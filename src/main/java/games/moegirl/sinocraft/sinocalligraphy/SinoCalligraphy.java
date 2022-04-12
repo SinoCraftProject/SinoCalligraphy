@@ -1,5 +1,7 @@
 package games.moegirl.sinocraft.sinocalligraphy;
 
+import games.moegirl.sinocraft.sinocalligraphy.gui.menu.SCAMenus;
+import games.moegirl.sinocraft.sinocalligraphy.item.SCAItems;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
@@ -13,5 +15,8 @@ public class SinoCalligraphy {
 
     public SinoCalligraphy() {
         IEventBus bus = FMLJavaModLoadingContext.get().getModEventBus();
+
+        SCAItems.register(bus);
+        SCAMenus.register(bus);
     }
 }
