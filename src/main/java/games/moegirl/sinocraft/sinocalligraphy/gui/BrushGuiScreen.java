@@ -52,8 +52,8 @@ public class BrushGuiScreen extends AbstractContainerScreen<BrushMenu> {
 
     @Override
     protected void renderBg(PoseStack stack, float partialTick, int mouseX, int mouseY) {
-        minecraft.getTextureManager().bindForSetup(GUI);
-        RenderSystem.clearColor(1.0f, 1.0f, 1.0f, 1.0f);
+        RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
+        RenderSystem.setShaderTexture(0, GUI);
         blit(stack, leftPos, topPos, 0, 0, width, height);
     }
 

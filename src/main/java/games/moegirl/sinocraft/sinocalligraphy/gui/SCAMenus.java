@@ -1,5 +1,6 @@
 package games.moegirl.sinocraft.sinocalligraphy.gui;
 
+import games.moegirl.sinocraft.sinocalligraphy.SinoCalligraphy;
 import games.moegirl.sinocraft.sinocalligraphy.gui.menu.BrushMenu;
 import games.moegirl.sinocraft.sinocore.SinoCore;
 import net.minecraft.network.FriendlyByteBuf;
@@ -12,7 +13,7 @@ import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 
 public class SCAMenus {
-    public static final DeferredRegister<MenuType<?>> MENUS = DeferredRegister.create(ForgeRegistries.CONTAINERS, SinoCore.MODID);
+    public static final DeferredRegister<MenuType<?>> MENUS = DeferredRegister.create(ForgeRegistries.CONTAINERS, SinoCalligraphy.MODID);
 
     public static RegistryObject<MenuType<BrushMenu>> BRUSH = MENUS.register("chinese_brush", () ->
             IForgeMenuType.create((int windowId, Inventory inv, FriendlyByteBuf data) ->

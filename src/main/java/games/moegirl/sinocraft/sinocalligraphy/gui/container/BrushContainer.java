@@ -3,6 +3,7 @@ package games.moegirl.sinocraft.sinocalligraphy.gui.container;
 import games.moegirl.sinocraft.sinocalligraphy.SinoCalligraphy;
 import games.moegirl.sinocraft.sinocalligraphy.gui.menu.BrushMenu;
 import games.moegirl.sinocraft.sinocalligraphy.item.SCAItems;
+import games.moegirl.sinocraft.sinocore.SinoCore;
 import net.minecraft.core.NonNullList;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
@@ -143,7 +144,7 @@ public class BrushContainer implements Container {
     }
 
     public boolean isInk(ItemStack stack) {
-        return stack.is(ItemTags.create(new ResourceLocation(SinoCalligraphy.MODID, "ink")));
+        return stack.is(ItemTags.create(new ResourceLocation(SinoCore.MODID, "ink")));
     }
 
     /**

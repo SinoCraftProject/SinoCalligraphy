@@ -48,8 +48,8 @@ public class HighlightableButton extends Button {
                 && mouseY < y + height;
 
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
-        RenderSystem.setShaderTexture(0, texture);
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, alpha);
+        RenderSystem.setShaderTexture(0, texture);
         RenderSystem.enableBlend();
         RenderSystem.defaultBlendFunc();
         RenderSystem.enableDepthTest();
@@ -60,6 +60,4 @@ public class HighlightableButton extends Button {
             blit(stack, x, y, hovered.u, hovered.v, width, height);
         }
     }
-
-
 }
