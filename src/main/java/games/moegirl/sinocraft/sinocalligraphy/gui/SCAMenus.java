@@ -1,5 +1,6 @@
-package games.moegirl.sinocraft.sinocalligraphy.gui.menu;
+package games.moegirl.sinocraft.sinocalligraphy.gui;
 
+import games.moegirl.sinocraft.sinocalligraphy.gui.menu.BrushMenu;
 import games.moegirl.sinocraft.sinocore.SinoCore;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;

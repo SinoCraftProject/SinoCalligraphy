@@ -1,10 +1,16 @@
 package games.moegirl.sinocraft.sinocalligraphy.gui.container;
 
+import games.moegirl.sinocraft.sinocalligraphy.SinoCalligraphy;
+import games.moegirl.sinocraft.sinocalligraphy.gui.menu.BrushMenu;
 import games.moegirl.sinocraft.sinocalligraphy.item.SCAItems;
 import net.minecraft.core.NonNullList;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.tags.ItemTags;
 import net.minecraft.world.Container;
 import net.minecraft.world.ContainerHelper;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
 
 /**
@@ -13,11 +19,18 @@ import net.minecraft.world.item.ItemStack;
  */
 public class BrushContainer implements Container {
     public static final int CONTAINER_SIZE = 3;
+
     public static final int EMPTY_XUAN_PAPER_SLOT = 0;
     public static final int INK_SLOT = 1;
     public static final int FILLED_XUAN_PAPER_SLOT = 2;
 
+    public AbstractContainerMenu menu;
+
     public NonNullList<ItemStack> items = NonNullList.withSize(CONTAINER_SIZE, ItemStack.EMPTY);
+
+    public BrushContainer(AbstractContainerMenu menuIn) {
+        menu = menuIn;
+    }
 
     @Override
     public int getContainerSize() {
@@ -54,7 +67,7 @@ public class BrushContainer implements Container {
      */
     @Override
     public void setChanged() {
-        // qyl27: Keep it empty.
+        menu.broadcastChanges();
     }
 
     @Override
@@ -68,31 +81,136 @@ public class BrushContainer implements Container {
         items.clear();
     }
 
-    public boolean hasPaper() {
-        return !getItem(EMPTY_XUAN_PAPER_SLOT).isEmpty();
+    protected ItemStack getPaper() {
+        return getItem(EMPTY_XUAN_PAPER_SLOT);
     }
 
-    public boolean hasInk() {
-        return !getItem(INK_SLOT).isEmpty();
+    protected ItemStack getInk() {
+        return getItem(INK_SLOT);
     }
 
+    protected boolean hasPaper() {
+        return !getPaper().isEmpty();
+    }
+
+    protected boolean hasInk() {
+        return !getInk().isEmpty();
+    }
+
+    // qyl27: We trust the stack in slot is Xuan Paper.
     public void usePaper() {
         removeItem(EMPTY_XUAN_PAPER_SLOT, 1);
     }
 
+    // qyl27: We trust the stack in slot is ink.
     public void useInk() {
         removeItem(INK_SLOT, 1);
     }
 
-    public void fillPaper() {
-
+    protected void fillPaper() {
+        // Todo: qyl27.
     }
 
-    public void paint() {
-        if (hasPaper() && hasInk()) {
+    public boolean canPaint() {
+        return hasPaper() && hasInk();
+    }
+
+    public ItemStack paint() {
+        if (canPaint()) {
             usePaper();
             useInk();
             fillPaper();
         }
+
+        return removeItemNoUpdate(FILLED_XUAN_PAPER_SLOT);
+    }
+
+    public void clearAll(Player player) {
+        if (!player.isAlive()
+                || (player instanceof ServerPlayer && ((ServerPlayer) player).hasDisconnected())) {
+            for (int j = 0; j < CONTAINER_SIZE; ++j) {
+                player.drop(removeItemNoUpdate(j), false);
+            }
+        } else {
+            for (int i = 0; i < CONTAINER_SIZE; ++i) {
+                player.getInventory().placeItemBackInInventory(removeItemNoUpdate(i));
+            }
+        }
+    }
+
+    public boolean isPaper(ItemStack stack) {
+        return stack.is(SCAItems.EMPTY_XUAN_PAPER.get());
+    }
+
+    public boolean isInk(ItemStack stack) {
+        return stack.is(ItemTags.create(new ResourceLocation(SinoCalligraphy.MODID, "ink")));
+    }
+
+    /**
+     * Quick add a stack to paper slot.
+     * @param stack The stack to add to paper slot.
+     * @return Remain stack.
+     */
+    public ItemStack quickAddPaper(ItemStack stack) {
+        // Todo: qyl27: Waiting for test.
+
+        ItemStack result = stack.copy();
+
+        if (isPaper(stack)) {
+            if (getPaper().is(stack.getItem())) {
+                if (getPaper().isStackable()) {
+                    if (getPaper().isEmpty()) {
+                        setItem(EMPTY_XUAN_PAPER_SLOT, stack);
+                        result = ItemStack.EMPTY;
+                    } else {
+                        var sumCount = getPaper().getCount() + stack.getCount();
+                        var remainCount = getPaper().getMaxStackSize() - getPaper().getCount();
+                        if (sumCount > getPaper().getMaxStackSize()) {
+                            result.setCount(stack.getCount() - remainCount);
+                            getPaper().setCount(getPaper().getMaxStackSize());
+                        } else {
+                            getPaper().setCount(getPaper().getCount() + stack.getCount());
+                            result = ItemStack.EMPTY;
+                        }
+                    }
+                }
+            }
+        }
+
+        return result;
+    }
+
+    /**
+     * Quick add a stack to ink slot.
+     * @param stack The stack to add to ink slot.
+     * @return Remain stack.
+     */
+    public ItemStack quickAddInk(ItemStack stack) {
+        // Todo: qyl27: Waiting for test.
+
+        ItemStack result = stack.copy();
+
+        if (isInk(stack)) {
+            if (getInk().is(stack.getItem())) {
+                if (getInk().isStackable()) {
+                    if (getInk().isEmpty()) {
+                        setItem(INK_SLOT, stack);
+                        result = ItemStack.EMPTY;
+                    } else {
+                        var sumCount = getInk().getCount() + stack.getCount();
+                        var remainCount = getInk().getMaxStackSize() - getInk().getCount();
+                        if (sumCount > getInk().getMaxStackSize()) {
+                            result.setCount(stack.getCount() - remainCount);
+                            getInk().setCount(getInk().getMaxStackSize());
+                        } else {
+                            getInk().setCount(getInk().getCount() + stack.getCount());
+                            result = ItemStack.EMPTY;
+                        }
+                    }
+                }
+            }
+        }
+
+        return result;
     }
 }
