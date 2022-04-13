@@ -1,5 +1,6 @@
 package games.moegirl.sinocraft.sinocalligraphy.network.packet;
 
+import games.moegirl.sinocraft.sinocalligraphy.gui.BrushGuiScreen;
 import games.moegirl.sinocraft.sinocalligraphy.gui.menu.BrushMenu;
 import games.moegirl.sinocraft.sinocalligraphy.item.SCAItems;
 import games.moegirl.sinocraft.sinocore.network.PacketBase;
@@ -11,11 +12,10 @@ import net.minecraftforge.network.NetworkDirection;
 import net.minecraftforge.network.NetworkEvent;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.function.Supplier;
 
 public class DrawC2SPacket extends PacketBase {
-    public static final int CANVAS_SIZE = 32;
-
     private XYPointInt pos;
     private byte color;
 
@@ -64,20 +64,17 @@ public class DrawC2SPacket extends PacketBase {
                 output = new ItemStack(SCAItems.XUAN_PAPER.get());
             }
 
+            var name = BrushGuiScreen.PIXELS_TAG_NAME;
+            var size = BrushGuiScreen.CANVAS_SIZE;
+
             CompoundTag nbt = output.getOrCreateTag();
-            if (!nbt.contains("pixels")) {
-                nbt.putByteArray("pixels", new byte[CANVAS_SIZE * CANVAS_SIZE]);
+            if (!nbt.contains(name)) {
+                nbt.putByteArray(name, new byte[size * size]);
             }
 
-            if (pos.x * 32 + pos.y < 1024) {
-                nbt.getByteArray("pixels")[pos.x * CANVAS_SIZE + pos.y] = color;
+            if (pos.x * size + pos.y < (size * size)) {
+                nbt.getByteArray(name)[pos.x * size + pos.y] = color;
                 // Todo: Add brush effect.
-            }
-
-            if (color == 0) {
-                if (Arrays.equals(nbt.getByteArray("pixels"), new byte[CANVAS_SIZE * CANVAS_SIZE])) {
-                    return;
-                }
             }
 
             output.setTag(nbt);

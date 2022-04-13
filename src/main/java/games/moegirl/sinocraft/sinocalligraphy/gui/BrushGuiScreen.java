@@ -11,6 +11,7 @@ import games.moegirl.sinocraft.sinocore.utility.render.UVOffsetInt;
 import games.moegirl.sinocraft.sinocore.utility.render.XYPointInt;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
+import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
@@ -21,6 +22,9 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 
 @OnlyIn(Dist.CLIENT)
 public class BrushGuiScreen extends AbstractContainerScreen<BrushMenu> {
+    public static final int CANVAS_SIZE = 32;
+    public static final String PIXELS_TAG_NAME = "pixels";
+
     private static final ResourceLocation GUI = new ResourceLocation(SinoCalligraphy.MODID, "textures/gui/chinese_brush.png");
     private Button buttonColorDarker;
     private Button buttonColorLighter;
@@ -29,7 +33,9 @@ public class BrushGuiScreen extends AbstractContainerScreen<BrushMenu> {
         super(pMenu, pPlayerInventory, pTitle);
 
         width = 212;
+        imageWidth = 212;
         height = 236;
+        imageHeight = 236;
     }
 
     @Override
@@ -52,14 +58,59 @@ public class BrushGuiScreen extends AbstractContainerScreen<BrushMenu> {
 
     @Override
     protected void renderBg(PoseStack stack, float partialTick, int mouseX, int mouseY) {
+        RenderSystem.setShader(GameRenderer::getPositionTexShader);
         RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
         RenderSystem.setShaderTexture(0, GUI);
         blit(stack, leftPos, topPos, 0, 0, width, height);
     }
 
     @Override
+    protected void renderLabels(PoseStack stack, int mouseX, int mouseY) {
+        font.draw(stack, Integer.toString(menu.getColor()), 18, 139, 0xffffff);
+        draw(stack);
+    }
+
+    protected void draw(PoseStack stack) {
+        if (menu.getPaper() != ItemStack.EMPTY) {
+            ItemStack paper = menu.getFilled();
+
+            RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
+            RenderSystem.setShaderTexture(0, GUI);
+
+            byte[] pixels = null;
+            if (paper.getOrCreateTag().contains(PIXELS_TAG_NAME)) {
+                pixels = paper.getTag().getByteArray(PIXELS_TAG_NAME);
+            } else {
+                pixels = new byte[CANVAS_SIZE * CANVAS_SIZE];
+            }
+
+            int startX = 61;
+            int startY = 14;
+            int unit = 128 / CANVAS_SIZE;
+
+            for (int i = 0; i < CANVAS_SIZE; i++) {
+                for (int j = 0; j < CANVAS_SIZE; j++) {
+                    float color = 0.0625f * (16 - pixels[i * CANVAS_SIZE + j]); //
+                    RenderSystem.setShaderColor(color, color, color, 1.0f);
+                    blit(stack, startX + i * unit, startY + j * unit, 22, 236, unit, unit);
+                }
+            }
+        }
+    }
+
+    @Override
     public boolean mouseClicked(double mouseX, double mouseY, int buttonCode) {
         super.mouseClicked(mouseX, mouseY, buttonCode);
+        return mouseDraw(mouseX, mouseY);
+    }
+
+    @Override
+    public boolean mouseDragged(double mouseX, double mouseY, int key, double dragX, double dragY) {
+        super.mouseDragged(mouseX, mouseY, key, dragX, dragY);
+        return mouseDraw(mouseX, mouseY);
+    }
+
+    protected boolean mouseDraw(double mouseX, double mouseY) {
         if ((mouseX >= leftPos + 61)
                 && (mouseX < leftPos + 61 + 128)
                 && (mouseY >= topPos + 14)
