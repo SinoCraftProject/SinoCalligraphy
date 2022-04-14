@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:item/generated",
   "textures": {
-    "layer0": "sinocalligraphy:item/filled_xuan_paper"
+    "layer0": "sinocalligraphy:item/inked_chinese_brush"
   }
 }

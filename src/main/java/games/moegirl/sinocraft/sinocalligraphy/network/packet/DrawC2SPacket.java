@@ -67,18 +67,22 @@ public class DrawC2SPacket extends PacketBase {
             var name = BrushGuiScreen.PIXELS_TAG_NAME;
             var size = BrushGuiScreen.CANVAS_SIZE;
 
+
             CompoundTag nbt = output.getOrCreateTag();
-            if (!nbt.contains(name)) {
-                nbt.putByteArray(name, new byte[size * size]);
-            }
+            if (nbt.contains(name)) {
+                if (pos.x * size + pos.y < (size * size)) {
+                    nbt.getByteArray(name)[pos.x * size + pos.y] = color;
+                    // Todo: Add brush effect.
+                }
 
-            if (pos.x * size + pos.y < (size * size)) {
-                nbt.getByteArray(name)[pos.x * size + pos.y] = color;
-                // Todo: Add brush effect.
+                output.setTag(nbt);
+                container.setFilled(output);
+            } else {
+                if (color != 0) {
+                    nbt.putByteArray(name, new byte[size * size]);
+                }
+                // Throw white draw with empty.
             }
-
-            output.setTag(nbt);
-            container.setFilled(output);
         }
     }
 }

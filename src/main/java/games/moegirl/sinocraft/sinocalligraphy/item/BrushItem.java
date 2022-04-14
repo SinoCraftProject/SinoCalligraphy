@@ -1,6 +1,5 @@
 package games.moegirl.sinocraft.sinocalligraphy.item;
 
-import games.moegirl.sinocraft.sinocalligraphy.gui.menu.BrushMenu;
 import games.moegirl.sinocraft.sinocalligraphy.gui.provider.BrushMenuProvider;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
@@ -26,7 +25,7 @@ public class BrushItem extends Item {
 
         // qyl27: The argument "limitedTag" is true in general.
         if (!level.isClientSide) {
-            NetworkHooks.openGui((ServerPlayer) player, new BrushMenuProvider(),
+            NetworkHooks.openGui((ServerPlayer) player, new BrushMenuProvider(item),
                     (FriendlyByteBuf byteBuf) -> byteBuf.writeItemStack(item, true));
         }
 

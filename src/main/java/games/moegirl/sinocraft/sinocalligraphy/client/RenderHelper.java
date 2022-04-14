@@ -1,17 +1,18 @@
 package games.moegirl.sinocraft.sinocalligraphy.client;
 
+import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Vector3f;
 import com.mojang.math.Vector4f;
 import games.moegirl.sinocraft.sinocore.utility.render.UVPairFloat;
+import net.minecraft.client.renderer.GameRenderer;
 
 import javax.annotation.Nullable;
 
 public class RenderHelper {
-
     public static void add(VertexConsumer consumer, @Nullable PoseStack stack,
-                           Vector3f pos, Vector4f color, @Nullable UVPairFloat uv) {
+                           Vector3f pos, Vector4f color, @Nullable UVPairFloat tex) {
         if (stack == null) {
             consumer.vertex(pos.x(), pos.y(), pos.z())
                     .color(color.x(), color.y(), color.z(), color.w())
@@ -19,43 +20,45 @@ public class RenderHelper {
         } else {
             consumer.vertex(stack.last().pose(), pos.x(), pos.y(), pos.z())
                     .color(color.x(), color.y(), color.z(), color.w());
-            if (uv != null) {
-                consumer.uv(uv.u, uv.v);
+            if (tex != null) {
+                consumer.uv(tex.u, tex.v);
             } else {
                 consumer.uv(0, 0);
             }
-            consumer.overlayCoords(0, 240)
-                    .normal(1, 0, 0);
+
+            consumer.uv2(0, 240)
+                    .normal(1, 1, 1);
+
             consumer.endVertex();
         }
     }
 
     public static void addSquare(VertexConsumer consumer, PoseStack stack,
-                                 Vector3f pos1, @Nullable UVPairFloat uv1, Vector4f color1,
-                                 Vector3f pos2, @Nullable UVPairFloat uv2, Vector4f color2,
-                                 Vector3f pos3, @Nullable UVPairFloat uv3, Vector4f color3,
-                                 Vector3f pos4, @Nullable UVPairFloat uv4, Vector4f color4) {
-        add(consumer, stack, pos1, color1, uv1);
-        add(consumer, stack, pos2, color2, uv2);
-        add(consumer, stack, pos3, color3, uv3);
-        add(consumer, stack, pos4, color4, uv4);
+                                 Vector3f pos1, Vector4f color1, @Nullable UVPairFloat tex1,
+                                 Vector3f pos2, Vector4f color2, @Nullable UVPairFloat tex2,
+                                 Vector3f pos3, Vector4f color3, @Nullable UVPairFloat tex3,
+                                 Vector3f pos4, Vector4f color4, @Nullable UVPairFloat tex4) {
+        add(consumer, stack, pos1, color1, tex1);
+        add(consumer, stack, pos2, color2, tex2);
+        add(consumer, stack, pos3, color3, tex3);
+        add(consumer, stack, pos4, color4, tex4);
     }
 
     public static void addSquare(VertexConsumer consumer, PoseStack stack,
-                                 Vector3f pos1, Vector3f pos2, Vector3f pos3, Vector3f pos4,
-                                 @Nullable Vector4f uv, Vector4f color) {
-        if (uv != null) {
+                                 Vector3f pos1, Vector3f pos2, Vector3f pos3, Vector3f pos4
+                                , Vector4f color, @Nullable Vector4f tex) {
+        if (tex != null) {
             addSquare(consumer, stack,
-                    pos1, new UVPairFloat(uv.x(), uv.z()), color,
-                    pos2, new UVPairFloat(uv.y(), uv.z()), color,
-                    pos3, new UVPairFloat(uv.x(), uv.w()), color,
-                    pos4, new UVPairFloat(uv.y(), uv.w()), color);
+                    pos1, color, new UVPairFloat(tex.x(), tex.z()),
+                    pos2, color, new UVPairFloat(tex.y(), tex.z()),
+                    pos3, color, new UVPairFloat(tex.x(), tex.w()),
+                    pos4, color, new UVPairFloat(tex.y(), tex.w()));
         } else {
             addSquare(consumer, stack,
-                    pos1, null, color,
-                    pos2, null, color,
-                    pos3, null, color,
-                    pos4, null, color);
+                    pos1, color, null,
+                    pos2, color, null,
+                    pos3, color, null,
+                    pos4, color, null);
         }
     }
 

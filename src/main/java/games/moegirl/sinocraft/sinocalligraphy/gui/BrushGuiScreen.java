@@ -24,17 +24,19 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 public class BrushGuiScreen extends AbstractContainerScreen<BrushMenu> {
     public static final int CANVAS_SIZE = 32;
     public static final String PIXELS_TAG_NAME = "pixels";
+    public static final ResourceLocation GUI = new ResourceLocation(SinoCalligraphy.MODID, "textures/gui/chinese_brush.png");
 
-    private static final ResourceLocation GUI = new ResourceLocation(SinoCalligraphy.MODID, "textures/gui/chinese_brush.png");
     private Button buttonColorDarker;
     private Button buttonColorLighter;
 
     public BrushGuiScreen(BrushMenu pMenu, Inventory pPlayerInventory, Component pTitle) {
         super(pMenu, pPlayerInventory, pTitle);
 
+        // Fixme: qyl27: Why it is not working?
         width = 212;
-        imageWidth = 212;
         height = 236;
+
+        imageWidth = 212;
         imageHeight = 236;
     }
 
@@ -71,9 +73,9 @@ public class BrushGuiScreen extends AbstractContainerScreen<BrushMenu> {
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
         RenderSystem.setShaderTexture(0, GUI);
         RenderSystem.enableBlend();
-        RenderSystem.defaultBlendFunc();
         RenderSystem.enableDepthTest();
-        blit(stack, leftPos, topPos, 0, 0, width, height);
+        blit(stack, leftPos, topPos, 0, 0, imageWidth, imageHeight);
+        RenderSystem.disableBlend();
     }
 
     @Override

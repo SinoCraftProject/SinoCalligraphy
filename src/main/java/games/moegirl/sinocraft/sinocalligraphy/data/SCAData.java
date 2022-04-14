@@ -5,7 +5,6 @@ import games.moegirl.sinocraft.sinocalligraphy.data.lang.SCALanguageProviderENUS
 import games.moegirl.sinocraft.sinocalligraphy.data.lang.SCALanguageProviderZHCN;
 import games.moegirl.sinocraft.sinocalligraphy.item.SCAItems;
 import games.moegirl.sinocraft.sinocore.SinoCore;
-import games.moegirl.sinocraft.sinocore.api.data.ItemModelProviderBase;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.forge.event.lifecycle.GatherDataEvent;
@@ -18,7 +17,7 @@ public class SCAData {
         var exHelper = event.getExistingFileHelper();
 
         if (event.includeClient()) {
-            generator.addProvider(new ItemModelProviderBase(generator, SinoCalligraphy.MODID, exHelper, SCAItems.ITEMS));
+            generator.addProvider(new SCAItemModelProvider(generator, SinoCalligraphy.MODID, exHelper, SCAItems.ITEMS));
         }
 
         if (event.includeServer()) {

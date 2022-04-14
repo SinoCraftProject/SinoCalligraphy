@@ -17,7 +17,7 @@ public class SCAMenus {
 
     public static RegistryObject<MenuType<BrushMenu>> BRUSH = MENUS.register("chinese_brush", () ->
             IForgeMenuType.create((int windowId, Inventory inv, FriendlyByteBuf data) ->
-                    new BrushMenu(windowId, inv)));
+                    new BrushMenu(windowId, inv, data.readItem())));
 
     public static void register(IEventBus bus) {
         MENUS.register(bus);

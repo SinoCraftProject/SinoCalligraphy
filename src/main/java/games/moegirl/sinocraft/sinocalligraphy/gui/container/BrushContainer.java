@@ -1,7 +1,5 @@
 package games.moegirl.sinocraft.sinocalligraphy.gui.container;
 
-import games.moegirl.sinocraft.sinocalligraphy.SinoCalligraphy;
-import games.moegirl.sinocraft.sinocalligraphy.gui.menu.BrushMenu;
 import games.moegirl.sinocraft.sinocalligraphy.item.SCAItems;
 import games.moegirl.sinocraft.sinocore.SinoCore;
 import net.minecraft.core.NonNullList;
@@ -124,6 +122,7 @@ public class BrushContainer implements Container {
     }
 
     public ItemStack paint() {
+        // qyl27: I made a mess.
         if (canPaint()) {
             usePaper();
             useInk();
@@ -135,14 +134,14 @@ public class BrushContainer implements Container {
         return removeItemNoUpdate(FILLED_XUAN_PAPER_SLOT);
     }
 
-    public void clearAll(Player player) {
+    public void dropAll(Player player) {
         if (!player.isAlive()
                 || (player instanceof ServerPlayer && ((ServerPlayer) player).hasDisconnected())) {
-            for (int j = 0; j < CONTAINER_SIZE; ++j) {
+            for (int j = 0; j < CONTAINER_SIZE - 1; ++j) {  // qyl27: No drop output slot.
                 player.drop(removeItemNoUpdate(j), false);
             }
         } else {
-            for (int i = 0; i < CONTAINER_SIZE; ++i) {
+            for (int i = 0; i < CONTAINER_SIZE - 1; ++i) {  // qyl27: No drop output slot.
                 player.getInventory().placeItemBackInInventory(removeItemNoUpdate(i));
             }
         }
@@ -222,5 +221,10 @@ public class BrushContainer implements Container {
         }
 
         return result;
+    }
+
+    @Override
+    public void stopOpen(Player player) {
+        dropAll(player);
     }
 }

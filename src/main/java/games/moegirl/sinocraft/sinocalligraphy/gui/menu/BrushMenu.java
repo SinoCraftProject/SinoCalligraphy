@@ -1,6 +1,5 @@
 package games.moegirl.sinocraft.sinocalligraphy.gui.menu;
 
-import games.moegirl.sinocraft.sinocalligraphy.SinoCalligraphy;
 import games.moegirl.sinocraft.sinocalligraphy.data.SCAItemTags;
 import games.moegirl.sinocraft.sinocalligraphy.gui.SCAMenus;
 import games.moegirl.sinocraft.sinocalligraphy.gui.container.BrushContainer;
@@ -8,8 +7,7 @@ import games.moegirl.sinocraft.sinocalligraphy.item.SCAItems;
 import games.moegirl.sinocraft.sinocore.gui.slot.AcceptSpecialSlot;
 import games.moegirl.sinocraft.sinocore.gui.slot.TakeOnlySlot;
 import games.moegirl.sinocraft.sinocore.utility.SlotHelper;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.tags.ItemTags;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -27,10 +25,14 @@ public class BrushMenu extends AbstractContainerMenu {
     protected Inventory playerInventory;
     protected int brushColor = 0;
 
-    public BrushMenu(int id, Inventory playerInv) {
+    protected ItemStack brush;
+
+    public BrushMenu(int id, Inventory playerInv, ItemStack brushIn) {
         super(SCAMenus.BRUSH.get(), id);
         playerInventory = playerInv;
         brushContainer = new BrushContainer(this);
+
+        brush = brushIn;
 
         addSlots();
     }
@@ -42,7 +44,7 @@ public class BrushMenu extends AbstractContainerMenu {
         addSlot(new AcceptSpecialSlot(brushContainer, BrushContainer.EMPTY_XUAN_PAPER_SLOT, 14, 23, SCAItems.EMPTY_XUAN_PAPER.get()));
         addSlot(new AcceptSpecialSlot(brushContainer, BrushContainer.INK_SLOT, 14, 66, SCAItemTags.INKS));
         addSlot(new TakeOnlySlot(brushContainer, BrushContainer.FILLED_XUAN_PAPER_SLOT, 14, 203) {
-            // Todo: qyl27: Test it.
+            // qyl27: There are some **** code.
             @Override
             public @NotNull ItemStack safeTake(int p_150648_, int p_150649_, @NotNull Player player) {
                 if (brushContainer.canPaint()) {
@@ -55,6 +57,9 @@ public class BrushMenu extends AbstractContainerMenu {
             @Override
             public void onTake(Player pPlayer, ItemStack pStack) {
                 brushContainer.paint();
+
+                brush.setDamageValue(brush.getDamageValue() + 1);
+
                 super.onTake(pPlayer, pStack);
             }
         });
@@ -68,9 +73,18 @@ public class BrushMenu extends AbstractContainerMenu {
                 || player.getOffhandItem().is(SCAItems.BRUSH.get());
     }
 
+    /**
+     * qyl27: Don't forget to rewrite removed method to put back items.
+     * @param player Player entity.
+     */
+    @Override
+    public void removed(Player player) {
+        brushContainer.dropAll(player);
+    }
+
     @Override
     protected void clearContainer(Player player, Container container) {
-        brushContainer.clearAll(player);
+        brushContainer.dropAll(player);
     }
 
     @Override
