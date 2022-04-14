@@ -17,18 +17,19 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 public class HighlightableButton extends Button {
     protected Screen gui;
 
-    protected ResourceLocation texture;
+    protected ResourceLocation guiTexture;
 
     protected UVOffsetInt uncover;
     protected UVOffsetInt hovered;
 
     public HighlightableButton(XYPointInt location, int width, int height,
-                               Component message, OnPress onPress, Screen screen,
+                               Component message, OnPress onPress, Screen screen, ResourceLocation texture,
                                UVOffsetInt uncoverUV, UVOffsetInt hoveredUV) {
         super(location.x, location.y, width, height, message, onPress);
 
         gui = screen;
 
+        guiTexture = texture;
         uncover = uncoverUV;
         hovered = hoveredUV;
     }
@@ -49,7 +50,7 @@ public class HighlightableButton extends Button {
 
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, alpha);
-        RenderSystem.setShaderTexture(0, texture);
+        RenderSystem.setShaderTexture(0, guiTexture);
         RenderSystem.enableBlend();
         RenderSystem.defaultBlendFunc();
         RenderSystem.enableDepthTest();

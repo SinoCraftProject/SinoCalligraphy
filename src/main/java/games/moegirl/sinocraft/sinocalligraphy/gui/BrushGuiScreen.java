@@ -1,7 +1,7 @@
 package games.moegirl.sinocraft.sinocalligraphy.gui;
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.*;
 import games.moegirl.sinocraft.sinocalligraphy.SinoCalligraphy;
 import games.moegirl.sinocraft.sinocalligraphy.gui.components.HighlightableButton;
 import games.moegirl.sinocraft.sinocalligraphy.gui.menu.BrushMenu;
@@ -44,23 +44,35 @@ public class BrushGuiScreen extends AbstractContainerScreen<BrushMenu> {
 
         buttonColorDarker = new HighlightableButton(new XYPointInt(leftPos + 16, topPos + 112),
                 11, 7, new TranslatableComponent("sinocraft.sinocalligraphy.gui.button.darker"),
-                button -> menu.increaseBrushColor(), this,
+                button -> menu.increaseBrushColor(), this, GUI,
                 new UVOffsetInt(11, 236), new UVOffsetInt(11, 243));
 
-        buttonColorLighter = new HighlightableButton(new XYPointInt(leftPos + 16, topPos + 112),
+        buttonColorLighter = new HighlightableButton(new XYPointInt(leftPos + 16, topPos + 166),
                 11, 7, new TranslatableComponent("sinocraft.sinocalligraphy.gui.button.lighter"),
-                button -> menu.decreaseBrushColor(), this,
+                button -> menu.decreaseBrushColor(), this, GUI,
                 new UVOffsetInt(0, 236), new UVOffsetInt(0, 243));
 
-        addWidget(buttonColorDarker);
-        addWidget(buttonColorLighter);
+        addRenderableWidget(buttonColorDarker);
+        addRenderableWidget(buttonColorLighter);
+
+        super.init();   // Init twice for correct location.
+    }
+
+    @Override
+    public void render(PoseStack stack, int mouseX, int mouseY, float partialTick) {
+        renderBackground(stack);
+        super.render(stack, mouseX, mouseY, partialTick);
+        renderTooltip(stack, mouseX, mouseY);
     }
 
     @Override
     protected void renderBg(PoseStack stack, float partialTick, int mouseX, int mouseY) {
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
-        RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
+        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
         RenderSystem.setShaderTexture(0, GUI);
+        RenderSystem.enableBlend();
+        RenderSystem.defaultBlendFunc();
+        RenderSystem.enableDepthTest();
         blit(stack, leftPos, topPos, 0, 0, width, height);
     }
 
@@ -90,7 +102,7 @@ public class BrushGuiScreen extends AbstractContainerScreen<BrushMenu> {
 
             for (int i = 0; i < CANVAS_SIZE; i++) {
                 for (int j = 0; j < CANVAS_SIZE; j++) {
-                    float color = 0.0625f * (16 - pixels[i * CANVAS_SIZE + j]); //
+                    float color = 0.0625f * (16 - pixels[i * CANVAS_SIZE + j]); // qyl27: For calculating grayscale.
                     RenderSystem.setShaderColor(color, color, color, 1.0f);
                     blit(stack, startX + i * unit, startY + j * unit, 22, 236, unit, unit);
                 }

@@ -1,4 +1,7 @@
+c534553d5ca4c5276a3d0a1576b5716354232028 assets/sinocore/lang/en_us.json
+61ab8b9901311efc2ef0397f56444dba3b98b0f1 assets/sinocore/lang/zh_cn.json
 9cc1daceb6db6569a4baf74adeb2b8c00f44cf20 assets/sinocore/models/item/chinese_brush.json
 5de011b04578873788f5ee901c6023ca0128cbaa assets/sinocore/models/item/empty_xuan_paper.json
 b3c85a81eb2c2e7d2e774c732dadecaec6231a66 assets/sinocore/models/item/filled_xuan_paper.json
 caa909bd15941ecefb1368cd395ad400c87639a7 assets/sinocore/models/item/ink.json
+11cce5179446181b57e780f93ff649f0ed02d113 data/sinocore/tags/items/inks.json

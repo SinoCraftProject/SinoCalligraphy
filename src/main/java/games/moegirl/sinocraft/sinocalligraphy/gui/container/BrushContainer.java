@@ -69,6 +69,10 @@ public class BrushContainer implements Container {
     @Override
     public void setChanged() {
         menu.broadcastChanges();
+
+        if (getPaper().isEmpty() || getInk().isEmpty()) {
+            removeItemNoUpdate(FILLED_XUAN_PAPER_SLOT);
+        }
     }
 
     @Override
@@ -79,7 +83,7 @@ public class BrushContainer implements Container {
 
     @Override
     public void clearContent() {
-        items.clear();
+
     }
 
     protected ItemStack getPaper() {
@@ -101,15 +105,18 @@ public class BrushContainer implements Container {
     // qyl27: We trust the stack in slot is Xuan Paper.
     public void usePaper() {
         removeItem(EMPTY_XUAN_PAPER_SLOT, 1);
+        setChanged();
     }
 
     // qyl27: We trust the stack in slot is ink.
     public void useInk() {
         removeItem(INK_SLOT, 1);
+        setChanged();
     }
 
     protected void fillPaper() {
         // Todo: qyl27.
+        setChanged();
     }
 
     public boolean canPaint() {
@@ -122,6 +129,8 @@ public class BrushContainer implements Container {
             useInk();
             fillPaper();
         }
+
+        setChanged();
 
         return removeItemNoUpdate(FILLED_XUAN_PAPER_SLOT);
     }

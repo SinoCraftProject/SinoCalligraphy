@@ -1,6 +1,7 @@
 package games.moegirl.sinocraft.sinocalligraphy.gui.menu;
 
 import games.moegirl.sinocraft.sinocalligraphy.SinoCalligraphy;
+import games.moegirl.sinocraft.sinocalligraphy.data.SCAItemTags;
 import games.moegirl.sinocraft.sinocalligraphy.gui.SCAMenus;
 import games.moegirl.sinocraft.sinocalligraphy.gui.container.BrushContainer;
 import games.moegirl.sinocraft.sinocalligraphy.item.SCAItems;
@@ -39,7 +40,7 @@ public class BrushMenu extends AbstractContainerMenu {
      */
     protected void addSlots() {
         addSlot(new AcceptSpecialSlot(brushContainer, BrushContainer.EMPTY_XUAN_PAPER_SLOT, 14, 23, SCAItems.EMPTY_XUAN_PAPER.get()));
-        addSlot(new AcceptSpecialSlot(brushContainer, BrushContainer.INK_SLOT, 14, 66, ItemTags.create(new ResourceLocation(SinoCalligraphy.MODID, "ink"))));
+        addSlot(new AcceptSpecialSlot(brushContainer, BrushContainer.INK_SLOT, 14, 66, SCAItemTags.INKS));
         addSlot(new TakeOnlySlot(brushContainer, BrushContainer.FILLED_XUAN_PAPER_SLOT, 14, 203) {
             // Todo: qyl27: Test it.
             @Override
@@ -49,6 +50,12 @@ public class BrushMenu extends AbstractContainerMenu {
                 } else {
                     return ItemStack.EMPTY;
                 }
+            }
+
+            @Override
+            public void onTake(Player pPlayer, ItemStack pStack) {
+                brushContainer.paint();
+                super.onTake(pPlayer, pStack);
             }
         });
 

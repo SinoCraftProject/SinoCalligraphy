@@ -139,6 +139,12 @@ repositories {
     // }
 
     maven { url 'https://jitpack.io' }
+
+    // Local maven for TEST.
+    maven {
+        name = "Local Maven"
+        url = "file://${projectDir}/../mavenLocal"
+    }
 }
 
 configurations.all {
@@ -149,7 +155,7 @@ dependencies {
     // Specify the version of Minecraft to use. If this is any group other than 'net.minecraft', it is assumed
     // that the dep is a ForgeGradle 'patcher' dependency, and its patches will be applied.
     // The userdev artifact is a special name and will get all sorts of transformations applied to it.
-    minecraft 'net.minecraftforge:forge:1.18.2-40.0.32'
+    minecraft 'net.minecraftforge:forge:1.18.2-40.0.36'
 
     // Real mod deobf dependency examples - these get remapped to your current mappings
     // compileOnly fg.deobf("mezz.jei:jei-${mc_version}:${jei_version}:api") // Adds JEI API as a compile dependency
@@ -164,6 +170,7 @@ dependencies {
     // http://www.gradle.org/docs/current/userguide/dependency_management.html
 
     implementation fg.deobf('com.github.SinoCraftProject:SinoCore:main-SNAPSHOT')
+    //implementation fg.deobf('games.moegirl.sinocraft.sinocore:SinoCore:1.18.2-1.0.1')   // qyl27: For offline debug.
 }
 
 // Example for how to get properties into the manifest for reading at runtime.
