@@ -79,6 +79,7 @@ public class BrushMenu extends AbstractContainerMenu {
      */
     @Override
     public void removed(Player player) {
+        super.removed(player);  // qyl27: Keep the brush.
         brushContainer.dropAll(player);
     }
 

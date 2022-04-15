@@ -69,20 +69,22 @@ public class DrawC2SPacket extends PacketBase {
 
 
             CompoundTag nbt = output.getOrCreateTag();
-            if (nbt.contains(name)) {
-                if (pos.x * size + pos.y < (size * size)) {
-                    nbt.getByteArray(name)[pos.x * size + pos.y] = color;
-                    // Todo: Add brush effect.
-                }
-
-                output.setTag(nbt);
-                container.setFilled(output);
-            } else {
+            if (!nbt.contains(name)) {
                 if (color != 0) {
                     nbt.putByteArray(name, new byte[size * size]);
+                    // Throw white draw with empty.
+                } else {
+                    return;
                 }
-                // Throw white draw with empty.
             }
+
+            if (pos.x * size + pos.y < (size * size)) {
+                nbt.getByteArray(name)[pos.x * size + pos.y] = color;
+                // Todo: Add brush effect.
+            }
+
+            output.setTag(nbt);
+            container.setFilled(output);
         }
     }
 }

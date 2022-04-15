@@ -135,8 +135,10 @@ public class BrushGuiScreen extends AbstractContainerScreen<BrushMenu> {
                 return false;
             }
 
-            int x = (int) (Math.round(mouseX) - leftPos - 61) / 4;
-            int y = (int) (Math.round(mouseY) - topPos - 14) / 4;
+            int cellSize = 128 / CANVAS_SIZE;
+
+            int x = (int) (Math.round(mouseX) - leftPos - 61) / cellSize;
+            int y = (int) (Math.round(mouseY) - topPos - 14) / cellSize;
 
             SCANetworks.INSTANCE.sendToServer(new DrawC2SPacket(new XYPointInt(x, y), (byte) menu.getColor()));
 
