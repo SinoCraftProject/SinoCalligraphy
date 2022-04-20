@@ -1,7 +1,5 @@
 package games.moegirl.sinocraft.sinocalligraphy.item;
 
-import games.moegirl.sinocraft.sinocalligraphy.client.SCAClient;
-import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
 import net.minecraft.world.item.Item;
 import net.minecraftforge.client.IItemRenderProperties;
 
@@ -19,8 +17,8 @@ public class FilledXuanPaperItem extends Item {
     public void initializeClient(Consumer<IItemRenderProperties> consumer) {
         consumer.accept(new IItemRenderProperties() {
             @Override
-            public BlockEntityWithoutLevelRenderer getItemStackRenderer() {
-                return SCAClient.getBEWLR();
+            public net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer getItemStackRenderer() {
+                return games.moegirl.sinocraft.sinocalligraphy.client.SCAClient.getXuanPaperRender();
             }
         });
     }

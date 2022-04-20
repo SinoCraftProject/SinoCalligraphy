@@ -1,16 +1,14 @@
 package games.moegirl.sinocraft.sinocalligraphy.client;
 
-import net.minecraft.client.Minecraft;
+import games.moegirl.sinocraft.sinocalligraphy.client.paper.FilledXuanPaperBlockRenderer;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
+@OnlyIn(Dist.CLIENT)
 public class SCAClient {
-    private static BlockEntityWithoutLevelRenderer BEWLR;
 
-    public static BlockEntityWithoutLevelRenderer getBEWLR() {
-        if (BEWLR == null) {
-            BEWLR = new SCABlockEntityWithoutLevelRenderer(Minecraft.getInstance().getBlockEntityRenderDispatcher(), Minecraft.getInstance().getEntityModels());
-        }
-        return BEWLR;
+    public static BlockEntityWithoutLevelRenderer getXuanPaperRender() {
+        return FilledXuanPaperBlockRenderer.getInstance();
     }
-
 }
