@@ -11,37 +11,7 @@ public class SCABlockTagsProvider extends BlockTagsProviderBase {
     }
 
     @Override
-    public void addPickaxe() {
-
-    }
-
-    @Override
-    public void addAxe() {
-
-    }
-
-    @Override
-    public void addShovel() {
-
-    }
-
-    @Override
-    public void addHoe() {
-
-    }
-
-    @Override
-    public void addStoneTool() {
-
-    }
-
-    @Override
-    public void addIronTool() {
-
-    }
-
-    @Override
-    public void addDiamondTool() {
+    protected void addTags() {
 
     }
 }
