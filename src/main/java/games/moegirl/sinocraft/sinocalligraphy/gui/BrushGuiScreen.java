@@ -32,7 +32,7 @@ public class BrushGuiScreen extends AbstractContainerScreen<BrushMenu> {
     public BrushGuiScreen(BrushMenu pMenu, Inventory pPlayerInventory, Component pTitle) {
         super(pMenu, pPlayerInventory, pTitle);
 
-        // Fixme: qyl27: Why it is not working?
+        // qyl27: Why it is not working?
         width = 212;
         height = 236;
 
@@ -137,6 +137,8 @@ public class BrushGuiScreen extends AbstractContainerScreen<BrushMenu> {
 
             int cellSize = 128 / CANVAS_SIZE;
 
+            // Fixme: qyl27: Unexpected more pixel in next pixel.
+            //               Maybe here is Math.floor?
             int x = (int) (Math.round(mouseX) - leftPos - 61) / cellSize;
             int y = (int) (Math.round(mouseY) - topPos - 14) / cellSize;
 

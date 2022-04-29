@@ -22,7 +22,7 @@ public class FilledXuanPaperModelBakeEvent {
         ModelResourceLocation location = new ModelResourceLocation(SCAItems.XUAN_PAPER.getId(), "inventory");
         BakedModel exist_model = registry.get(location);
         if (exist_model == null) {
-            throw new IllegalStateException(location + " has no existing model");
+            throw new IllegalStateException(location + " has no existing model.");
         }
         registry.put(location, new FilledXuanPaperBakedModel(exist_model));
     }

@@ -76,7 +76,7 @@ public class FilledXuanPaperBlockRenderer extends BlockEntityWithoutLevelRendere
         }
 
         VertexConsumer vertex = buffer.getBuffer(RenderType.create(
-                BrushGuiScreen.PIXELS_TAG_NAME, DefaultVertexFormat.POSITION_COLOR,
+                BrushGuiScreen.PIXELS_TAG_NAME, DefaultVertexFormat.POSITION_COLOR_LIGHTMAP,
                 VertexFormat.Mode.QUADS, 256, false, true,
                 RenderType.CompositeState.builder()
                         .setShaderState(new RenderStateShard.ShaderStateShard(GameRenderer::getPositionColorShader))
@@ -86,10 +86,10 @@ public class FilledXuanPaperBlockRenderer extends BlockEntityWithoutLevelRendere
             for (int y1 = 0; y1 < BrushGuiScreen.CANVAS_SIZE; y1++) {
                 float pixel = 0.0625f * (16 - pixels[x1 * BrushGuiScreen.CANVAS_SIZE + y1]);
                 float y2 = y1 + 1;
-                vertex.vertex(stack.last().pose(), x1, y1, 0).color(pixel, pixel, pixel, 1).endVertex();
-                vertex.vertex(stack.last().pose(), x1, y2, 0).color(pixel, pixel, pixel, 1).endVertex();
-                vertex.vertex(stack.last().pose(), x2, y2, 0).color(pixel, pixel, pixel, 1).endVertex();
-                vertex.vertex(stack.last().pose(), x2, y1, 0).color(pixel, pixel, pixel, 1).endVertex();
+                vertex.vertex(stack.last().pose(), x1, y1, 0).color(pixel, pixel, pixel, 1).uv2(combinedLight).endVertex();
+                vertex.vertex(stack.last().pose(), x1, y2, 0).color(pixel, pixel, pixel, 1).uv2(combinedLight).endVertex();
+                vertex.vertex(stack.last().pose(), x2, y2, 0).color(pixel, pixel, pixel, 1).uv2(combinedLight).endVertex();
+                vertex.vertex(stack.last().pose(), x2, y1, 0).color(pixel, pixel, pixel, 1).uv2(combinedLight).endVertex();
             }
         }
     }

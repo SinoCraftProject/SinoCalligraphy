@@ -3,23 +3,24 @@ package games.moegirl.sinocraft.sinocalligraphy.client.paper;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
+import com.mojang.math.Matrix4f;
 import com.mojang.math.Vector3f;
 import games.moegirl.sinocraft.sinocalligraphy.gui.BrushGuiScreen;
 import games.moegirl.sinocraft.sinocalligraphy.item.SCAItems;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.*;
-import net.minecraft.client.renderer.block.BlockRenderDispatcher;
+import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.client.renderer.entity.player.PlayerRenderer;
 import net.minecraft.client.renderer.texture.OverlayTexture;
-import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.HumanoidArm;
+import net.minecraft.world.entity.decoration.ItemFrame;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.RenderHandEvent;
@@ -33,38 +34,59 @@ import net.minecraftforge.fml.common.Mod;
 @Mod.EventBusSubscriber(Dist.CLIENT)
 @OnlyIn(Dist.CLIENT)
 public class FilledXuanPaperRenderEvent {
-    public static final ModelResourceLocation MAP_MODEL_LOCATION = new ModelResourceLocation(new ResourceLocation("minecraft", "item_frame"), "map=true");
+    public static final ModelResourceLocation MAP_MODEL_LOCATION = new ModelResourceLocation(new ResourceLocation("minecraft", "item_frame_map"), "back");
 
     @SubscribeEvent
     public static void onRenderInFrame(RenderItemInFrameEvent event) {
+        var stack = event.getPoseStack();
         var item = event.getItemStack();
         var frame = event.getItemFrameEntity();
-        if (item.is(SCAItems.XUAN_PAPER.get())) {
-            // Re-render the frame, in order to prevent asm to net.minecraft.client.renderer.entity.ItemFrameRenderer.render.
-            var isInvisible = frame.isInvisible();
-            var mc = Minecraft.getInstance();
-            var stack = event.getPoseStack();
-            var buffers = event.getMultiBufferSource();
-            var light = event.getPackedLight();
+        var light = event.getPackedLight();
+        var buffers = event.getMultiBufferSource();
 
-            if (!isInvisible) {
-                var vec = Vec3.ZERO.scale(-45 * frame.getRotation());
-                stack.scale((float) vec.x, (float) vec.y, (float) vec.z);
-                stack.translate(0, 0, -0.4375);
-                BlockRenderDispatcher dispatcher = mc.getBlockRenderer();
-                BakedModel model = dispatcher.getBlockModelShaper().getModelManager().getModel(MAP_MODEL_LOCATION);
-                VertexConsumer consumer = buffers.getBuffer(Sheets.solidBlockSheet());
-                stack.pushPose();
-                stack.translate(-0.5D, -0.5D, -0.5D);
-                dispatcher.getModelRenderer().renderModel(stack.last(), consumer, null, model,
-                        1.0F, 1.0F, 1.0F, light, OverlayTexture.NO_OVERLAY);
-                stack.popPose();
+        stack.pushPose();
+
+        if (item.is(SCAItems.XUAN_PAPER.get())) {
+            if (frame.isInvisible()) {
+                stack.translate(0.0D, 0.0D, 0.5D);
+            } else {
                 stack.translate(0.0D, 0.0D, 0.4375D);
             }
 
-            var vec2 = Vec3.ZERO.scale(frame.getRotation() % 4 * 90);
-            stack.scale((float) vec2.x, (float) vec2.y, (float) vec2.z);
+            float scaleRate = 0.0078125F;
+
+            stack.scale(scaleRate, scaleRate, scaleRate);
+            stack.translate(-64.0D, -64.0D, 0.0D);
+            stack.translate(0.0D, 0.0D, -1.0D);
+
+            stack.scale(1/32f, 1/32f, 1/32f);
+            if (item.hasTag() && item.getTag().contains("renderBig") && item.getTag().getBoolean("renderBig")) {
+                stack.scale(32, 32, 32);
+            }
+
+            var rotation = frame.getRotation() % 4 * 2;
+            stack.mulPose(Vector3f.ZP.rotationDegrees((float)rotation * 360.0F / 8.0F));
+            stack.mulPose(Vector3f.ZP.rotationDegrees(180.0F));
+
+
+            int lightValue = getLightVal(frame, 15728850, light);
+            renderXuanPaperOnFrame(stack, lightValue, buffers);
         }
+
+        stack.popPose();
+    }
+
+    private static void renderXuanPaperOnFrame(PoseStack stack, int light, MultiBufferSource buffers) {
+        Matrix4f matrix4f = stack.last().pose();
+        VertexConsumer vertexconsumer = buffers.getBuffer(RenderType.text(MAP_MODEL_LOCATION));
+        vertexconsumer.vertex(matrix4f, 0.0F, 128.0F, -0.01F).color(255, 255, 255, 255).uv(0.0F, 1.0F).uv2(light).endVertex();
+        vertexconsumer.vertex(matrix4f, 128.0F, 128.0F, -0.01F).color(255, 255, 255, 255).uv(1.0F, 1.0F).uv2(light).endVertex();
+        vertexconsumer.vertex(matrix4f, 128.0F, 0.0F, -0.01F).color(255, 255, 255, 255).uv(1.0F, 0.0F).uv2(light).endVertex();
+        vertexconsumer.vertex(matrix4f, 0.0F, 0.0F, -0.01F).color(255, 255, 255, 255).uv(0.0F, 0.0F).uv2(light).endVertex();
+    }
+
+    private static int getLightVal(ItemFrame frame, int maxLight, int light) {
+        return frame.getType() == EntityType.GLOW_ITEM_FRAME ? maxLight : light;
     }
 
     /**
@@ -88,15 +110,15 @@ public class FilledXuanPaperRenderEvent {
         }
     }
 
-    private static void renderXuanPaper(PoseStack pMatrixStack, MultiBufferSource pBuffer, int pCombinedLight, ItemStack pStack) {
-        pMatrixStack.mulPose(Vector3f.YP.rotationDegrees(180.0F));
-        pMatrixStack.mulPose(Vector3f.ZP.rotationDegrees(180.0F));
-        pMatrixStack.scale(0.38F, 0.38F, 0.38F);
-        pMatrixStack.translate(-0.5D, -0.5D, 0.0D);
-        pMatrixStack.scale(0.0078125F, 0.0078125F, 0.0078125F);
+    private static void renderXuanPaper(PoseStack stack, MultiBufferSource pBuffer, int pCombinedLight, ItemStack pStack) {
+        stack.mulPose(Vector3f.YP.rotationDegrees(180.0F));
+        stack.mulPose(Vector3f.ZP.rotationDegrees(180.0F));
+        stack.scale(0.38F, 0.38F, 0.38F);
+        stack.translate(-0.5D, -0.5D, 0.0D);
+        stack.scale(0.0078125F, 0.0078125F, 0.0078125F);
         float step = 128f / BrushGuiScreen.CANVAS_SIZE;
-        pMatrixStack.scale(step, step, step);
-        FilledXuanPaperBlockRenderer.renderXuanPaper(pMatrixStack, pBuffer, pCombinedLight, pStack);
+        stack.scale(step, step, step);
+        FilledXuanPaperBlockRenderer.renderXuanPaper(stack, pBuffer, pCombinedLight, pStack);
     }
 
     private static void renderOneHandedPaper(LocalPlayer player, RenderHandEvent event, HumanoidArm arm) {
@@ -157,30 +179,30 @@ public class FilledXuanPaperRenderEvent {
         renderXuanPaper(stack, buffer, light, event.getItemStack());
     }
 
-    private static void renderPlayerArm(LocalPlayer player, PoseStack pMatrixStack, MultiBufferSource pBuffer, int pCombinedLight, float pEquippedProgress, float pSwingProgress, HumanoidArm pSide) {
+    private static void renderPlayerArm(LocalPlayer player, PoseStack stack, MultiBufferSource pBuffer, int pCombinedLight, float pEquippedProgress, float pSwingProgress, HumanoidArm pSide) {
         boolean flag = pSide != HumanoidArm.LEFT;
         float f = flag ? 1.0F : -1.0F;
         float f1 = Mth.sqrt(pSwingProgress);
         float f2 = -0.3F * Mth.sin(f1 * (float) Math.PI);
         float f3 = 0.4F * Mth.sin(f1 * ((float) Math.PI * 2F));
         float f4 = -0.4F * Mth.sin(pSwingProgress * (float) Math.PI);
-        pMatrixStack.translate(f * (f2 + 0.64), f3 - 0.6 + pEquippedProgress * -0.6F, f4 - 0.72);
-        pMatrixStack.mulPose(Vector3f.YP.rotationDegrees(f * 45.0F));
+        stack.translate(f * (f2 + 0.64), f3 - 0.6 + pEquippedProgress * -0.6F, f4 - 0.72);
+        stack.mulPose(Vector3f.YP.rotationDegrees(f * 45.0F));
         float f5 = Mth.sin(pSwingProgress * pSwingProgress * (float) Math.PI);
         float f6 = Mth.sin(f1 * (float) Math.PI);
-        pMatrixStack.mulPose(Vector3f.YP.rotationDegrees(f * f6 * 70.0F));
-        pMatrixStack.mulPose(Vector3f.ZP.rotationDegrees(f * f5 * -20.0F));
+        stack.mulPose(Vector3f.YP.rotationDegrees(f * f6 * 70.0F));
+        stack.mulPose(Vector3f.ZP.rotationDegrees(f * f5 * -20.0F));
         RenderSystem.setShaderTexture(0, player.getSkinTextureLocation());
-        pMatrixStack.translate(f * -1.0F, 3.6F, 3.5D);
-        pMatrixStack.mulPose(Vector3f.ZP.rotationDegrees(f * 120.0F));
-        pMatrixStack.mulPose(Vector3f.XP.rotationDegrees(200.0F));
-        pMatrixStack.mulPose(Vector3f.YP.rotationDegrees(f * -135.0F));
-        pMatrixStack.translate(f * 5.6F, 0.0D, 0.0D);
+        stack.translate(f * -1.0F, 3.6F, 3.5D);
+        stack.mulPose(Vector3f.ZP.rotationDegrees(f * 120.0F));
+        stack.mulPose(Vector3f.XP.rotationDegrees(200.0F));
+        stack.mulPose(Vector3f.YP.rotationDegrees(f * -135.0F));
+        stack.translate(f * 5.6F, 0.0D, 0.0D);
         PlayerRenderer renderer = (PlayerRenderer) Minecraft.getInstance().getEntityRenderDispatcher().getRenderer(player);
         if (flag) {
-            renderer.renderRightHand(pMatrixStack, pBuffer, pCombinedLight, player);
+            renderer.renderRightHand(stack, pBuffer, pCombinedLight, player);
         } else {
-            renderer.renderLeftHand(pMatrixStack, pBuffer, pCombinedLight, player);
+            renderer.renderLeftHand(stack, pBuffer, pCombinedLight, player);
         }
 
     }
@@ -208,5 +230,4 @@ public class FilledXuanPaperRenderEvent {
 
         stack.popPose();
     }
-
 }

@@ -13,7 +13,9 @@ import net.minecraftforge.network.NetworkEvent;
 
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
 import java.util.function.Supplier;
+import java.util.stream.IntStream;
 
 public class DrawC2SPacket extends PacketBase {
     private XYPointInt pos;
@@ -81,6 +83,12 @@ public class DrawC2SPacket extends PacketBase {
             if (pos.x * size + pos.y < (size * size)) {
                 nbt.getByteArray(name)[pos.x * size + pos.y] = color;
                 // Todo: Add brush effect.
+            }
+
+            var bytes = nbt.getByteArray(name);
+            var byteStream = IntStream.range(0, bytes.length).mapToObj(i -> bytes[i]);
+            if (byteStream.allMatch(b -> b == (byte) 0)) {
+                return; // White to remove color.
             }
 
             output.setTag(nbt);
