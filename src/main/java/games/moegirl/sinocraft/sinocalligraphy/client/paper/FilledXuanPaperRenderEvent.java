@@ -10,7 +10,6 @@ import games.moegirl.sinocraft.sinocalligraphy.item.SCAItems;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.*;
-import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.client.renderer.entity.player.PlayerRenderer;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.resources.model.ModelResourceLocation;
@@ -21,12 +20,14 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.HumanoidArm;
 import net.minecraft.world.entity.decoration.ItemFrame;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.RenderHandEvent;
 import net.minecraftforge.client.event.RenderItemInFrameEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+import org.lwjgl.system.CallbackI;
 
 /**
  * Client render event subscriber.
@@ -34,55 +35,41 @@ import net.minecraftforge.fml.common.Mod;
 @Mod.EventBusSubscriber(Dist.CLIENT)
 @OnlyIn(Dist.CLIENT)
 public class FilledXuanPaperRenderEvent {
-    public static final ModelResourceLocation MAP_MODEL_LOCATION = new ModelResourceLocation(new ResourceLocation("minecraft", "item_frame_map"), "back");
-
     @SubscribeEvent
     public static void onRenderInFrame(RenderItemInFrameEvent event) {
-        var stack = event.getPoseStack();
+        // Re-render the frame, in order to prevent asm to net.minecraft.client.renderer.entity.ItemFrameRenderer.render.
         var item = event.getItemStack();
         var frame = event.getItemFrameEntity();
-        var light = event.getPackedLight();
-        var buffers = event.getMultiBufferSource();
-
-        stack.pushPose();
-
         if (item.is(SCAItems.XUAN_PAPER.get())) {
-            if (frame.isInvisible()) {
-                stack.translate(0.0D, 0.0D, 0.5D);
-            } else {
+            var invisible = frame.isInvisible();
+            var stack = event.getPoseStack();
+            var buffers = event.getMultiBufferSource();
+            var light = event.getPackedLight();
+            var mc = Minecraft.getInstance();
+
+            if (!invisible) {
+                stack.mulPose(Vector3f.ZP.rotationDegrees(-45 * frame.getRotation()));
+                stack.translate(0, 0, -0.4375);
+                var dispatcher =  mc.getBlockRenderer();
+                var model = dispatcher.getBlockModelShaper().getModelManager().getModel(getBigFrameModel(frame));
+                var consumer = buffers.getBuffer(Sheets.solidBlockSheet());
+                stack.pushPose();
+                stack.translate(-0.5D, -0.5D, -0.5D);
+                dispatcher.getModelRenderer().renderModel(stack.last(), consumer, null, model,
+                        1.0F, 1.0F, 1.0F, getLightVal(frame, 15728880, light), OverlayTexture.NO_OVERLAY);
+                stack.popPose();
                 stack.translate(0.0D, 0.0D, 0.4375D);
             }
-
-            float scaleRate = 0.0078125F;
-
-            stack.scale(scaleRate, scaleRate, scaleRate);
-            stack.translate(-64.0D, -64.0D, 0.0D);
-            stack.translate(0.0D, 0.0D, -1.0D);
-
-            stack.scale(1/32f, 1/32f, 1/32f);
-            if (item.hasTag() && item.getTag().contains("renderBig") && item.getTag().getBoolean("renderBig")) {
-                stack.scale(32, 32, 32);
-            }
-
-            var rotation = frame.getRotation() % 4 * 2;
-            stack.mulPose(Vector3f.ZP.rotationDegrees((float)rotation * 360.0F / 8.0F));
-            stack.mulPose(Vector3f.ZP.rotationDegrees(180.0F));
-
-
-            int lightValue = getLightVal(frame, 15728850, light);
-            renderXuanPaperOnFrame(stack, lightValue, buffers);
+            stack.mulPose(Vector3f.ZP.rotationDegrees(frame.getRotation() % 4 * 90));
         }
-
-        stack.popPose();
     }
 
-    private static void renderXuanPaperOnFrame(PoseStack stack, int light, MultiBufferSource buffers) {
-        Matrix4f matrix4f = stack.last().pose();
-        VertexConsumer vertexconsumer = buffers.getBuffer(RenderType.text(MAP_MODEL_LOCATION));
-        vertexconsumer.vertex(matrix4f, 0.0F, 128.0F, -0.01F).color(255, 255, 255, 255).uv(0.0F, 1.0F).uv2(light).endVertex();
-        vertexconsumer.vertex(matrix4f, 128.0F, 128.0F, -0.01F).color(255, 255, 255, 255).uv(1.0F, 1.0F).uv2(light).endVertex();
-        vertexconsumer.vertex(matrix4f, 128.0F, 0.0F, -0.01F).color(255, 255, 255, 255).uv(1.0F, 0.0F).uv2(light).endVertex();
-        vertexconsumer.vertex(matrix4f, 0.0F, 0.0F, -0.01F).color(255, 255, 255, 255).uv(0.0F, 0.0F).uv2(light).endVertex();
+    private static ModelResourceLocation getBigFrameModel(ItemFrame frame) {
+        if (frame.getType() == EntityType.GLOW_ITEM_FRAME) {
+            return new ModelResourceLocation(new ResourceLocation("minecraft", "glow_item_frame"), "map=true");
+        } else {
+            return new ModelResourceLocation(new ResourceLocation("minecraft", "item_frame"), "map=true");
+        }
     }
 
     private static int getLightVal(ItemFrame frame, int maxLight, int light) {
@@ -179,7 +166,8 @@ public class FilledXuanPaperRenderEvent {
         renderXuanPaper(stack, buffer, light, event.getItemStack());
     }
 
-    private static void renderPlayerArm(LocalPlayer player, PoseStack stack, MultiBufferSource pBuffer, int pCombinedLight, float pEquippedProgress, float pSwingProgress, HumanoidArm pSide) {
+    private static void renderPlayerArm(LocalPlayer player, PoseStack stack, MultiBufferSource pBuffer, int pCombinedLight,
+                                        float pEquippedProgress, float pSwingProgress, HumanoidArm pSide) {
         boolean flag = pSide != HumanoidArm.LEFT;
         float f = flag ? 1.0F : -1.0F;
         float f1 = Mth.sqrt(pSwingProgress);

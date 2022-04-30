@@ -13,6 +13,7 @@ import net.minecraft.client.model.geom.EntityModelSet;
 import net.minecraft.client.renderer.*;
 import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
+import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.nbt.Tag;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
@@ -43,23 +44,24 @@ public class FilledXuanPaperBlockRenderer extends BlockEntityWithoutLevelRendere
 
     @Override
     public void renderByItem(ItemStack stack, ItemTransforms.TransformType transformType, PoseStack poseStack, MultiBufferSource buffer, int packedLight, int packedOverlay) {
-        renderXuanPaper(stack, transformType, poseStack, buffer);
+        renderXuanPaperAsItem(stack, transformType, poseStack, buffer, packedLight);
     }
 
-    private void renderXuanPaper(ItemStack stack, ItemTransforms.TransformType transformType, PoseStack poseStack, MultiBufferSource buffer) {
+    private void renderXuanPaperAsItem(ItemStack stack, ItemTransforms.TransformType transformType, PoseStack poseStack, MultiBufferSource buffer, int light) {
         RenderSystem.disableDepthTest();
         RenderSystem.disableCull();
         poseStack.pushPose();
         if (transformType == ItemTransforms.TransformType.FIXED) {
             poseStack.mulPose(Vector3f.YP.rotationDegrees(180));
-            poseStack.translate(-1.5, -0.5, -0.5);
+            poseStack.scale(1, -1, 1);
+            poseStack.translate(-1.5, -1.5, -0.5);
             poseStack.scale(0.0625f, 0.0625f, 0.0625f);
             poseStack.translate(0.0D, 0.0D, 0.01D);
         } else {
             poseStack.scale(0.03125f, 0.03125f, 1.0f);
+            poseStack.scale(BrushGuiScreen.CANVAS_SIZE, BrushGuiScreen.CANVAS_SIZE, BrushGuiScreen.CANVAS_SIZE);
         }
-        poseStack.scale(BrushGuiScreen.CANVAS_SIZE, BrushGuiScreen.CANVAS_SIZE, BrushGuiScreen.CANVAS_SIZE);
-        renderXuanPaper(poseStack, buffer, 0, stack);
+        renderXuanPaper(poseStack, buffer, light, stack);
         poseStack.popPose();
     }
 
@@ -79,7 +81,8 @@ public class FilledXuanPaperBlockRenderer extends BlockEntityWithoutLevelRendere
                 BrushGuiScreen.PIXELS_TAG_NAME, DefaultVertexFormat.POSITION_COLOR_LIGHTMAP,
                 VertexFormat.Mode.QUADS, 256, false, true,
                 RenderType.CompositeState.builder()
-                        .setShaderState(new RenderStateShard.ShaderStateShard(GameRenderer::getPositionColorShader))
+                        .setShaderState(new RenderStateShard.ShaderStateShard(GameRenderer::getPositionColorLightmapShader))
+                        .setLightmapState(new RenderStateShard.LightmapStateShard(true))
                         .createCompositeState(false)));
         for (int x1 = 0; x1 < BrushGuiScreen.CANVAS_SIZE; x1++) {
             float x2 = x1 + 1;
