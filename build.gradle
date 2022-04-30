@@ -26,7 +26,7 @@ apply plugin: 'org.parchmentmc.librarian.forgegradle'   // Parchment mappings.
 apply plugin: 'eclipse'
 apply plugin: 'maven-publish'
 
-version = '1.18.2-1.0.1'
+version = '1.18.2-1.0.2'
 group = 'games.moegirl.sinocraft.sinocalligraphy' // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = 'sinocalligraphy'
 

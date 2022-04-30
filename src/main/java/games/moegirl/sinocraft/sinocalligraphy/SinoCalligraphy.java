@@ -12,7 +12,7 @@ import org.apache.logging.log4j.Logger;
 @Mod("sinocalligraphy")
 public class SinoCalligraphy {
     public static final String MODID = "sinocalligraphy";
-    public static final String VERSION = "1.18.2-1.0.1";
+    public static final String VERSION = "1.18.2-1.0.2";
     private static final Logger LOGGER = LogManager.getLogger();
 
     public SinoCalligraphy() {
