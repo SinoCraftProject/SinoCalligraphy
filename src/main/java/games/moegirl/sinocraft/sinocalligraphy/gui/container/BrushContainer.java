@@ -148,7 +148,7 @@ public class BrushContainer implements Container {
     }
 
     public boolean isPaper(ItemStack stack) {
-        return stack.is(SCAItems.EMPTY_XUAN_PAPER.get());
+        return stack.is(SCAItems.XUAN_PAPER.get());
     }
 
     public boolean isInk(ItemStack stack) {

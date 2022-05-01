@@ -1,10 +1,12 @@
 package games.moegirl.sinocraft.sinocalligraphy.data.lang;
 
-import games.moegirl.sinocraft.sinocalligraphy.item.SCACreativeTab;
+import games.moegirl.sinocraft.sinocalligraphy.item.RemovedItem;
 import games.moegirl.sinocraft.sinocalligraphy.item.SCAItems;
 import games.moegirl.sinocraft.sinocore.api.data.I18nProviderBase;
 import net.minecraft.data.DataGenerator;
-import net.minecraftforge.common.data.LanguageProvider;
+import net.minecraft.world.item.Item;
+
+import java.util.function.Supplier;
 
 public class SCALanguageProviderZHCN extends I18nProviderBase {
     public SCALanguageProviderZHCN(DataGenerator gen, String modId, String mainModId, String locale) {
@@ -15,9 +17,16 @@ public class SCALanguageProviderZHCN extends I18nProviderBase {
     protected void addTranslations() {
         addItem(SCAItems.BRUSH, "毛笔");
         addItem(SCAItems.INK, "墨汁");
-        addItem(SCAItems.XUAN_PAPER, "填充过的宣纸");
-        addItem(SCAItems.EMPTY_XUAN_PAPER, "空白的宣纸");
+        addItem(SCAItems.XUAN_PAPER, "宣纸");
 
         add("itemGroup.sino_calligraphy", "华夏丹青");
+
+        add(RemovedItem.HOVER_KEY, "已弃用，右键使用获取新物品");
+        deprecated(SCAItems.XUAN_PAPER_FILLED, "宣纸");
+        deprecated(SCAItems.EMPTY_XUAN_PAPER, "宣纸");
+    }
+
+    private void deprecated(Supplier<? extends Item> item, String name) {
+        addItem(item, name + " (已弃用)");
     }
 }

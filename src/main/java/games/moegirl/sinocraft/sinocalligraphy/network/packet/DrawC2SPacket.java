@@ -11,8 +11,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.network.NetworkDirection;
 import net.minecraftforge.network.NetworkEvent;
 
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.function.Supplier;
 
 public class DrawC2SPacket extends PacketBase {
@@ -61,7 +59,7 @@ public class DrawC2SPacket extends PacketBase {
             ItemStack output = container.getFilled();
 
             if (output.isEmpty()) {
-                output = new ItemStack(SCAItems.XUAN_PAPER.get());
+                output = new ItemStack(SCAItems.XUAN_PAPER_FILLED.get());
             }
 
             var name = BrushGuiScreen.PIXELS_TAG_NAME;

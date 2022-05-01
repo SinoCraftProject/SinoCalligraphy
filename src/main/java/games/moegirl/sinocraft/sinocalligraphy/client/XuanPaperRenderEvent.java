@@ -1,14 +1,15 @@
-package games.moegirl.sinocraft.sinocalligraphy.client.paper;
+package games.moegirl.sinocraft.sinocalligraphy.client;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Vector3f;
-import games.moegirl.sinocraft.sinocalligraphy.gui.BrushGuiScreen;
 import games.moegirl.sinocraft.sinocalligraphy.item.SCAItems;
+import games.moegirl.sinocraft.sinocalligraphy.item.XuanPaperItem;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
-import net.minecraft.client.renderer.*;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.Sheets;
 import net.minecraft.client.renderer.block.BlockRenderDispatcher;
 import net.minecraft.client.renderer.entity.player.PlayerRenderer;
 import net.minecraft.client.renderer.texture.OverlayTexture;
@@ -32,7 +33,8 @@ import net.minecraftforge.fml.common.Mod;
  */
 @Mod.EventBusSubscriber(Dist.CLIENT)
 @OnlyIn(Dist.CLIENT)
-public class FilledXuanPaperRenderEvent {
+public class XuanPaperRenderEvent {
+
     public static final ModelResourceLocation MAP_MODEL_LOCATION = new ModelResourceLocation(new ResourceLocation("minecraft", "item_frame"), "map=true");
 
     @SubscribeEvent
@@ -88,15 +90,15 @@ public class FilledXuanPaperRenderEvent {
         }
     }
 
-    private static void renderXuanPaper(PoseStack pMatrixStack, MultiBufferSource pBuffer, int pCombinedLight, ItemStack pStack) {
+    private static void renderXuanPaperInHand(PoseStack pMatrixStack, MultiBufferSource pBuffer, ItemStack pStack) {
         pMatrixStack.mulPose(Vector3f.YP.rotationDegrees(180.0F));
         pMatrixStack.mulPose(Vector3f.ZP.rotationDegrees(180.0F));
         pMatrixStack.scale(0.38F, 0.38F, 0.38F);
         pMatrixStack.translate(-0.5D, -0.5D, 0.0D);
         pMatrixStack.scale(0.0078125F, 0.0078125F, 0.0078125F);
-        float step = 128f / BrushGuiScreen.CANVAS_SIZE;
+        float step = 128f / XuanPaperItem.SIZE;
         pMatrixStack.scale(step, step, step);
-        FilledXuanPaperBlockRenderer.renderXuanPaper(pMatrixStack, pBuffer, pCombinedLight, pStack);
+        XuanPaperRenderer.renderXuanPaper(pMatrixStack, pBuffer, pStack);
     }
 
     private static void renderOneHandedPaper(LocalPlayer player, RenderHandEvent event, HumanoidArm arm) {
@@ -125,7 +127,7 @@ public class FilledXuanPaperRenderEvent {
         stack.translate(f * f3, f4 - 0.3F * f2, f5);
         stack.mulPose(Vector3f.XP.rotationDegrees(f2 * -45.0F));
         stack.mulPose(Vector3f.YP.rotationDegrees(f * f2 * -30.0F));
-        renderXuanPaper(stack, buffer, light, event.getItemStack());
+        renderXuanPaperInHand(stack, buffer, event.getItemStack());
         stack.popPose();
     }
 
@@ -136,6 +138,7 @@ public class FilledXuanPaperRenderEvent {
         float equippedProgress = event.getEquipProgress();
         float swingProgress = event.getSwingProgress();
 
+        stack.pushPose();
         float f = Mth.sqrt(swingProgress);
         float f1 = -0.2F * Mth.sin(swingProgress * (float) Math.PI);
         float f2 = -0.4F * Mth.sin(f * (float) Math.PI);
@@ -154,7 +157,8 @@ public class FilledXuanPaperRenderEvent {
         float f4 = Mth.sin(f * (float) Math.PI);
         stack.mulPose(Vector3f.XP.rotationDegrees(f4 * 20.0F));
         stack.scale(2.0F, 2.0F, 2.0F);
-        renderXuanPaper(stack, buffer, light, event.getItemStack());
+        renderXuanPaperInHand(stack, buffer, event.getItemStack());
+        stack.popPose();
     }
 
     private static void renderPlayerArm(LocalPlayer player, PoseStack pMatrixStack, MultiBufferSource pBuffer, int pCombinedLight, float pEquippedProgress, float pSwingProgress, HumanoidArm pSide) {
@@ -182,7 +186,6 @@ public class FilledXuanPaperRenderEvent {
         } else {
             renderer.renderLeftHand(pMatrixStack, pBuffer, pCombinedLight, player);
         }
-
     }
 
     private static float calculateMapTilt(float pitch) {

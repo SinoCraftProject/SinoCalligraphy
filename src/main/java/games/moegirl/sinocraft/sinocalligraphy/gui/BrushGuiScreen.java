@@ -5,6 +5,7 @@ import com.mojang.blaze3d.vertex.*;
 import games.moegirl.sinocraft.sinocalligraphy.SinoCalligraphy;
 import games.moegirl.sinocraft.sinocalligraphy.gui.components.HighlightableButton;
 import games.moegirl.sinocraft.sinocalligraphy.gui.menu.BrushMenu;
+import games.moegirl.sinocraft.sinocalligraphy.item.XuanPaperItem;
 import games.moegirl.sinocraft.sinocalligraphy.network.SCANetworks;
 import games.moegirl.sinocraft.sinocalligraphy.network.packet.DrawC2SPacket;
 import games.moegirl.sinocraft.sinocore.utility.render.UVOffsetInt;
@@ -22,8 +23,10 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 
 @OnlyIn(Dist.CLIENT)
 public class BrushGuiScreen extends AbstractContainerScreen<BrushMenu> {
-    public static final int CANVAS_SIZE = 32;
-    public static final String PIXELS_TAG_NAME = "pixels";
+    @Deprecated(forRemoval = true)
+    public static final int CANVAS_SIZE = XuanPaperItem.SIZE;
+    @Deprecated(forRemoval = true)
+    public static final String PIXELS_TAG_NAME = XuanPaperItem.TAG_NAME;
     public static final ResourceLocation GUI = new ResourceLocation(SinoCalligraphy.MODID, "textures/gui/chinese_brush.png");
 
     private Button buttonColorDarker;

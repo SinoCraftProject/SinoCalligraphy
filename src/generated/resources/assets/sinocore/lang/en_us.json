@@ -1,7 +1,9 @@
 {
   "item.sinocore.chinese_brush": "Chinese Brush",
-  "item.sinocore.empty_xuan_paper": "Empty Xuan Paper",
-  "item.sinocore.filled_xuan_paper": "Filled Xuan Paper",
+  "item.sinocore.empty_xuan_paper": "Xuan Paper (Deprecated Item)",
+  "item.sinocore.filled_xuan_paper": "Xuan Paper (Deprecated Item)",
   "item.sinocore.ink": "Ink",
-  "itemGroup.sino_calligraphy": "SinoCalligraphy"
+  "item.sinocore.xuan_paper": "Xuan Paper",
+  "itemGroup.sino_calligraphy": "SinoCalligraphy",
+  "sino_calligraphy.tooltips.deprecated": "Deprecated, please use it to get new item."
 }

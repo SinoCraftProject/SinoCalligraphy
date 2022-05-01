@@ -7,7 +7,6 @@ import games.moegirl.sinocraft.sinocalligraphy.item.SCAItems;
 import games.moegirl.sinocraft.sinocore.gui.slot.AcceptSpecialSlot;
 import games.moegirl.sinocraft.sinocore.gui.slot.TakeOnlySlot;
 import games.moegirl.sinocraft.sinocore.utility.SlotHelper;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -41,7 +40,7 @@ public class BrushMenu extends AbstractContainerMenu {
      * Add slots of the container.
      */
     protected void addSlots() {
-        addSlot(new AcceptSpecialSlot(brushContainer, BrushContainer.EMPTY_XUAN_PAPER_SLOT, 14, 23, SCAItems.EMPTY_XUAN_PAPER.get()));
+        addSlot(new AcceptSpecialSlot(brushContainer, BrushContainer.EMPTY_XUAN_PAPER_SLOT, 14, 23, SCAItems.XUAN_PAPER.get()));
         addSlot(new AcceptSpecialSlot(brushContainer, BrushContainer.INK_SLOT, 14, 66, SCAItemTags.INKS));
         addSlot(new TakeOnlySlot(brushContainer, BrushContainer.FILLED_XUAN_PAPER_SLOT, 14, 203) {
             // qyl27: There are some **** code.

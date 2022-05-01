@@ -1,0 +1,14 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "sinocalligraphy:item/xuan_paper"
+  },
+  "overrides": [
+    {
+      "predicate": {
+        "sinocalligraphy:has_draw": 1.0
+      },
+      "model": "sinocore:item/xuan_paper2"
+    }
+  ]
+}
