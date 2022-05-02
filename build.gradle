@@ -169,8 +169,7 @@ dependencies {
     // http://www.gradle.org/docs/current/userguide/artifact_dependencies_tutorial.html
     // http://www.gradle.org/docs/current/userguide/dependency_management.html
 
-    implementation fg.deobf('com.github.SinoCraftProject:SinoCore:1.1.1')
-//    implementation fg.deobf('com.github.SinoCraftProject:SinoCore:main-SNAPSHOT')
+    implementation fg.deobf('com.github.SinoCraftProject:SinoCore:main-SNAPSHOT')
     //implementation fg.deobf('games.moegirl.sinocraft.sinocore:SinoCore:1.18.2-1.0.1')   // qyl27: For offline debug.
 }
 

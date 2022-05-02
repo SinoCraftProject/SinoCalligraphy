@@ -153,7 +153,7 @@ public class BrushContainer implements Container {
      * @return Remain stack.
      */
     public ItemStack quickAddPaper(ItemStack stack) {
-        // Todo: qyl27: Waiting for test.
+        // qyl27: It runs well, so do not delete this method.jpg.
 
         ItemStack result = stack.copy();
 
@@ -187,7 +187,7 @@ public class BrushContainer implements Container {
      * @return Remain stack.
      */
     public ItemStack quickAddInk(ItemStack stack) {
-        // Todo: qyl27: Waiting for test.
+        // qyl27: It runs well, so do not delete this method.jpg.
 
         ItemStack result = stack.copy();
 

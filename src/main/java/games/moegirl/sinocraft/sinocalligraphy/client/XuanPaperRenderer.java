@@ -33,6 +33,13 @@ public class XuanPaperRenderer extends BlockEntityWithoutLevelRenderer {
             XuanPaperItem.TAG_PIXELS, DefaultVertexFormat.POSITION_COLOR,
             VertexFormat.Mode.QUADS, 256, false, true,
             CompositeState.builder().setShaderState(new RenderStateShard.ShaderStateShard(GameRenderer::getPositionColorShader)).createCompositeState(false));
+    private final static RenderType XUAN_RENDER_WITH_LIGHT = RenderType.create(
+            XuanPaperItem.TAG_PIXELS, DefaultVertexFormat.POSITION_COLOR_LIGHTMAP,
+            VertexFormat.Mode.QUADS, 256, false, true,
+            CompositeState.builder()
+                    .setShaderState(new RenderStateShard.ShaderStateShard(GameRenderer::getPositionColorLightmapShader))
+                    .setLightmapState(new RenderStateShard.LightmapStateShard(true))
+                    .createCompositeState(false));
 
     public static XuanPaperRenderer getInstance() {
         if (INSTANCE == null) {
@@ -52,15 +59,39 @@ public class XuanPaperRenderer extends BlockEntityWithoutLevelRenderer {
         poseStack.pushPose();
         if (transformType == ItemTransforms.TransformType.FIXED) {
             poseStack.mulPose(Vector3f.YP.rotationDegrees(180));
-            poseStack.translate(-1.5, -0.5, -0.5);
+            poseStack.scale(1, -1, 1);
+            poseStack.translate(-1.5, -1.5, -0.5);
             poseStack.scale(0.0625f, 0.0625f, 0.0625f);
             poseStack.translate(0.0D, 0.0D, 0.01D);
         } else {
             poseStack.scale(0.03125f, 0.03125f, 1.0f);
+            poseStack.scale(XuanPaperItem.SIZE, XuanPaperItem.SIZE, XuanPaperItem.SIZE);
         }
-        poseStack.scale(XuanPaperItem.SIZE, XuanPaperItem.SIZE, XuanPaperItem.SIZE);
-        renderXuanPaper(poseStack, buffer, stack);
+        renderXuanPaper(poseStack, buffer, packedLight, stack);
         poseStack.popPose();
+    }
+
+    public static void renderXuanPaper(PoseStack stack, MultiBufferSource buffer, int packedLight, ItemStack item) {
+        VertexConsumer vertex = buffer.getBuffer(XUAN_RENDER_WITH_LIGHT);
+        if (XuanPaperItem.hasDraw(item)) {
+            byte[] pixels = XuanPaperItem.getDraw(item);
+            for (int x1 = 0; x1 < XuanPaperItem.SIZE; x1++) {
+                float x2 = x1 + 1;
+                for (int y1 = 0; y1 < XuanPaperItem.SIZE; y1++) {
+                    float pixel = 0.0625f * (16 - pixels[x1 * XuanPaperItem.SIZE + y1]);
+                    float y2 = y1 + 1;
+                    vertex.vertex(stack.last().pose(), x1, y1, 0).color(pixel, pixel, pixel, 1).uv2(packedLight).endVertex();
+                    vertex.vertex(stack.last().pose(), x1, y2, 0).color(pixel, pixel, pixel, 1).uv2(packedLight).endVertex();
+                    vertex.vertex(stack.last().pose(), x2, y2, 0).color(pixel, pixel, pixel, 1).uv2(packedLight).endVertex();
+                    vertex.vertex(stack.last().pose(), x2, y1, 0).color(pixel, pixel, pixel, 1).uv2(packedLight).endVertex();
+                }
+            }
+        } else {
+            vertex.vertex(stack.last().pose(), 0, 0, 0).color(0, 0, 0, 1).uv2(packedLight).endVertex();
+            vertex.vertex(stack.last().pose(), 0, XuanPaperItem.SIZE, 0).color(0, 0, 0, 1).uv2(packedLight).endVertex();
+            vertex.vertex(stack.last().pose(), XuanPaperItem.SIZE, XuanPaperItem.SIZE, 0).color(0, 0, 0, 1).uv2(packedLight).endVertex();
+            vertex.vertex(stack.last().pose(), XuanPaperItem.SIZE, 0, 0).color(0, 0, 0, 1).uv2(packedLight).endVertex();
+        }
     }
 
     public static void renderXuanPaper(PoseStack stack, MultiBufferSource buffer, ItemStack item) {

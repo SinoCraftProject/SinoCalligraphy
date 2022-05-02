@@ -2,7 +2,6 @@ package games.moegirl.sinocraft.sinocalligraphy.client;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Vector3f;
 import games.moegirl.sinocraft.sinocalligraphy.item.SCAItems;
 import games.moegirl.sinocraft.sinocalligraphy.item.XuanPaperItem;
@@ -10,17 +9,16 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.Sheets;
-import net.minecraft.client.renderer.block.BlockRenderDispatcher;
 import net.minecraft.client.renderer.entity.player.PlayerRenderer;
 import net.minecraft.client.renderer.texture.OverlayTexture;
-import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.HumanoidArm;
+import net.minecraft.world.entity.decoration.ItemFrame;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.RenderHandEvent;
@@ -35,38 +33,45 @@ import net.minecraftforge.fml.common.Mod;
 @OnlyIn(Dist.CLIENT)
 public class XuanPaperRenderEvent {
 
-    public static final ModelResourceLocation MAP_MODEL_LOCATION = new ModelResourceLocation(new ResourceLocation("minecraft", "item_frame"), "map=true");
-
     @SubscribeEvent
     public static void onRenderInFrame(RenderItemInFrameEvent event) {
         var item = event.getItemStack();
         var frame = event.getItemFrameEntity();
+        // Re-render the frame, in order to prevent asm to net.minecraft.client.renderer.entity.ItemFrameRenderer.render.
         if (item.is(SCAItems.XUAN_PAPER_FILLED.get())) {
-            // Re-render the frame, in order to prevent asm to net.minecraft.client.renderer.entity.ItemFrameRenderer.render.
-            var isInvisible = frame.isInvisible();
-            var mc = Minecraft.getInstance();
+            var invisible = frame.isInvisible();
             var stack = event.getPoseStack();
             var buffers = event.getMultiBufferSource();
             var light = event.getPackedLight();
+            var mc = Minecraft.getInstance();
 
-            if (!isInvisible) {
-                var vec = Vec3.ZERO.scale(-45 * frame.getRotation());
-                stack.scale((float) vec.x, (float) vec.y, (float) vec.z);
+            if (!invisible) {
+                stack.mulPose(Vector3f.ZP.rotationDegrees(-45 * frame.getRotation()));
                 stack.translate(0, 0, -0.4375);
-                BlockRenderDispatcher dispatcher = mc.getBlockRenderer();
-                BakedModel model = dispatcher.getBlockModelShaper().getModelManager().getModel(MAP_MODEL_LOCATION);
-                VertexConsumer consumer = buffers.getBuffer(Sheets.solidBlockSheet());
+                var dispatcher =  mc.getBlockRenderer();
+                var model = dispatcher.getBlockModelShaper().getModelManager().getModel(getBigFrameModel(frame));
+                var consumer = buffers.getBuffer(Sheets.solidBlockSheet());
                 stack.pushPose();
                 stack.translate(-0.5D, -0.5D, -0.5D);
                 dispatcher.getModelRenderer().renderModel(stack.last(), consumer, null, model,
-                        1.0F, 1.0F, 1.0F, light, OverlayTexture.NO_OVERLAY);
+                        1.0F, 1.0F, 1.0F, getLightVal(frame, light), OverlayTexture.NO_OVERLAY);
                 stack.popPose();
                 stack.translate(0.0D, 0.0D, 0.4375D);
             }
-
-            var vec2 = Vec3.ZERO.scale(frame.getRotation() % 4 * 90);
-            stack.scale((float) vec2.x, (float) vec2.y, (float) vec2.z);
+            stack.mulPose(Vector3f.ZP.rotationDegrees(frame.getRotation() % 4 * 90));
         }
+    }
+
+    private static ModelResourceLocation getBigFrameModel(ItemFrame frame) {
+        if (frame.getType() == EntityType.GLOW_ITEM_FRAME) {
+            return new ModelResourceLocation(new ResourceLocation("minecraft", "glow_item_frame"), "map=true");
+        } else {
+            return new ModelResourceLocation(new ResourceLocation("minecraft", "item_frame"), "map=true");
+        }
+    }
+
+    private static int getLightVal(ItemFrame frame, int light) {
+        return frame.getType() == EntityType.GLOW_ITEM_FRAME ? 15728880 : light;
     }
 
     /**
