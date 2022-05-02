@@ -2,9 +2,9 @@ package games.moegirl.sinocraft.sinocalligraphy.gui.components;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
-import games.moegirl.sinocraft.sinocalligraphy.client.TextureAtlas;
-import games.moegirl.sinocraft.sinocalligraphy.gui.GLSwitcher;
 import games.moegirl.sinocraft.sinocalligraphy.item.FilledXuanPaper;
+import games.moegirl.sinocraft.sinocore.api.utility.GLSwitcher;
+import games.moegirl.sinocraft.sinocore.api.utility.TextureAtlas;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.narration.NarratedElementType;
 import net.minecraft.client.gui.narration.NarrationElementOutput;

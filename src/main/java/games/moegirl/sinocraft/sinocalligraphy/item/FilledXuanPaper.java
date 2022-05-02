@@ -70,20 +70,12 @@ public class FilledXuanPaper extends Item {
         return new TranslatableComponent(HOVER_AUTHOR_EMPTY);
     }
 
-    public static ItemStack draw(byte[] draw, @Nullable Component author) {
+    public static ItemStack draw(byte[] draw, Component author) {
         ItemStack paper = new ItemStack(SCAItems.FILLED_XUAN_PAPER.get());
         CompoundTag tag = paper.getOrCreateTag();
         tag.putByteArray(TAG_PIXELS, adjustSize(draw));
-
-        if (author != null) {
-            tag.putString(TAG_AUTHOR, Component.Serializer.toJson(author));
-        }
-
+        tag.putString(TAG_AUTHOR, Component.Serializer.toJson(author));
         return paper;
-    }
-
-    public static ItemStack draw(byte[] draw) {
-        return draw(draw, null);
     }
 
     public static boolean isDrawn(ItemStack paper) {

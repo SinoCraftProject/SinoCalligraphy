@@ -3,16 +3,16 @@ package games.moegirl.sinocraft.sinocalligraphy.gui;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import games.moegirl.sinocraft.sinocalligraphy.SinoCalligraphy;
-import games.moegirl.sinocraft.sinocalligraphy.client.TextureAtlas;
-import games.moegirl.sinocraft.sinocalligraphy.gui.components.AnimatedText;
 import games.moegirl.sinocraft.sinocalligraphy.gui.components.Canvas;
-import games.moegirl.sinocraft.sinocalligraphy.gui.components.EnabledButton;
-import games.moegirl.sinocraft.sinocalligraphy.gui.components.HighlightableButton;
 import games.moegirl.sinocraft.sinocalligraphy.gui.menu.BrushMenu;
 import games.moegirl.sinocraft.sinocalligraphy.network.SCANetworks;
 import games.moegirl.sinocraft.sinocalligraphy.network.packet.DrawSaveC2SPacket;
 import games.moegirl.sinocraft.sinocalligraphy.network.packet.SaveFailedS2CPacket;
-import games.moegirl.sinocraft.sinocore.utility.render.XYPointInt;
+import games.moegirl.sinocraft.sinocore.api.client.component.AnimatedText;
+import games.moegirl.sinocraft.sinocore.api.client.component.EnabledButton;
+import games.moegirl.sinocraft.sinocore.api.client.component.HighlightableButton;
+import games.moegirl.sinocraft.sinocore.api.utility.GLSwitcher;
+import games.moegirl.sinocraft.sinocore.api.utility.TextureAtlas;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
@@ -64,10 +64,10 @@ public class BrushGuiScreen extends AbstractContainerScreen<BrushMenu> {
     protected void init() {
         super.init();
 
-        addRenderableWidget(new HighlightableButton(new XYPointInt(leftPos + 16, topPos + 112),
+        addRenderableWidget(new HighlightableButton(new Point(leftPos + 16, topPos + 112),
                 11, 7, new TranslatableComponent("sinocraft.sinocalligraphy.gui.button.darker"),
                 button -> menu.increaseBrushColor(), this, ATLAS, "up"));
-        addRenderableWidget(new HighlightableButton(new XYPointInt(leftPos + 16, topPos + 166),
+        addRenderableWidget(new HighlightableButton(new Point(leftPos + 16, topPos + 166),
                 11, 7, new TranslatableComponent("sinocraft.sinocalligraphy.gui.button.lighter"),
                 button -> menu.decreaseBrushColor(), this, ATLAS, "down"));
         addRenderableWidget(save.get().resize(leftPos + 15, topPos + 184));

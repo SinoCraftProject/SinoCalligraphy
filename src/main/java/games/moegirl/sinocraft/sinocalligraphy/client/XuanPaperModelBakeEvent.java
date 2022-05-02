@@ -2,6 +2,7 @@ package games.moegirl.sinocraft.sinocalligraphy.client;
 
 import games.moegirl.sinocraft.sinocalligraphy.SinoCalligraphy;
 import games.moegirl.sinocraft.sinocalligraphy.item.SCAItems;
+import games.moegirl.sinocraft.sinocore.api.client.ReplacedModel;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;

@@ -31,7 +31,7 @@ import net.minecraftforge.fml.common.Mod;
  */
 @Mod.EventBusSubscriber(Dist.CLIENT)
 @OnlyIn(Dist.CLIENT)
-public class FilledXuanPaperRenderEvent {
+public class XuanPaperRenderEvent {
     @SubscribeEvent
     public static void onRenderInFrame(RenderItemInFrameEvent event) {
         // Re-render the frame, in order to prevent asm to net.minecraft.client.renderer.entity.ItemFrameRenderer.render.
