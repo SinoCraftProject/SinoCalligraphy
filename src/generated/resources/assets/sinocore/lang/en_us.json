@@ -3,5 +3,11 @@
   "item.sinocore.empty_xuan_paper": "Empty Xuan Paper",
   "item.sinocore.filled_xuan_paper": "Filled Xuan Paper",
   "item.sinocore.ink": "Ink",
-  "itemGroup.sino_calligraphy": "SinoCalligraphy"
+  "itemGroup.sino_calligraphy": "SinoCalligraphy",
+  "sinocalligraphy.gui.save": "Save",
+  "sinocalligraphy.gui.save.err.ink": "No enough ink",
+  "sinocalligraphy.gui.save.err.paper": "No enough paper",
+  "sinocalligraphy.gui.save.succeed": "Save Succeed!",
+  "sinocalligraphy.hover.author.empty": "Unknown",
+  "sinocalligraphy.hover.author.prefix": "Author: "
 }

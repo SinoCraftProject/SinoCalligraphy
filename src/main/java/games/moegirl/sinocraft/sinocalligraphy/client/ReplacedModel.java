@@ -1,4 +1,4 @@
-package games.moegirl.sinocraft.sinocalligraphy.client.paper;
+package games.moegirl.sinocraft.sinocalligraphy.client;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.renderer.block.model.BakedQuad;
@@ -8,18 +8,17 @@ import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
+import org.apache.commons.lang3.ArrayUtils;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
-public class FilledXuanPaperBakedModel implements BakedModel {
-    private final BakedModel existingModel;
-
-    public FilledXuanPaperBakedModel(BakedModel existingModel) {
-        this.existingModel = existingModel;
-    }
+@OnlyIn(Dist.CLIENT)
+public record ReplacedModel(BakedModel model, ItemTransforms.TransformType... replaced) implements BakedModel {
 
     @Override
     public List<BakedQuad> getQuads(@Nullable BlockState pState, @Nullable Direction pSide, Random pRand) {
@@ -33,12 +32,12 @@ public class FilledXuanPaperBakedModel implements BakedModel {
 
     @Override
     public boolean isGui3d() {
-        return existingModel.isGui3d();
+        return model.isGui3d();
     }
 
     @Override
     public boolean usesBlockLight() {
-        return existingModel.usesBlockLight();
+        return model.usesBlockLight();
     }
 
     @Override
@@ -48,22 +47,19 @@ public class FilledXuanPaperBakedModel implements BakedModel {
 
     @Override
     public TextureAtlasSprite getParticleIcon() {
-        return existingModel.getParticleIcon();
+        return model.getParticleIcon();
     }
 
     @Override
     public ItemOverrides getOverrides() {
-        return existingModel.getOverrides();
+        return model.getOverrides();
     }
 
     @Override
     public BakedModel handlePerspective(ItemTransforms.TransformType cameraTransformType, PoseStack poseStack) {
-        if (cameraTransformType == ItemTransforms.TransformType.FIRST_PERSON_RIGHT_HAND
-                || cameraTransformType == ItemTransforms.TransformType.FIRST_PERSON_LEFT_HAND
-                || cameraTransformType == ItemTransforms.TransformType.FIXED) {
+        if (ArrayUtils.contains(replaced, cameraTransformType)) {
             return this;
         }
-
-        return this.existingModel.handlePerspective(cameraTransformType, poseStack);
+        return this.model.handlePerspective(cameraTransformType, poseStack);
     }
 }
