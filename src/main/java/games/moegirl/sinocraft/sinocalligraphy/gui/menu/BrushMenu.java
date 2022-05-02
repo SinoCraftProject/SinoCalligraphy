@@ -4,10 +4,12 @@ import games.moegirl.sinocraft.sinocalligraphy.data.SCAItemTags;
 import games.moegirl.sinocraft.sinocalligraphy.gui.SCAMenus;
 import games.moegirl.sinocraft.sinocalligraphy.gui.container.BrushContainer;
 import games.moegirl.sinocraft.sinocalligraphy.item.SCAItems;
+import games.moegirl.sinocraft.sinocalligraphy.network.packet.SaveFailedS2CPacket;
 import games.moegirl.sinocraft.sinocore.gui.slot.AcceptSpecialSlot;
 import games.moegirl.sinocraft.sinocore.gui.slot.TakeOnlySlot;
 import games.moegirl.sinocraft.sinocore.utility.SlotHelper;
-import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.util.Mth;
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -26,6 +28,7 @@ public class BrushMenu extends AbstractContainerMenu {
     protected int brushColor = 0;
 
     protected ItemStack brush;
+    public GuiController gui;
 
     public BrushMenu(int id, Inventory playerInv, ItemStack brushIn) {
         super(SCAMenus.BRUSH.get(), id);
@@ -33,16 +36,33 @@ public class BrushMenu extends AbstractContainerMenu {
         brushContainer = new BrushContainer(this);
 
         brush = brushIn;
+        gui = new GuiController();
 
         addSlots();
+    }
+
+    public BrushMenu(int id, Inventory playerInv, FriendlyByteBuf data) {
+        this(id, playerInv, data.readItem());
     }
 
     /**
      * Add slots of the container.
      */
     protected void addSlots() {
-        addSlot(new AcceptSpecialSlot(brushContainer, BrushContainer.EMPTY_XUAN_PAPER_SLOT, 14, 23, SCAItems.EMPTY_XUAN_PAPER.get()));
-        addSlot(new AcceptSpecialSlot(brushContainer, BrushContainer.INK_SLOT, 14, 66, SCAItemTags.INKS));
+        addSlot(new AcceptSpecialSlot(brushContainer, BrushContainer.XUAN_PAPER_SLOT, 14, 23, SCAItems.EMPTY_XUAN_PAPER.get()) {
+            @Override
+            public void setChanged() {
+                super.setChanged();
+                gui.setCanvasEnable(brushContainer.canPaint());
+            }
+        });
+        addSlot(new AcceptSpecialSlot(brushContainer, BrushContainer.INK_SLOT, 14, 66, SCAItemTags.INKS) {
+            @Override
+            public void setChanged() {
+                super.setChanged();
+                gui.setCanvasEnable(brushContainer.canPaint());
+            }
+        });
         addSlot(new TakeOnlySlot(brushContainer, BrushContainer.FILLED_XUAN_PAPER_SLOT, 14, 203) {
             // qyl27: There are some **** code.
             @Override
@@ -57,10 +77,9 @@ public class BrushMenu extends AbstractContainerMenu {
             @Override
             public void onTake(Player pPlayer, ItemStack pStack) {
                 brushContainer.paint();
-
                 brush.setDamageValue(brush.getDamageValue() + 1);
-
                 super.onTake(pPlayer, pStack);
+                gui.clearCanvas();
             }
         });
 
@@ -124,7 +143,7 @@ public class BrushMenu extends AbstractContainerMenu {
     }
 
     public ItemStack getPaper() {
-        return brushContainer.getItem(BrushContainer.EMPTY_XUAN_PAPER_SLOT);
+        return brushContainer.getItem(BrushContainer.XUAN_PAPER_SLOT);
     }
 
     public ItemStack getInk() {
@@ -141,5 +160,21 @@ public class BrushMenu extends AbstractContainerMenu {
 
     public int getColor() {
         return brushColor;
+    }
+
+    public void setColor(int color) {
+        brushColor = Mth.clamp(color, 0, 15);
+    }
+
+    public static class GuiController {
+
+        public void handleSaveResult(SaveFailedS2CPacket.Reason code) {
+        }
+
+        public void setCanvasEnable(boolean isEnable) {
+        }
+
+        public void clearCanvas() {
+        }
     }
 }

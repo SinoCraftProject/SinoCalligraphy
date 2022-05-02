@@ -4,6 +4,7 @@ import games.moegirl.sinocraft.sinocalligraphy.item.SCAItems;
 import games.moegirl.sinocraft.sinocore.api.data.ItemModelProviderBase;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.world.item.Item;
+import net.minecraftforge.client.model.generators.ItemModelBuilder;
 import net.minecraftforge.common.data.ExistingFileHelper;
 import net.minecraftforge.registries.DeferredRegister;
 
@@ -19,4 +20,11 @@ public class SCAItemModelProvider extends ItemModelProviderBase {
 
         super.registerModels();
     }
+
+    // Fixme: qyl27: SC breaks here.
+//    @Override
+//    protected ItemModelBuilder generatedItem(String name) {
+//        return this.withExistingParent("sinocore:" + name, GENERATED).texture("layer0", this.modLoc("item/" + name));
+//    }
 }
+
