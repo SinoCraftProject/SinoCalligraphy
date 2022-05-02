@@ -15,6 +15,7 @@ public class SCAItemModelProvider extends ItemModelProviderBase {
     @Override
     protected void registerModels() {
         skipItems(SCAItems.BRUSH.get());
+        skipItems(SCAItems.INK.get());
 
         super.registerModels();
     }
