@@ -1,5 +1,6 @@
 package games.moegirl.sinocraft.sinocalligraphy.data;
 
+import games.moegirl.sinocraft.sinocalligraphy.item.SCAItemTags;
 import games.moegirl.sinocraft.sinocalligraphy.item.SCAItems;
 import games.moegirl.sinocraft.sinocore.api.data.BlockTagsProviderBase;
 import games.moegirl.sinocraft.sinocore.api.data.ItemTagsProviderBase;

@@ -1,12 +1,10 @@
 package games.moegirl.sinocraft.sinocalligraphy.data.lang;
 
-import games.moegirl.sinocraft.sinocalligraphy.item.RemovedItem;
+import games.moegirl.sinocraft.sinocalligraphy.gui.BrushGuiScreen;
 import games.moegirl.sinocraft.sinocalligraphy.item.SCAItems;
+import games.moegirl.sinocraft.sinocalligraphy.item.XuanPaperItem;
 import games.moegirl.sinocraft.sinocore.api.data.I18nProviderBase;
 import net.minecraft.data.DataGenerator;
-import net.minecraft.world.item.Item;
-
-import java.util.function.Supplier;
 
 public class SCALanguageProviderENUS extends I18nProviderBase {
     public SCALanguageProviderENUS(DataGenerator gen, String modId, String mainModId, String locale) {
@@ -17,16 +15,18 @@ public class SCALanguageProviderENUS extends I18nProviderBase {
     protected void addTranslations() {
         addItem(SCAItems.BRUSH, "Chinese Brush");
         addItem(SCAItems.INK, "Ink");
-        addItem(SCAItems.XUAN_PAPER, "Xuan Paper");
+        addItem(SCAItems.EMPTY_XUAN_PAPER, "Xuan Paper");
+        addItem(SCAItems.XUAN_PAPER_FILLED, "Xuan Paper (Filled)");
 
         add("itemGroup.sino_calligraphy", "SinoCalligraphy");
 
-        add(RemovedItem.HOVER_KEY, "Deprecated, please use it to get new item.");
-        deprecated(SCAItems.XUAN_PAPER_FILLED, "Xuan Paper");
-        deprecated(SCAItems.EMPTY_XUAN_PAPER, "Xuan Paper");
-    }
+        add(XuanPaperItem.HOVER_AUTHOR, "Author: ");
+        add(XuanPaperItem.HOVER_AUTHOR_ERROR, "%s");
+        add(XuanPaperItem.HOVER_AUTHOR_EMPTY, "Unknown");
 
-    private void deprecated(Supplier<? extends Item> item, String name) {
-        addItem(item, name + " (Deprecated Item)");
+        add(BrushGuiScreen.KEY_SAVE, "Save");
+        add(BrushGuiScreen.KEY_SAVE_SUCCEED, "Save Succeed!");
+        add(BrushGuiScreen.KEY_SAVE_ERR_INK, "No enough ink");
+        add(BrushGuiScreen.KEY_SAVE_ERR_PAPER, "No enough paper");
     }
 }

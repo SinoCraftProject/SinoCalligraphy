@@ -1,4 +1,4 @@
-package games.moegirl.sinocraft.sinocalligraphy.data;
+package games.moegirl.sinocraft.sinocalligraphy.item;
 
 import games.moegirl.sinocraft.sinocore.SinoCore;
 import net.minecraft.resources.ResourceLocation;

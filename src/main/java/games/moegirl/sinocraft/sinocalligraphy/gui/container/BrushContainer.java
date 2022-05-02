@@ -19,7 +19,7 @@ import net.minecraft.world.item.ItemStack;
 public class BrushContainer implements Container {
     public static final int CONTAINER_SIZE = 3;
 
-    public static final int EMPTY_XUAN_PAPER_SLOT = 0;
+    public static final int XUAN_PAPER_SLOT = 0;
     public static final int INK_SLOT = 1;
     public static final int FILLED_XUAN_PAPER_SLOT = 2;
 
@@ -85,7 +85,7 @@ public class BrushContainer implements Container {
     }
 
     protected ItemStack getPaper() {
-        return getItem(EMPTY_XUAN_PAPER_SLOT);
+        return getItem(XUAN_PAPER_SLOT);
     }
 
     protected ItemStack getInk() {
@@ -102,18 +102,13 @@ public class BrushContainer implements Container {
 
     // qyl27: We trust the stack in slot is Xuan Paper.
     public void usePaper() {
-        removeItem(EMPTY_XUAN_PAPER_SLOT, 1);
+        removeItem(XUAN_PAPER_SLOT, 1);
         setChanged();
     }
 
     // qyl27: We trust the stack in slot is ink.
     public void useInk() {
         removeItem(INK_SLOT, 1);
-        setChanged();
-    }
-
-    protected void fillPaper() {
-        // Todo: qyl27.
         setChanged();
     }
 
@@ -126,11 +121,8 @@ public class BrushContainer implements Container {
         if (canPaint()) {
             usePaper();
             useInk();
-            fillPaper();
         }
-
         setChanged();
-
         return removeItemNoUpdate(FILLED_XUAN_PAPER_SLOT);
     }
 
@@ -148,7 +140,7 @@ public class BrushContainer implements Container {
     }
 
     public boolean isPaper(ItemStack stack) {
-        return stack.is(SCAItems.XUAN_PAPER.get());
+        return stack.is(SCAItems.EMPTY_XUAN_PAPER.get());
     }
 
     public boolean isInk(ItemStack stack) {
@@ -169,7 +161,7 @@ public class BrushContainer implements Container {
             if (getPaper().is(stack.getItem())) {
                 if (getPaper().isStackable()) {
                     if (getPaper().isEmpty()) {
-                        setItem(EMPTY_XUAN_PAPER_SLOT, stack);
+                        setItem(XUAN_PAPER_SLOT, stack);
                         result = ItemStack.EMPTY;
                     } else {
                         var sumCount = getPaper().getCount() + stack.getCount();

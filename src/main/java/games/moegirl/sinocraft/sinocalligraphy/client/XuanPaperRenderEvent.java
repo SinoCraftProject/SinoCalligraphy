@@ -41,7 +41,7 @@ public class XuanPaperRenderEvent {
     public static void onRenderInFrame(RenderItemInFrameEvent event) {
         var item = event.getItemStack();
         var frame = event.getItemFrameEntity();
-        if (item.is(SCAItems.XUAN_PAPER.get())) {
+        if (item.is(SCAItems.XUAN_PAPER_FILLED.get())) {
             // Re-render the frame, in order to prevent asm to net.minecraft.client.renderer.entity.ItemFrameRenderer.render.
             var isInvisible = frame.isInvisible();
             var mc = Minecraft.getInstance();
@@ -77,7 +77,7 @@ public class XuanPaperRenderEvent {
         Minecraft mc = Minecraft.getInstance();
         LocalPlayer player = mc.player;
         ItemStack stack = event.getItemStack();
-        if (stack.is(SCAItems.XUAN_PAPER.get()) && player != null && !player.isScoping()) {
+        if (stack.is(SCAItems.XUAN_PAPER_FILLED.get()) && player != null && !player.isScoping()) {
             InteractionHand hand = event.getHand();
             switch (hand) {
                 case MAIN_HAND -> {

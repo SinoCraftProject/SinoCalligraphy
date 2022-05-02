@@ -24,7 +24,7 @@ public class XuanPaperModelBakeEvent {
     @SubscribeEvent
     public static void onModelBake(ModelBakeEvent event) {
         var registry = event.getModelRegistry();
-        ModelResourceLocation location = new ModelResourceLocation(SCAItems.XUAN_PAPER.getId(), "inventory");
+        ModelResourceLocation location = new ModelResourceLocation(SCAItems.XUAN_PAPER_FILLED.getId(), "inventory");
         BakedModel model = Objects.requireNonNull(registry.get(location), location + " has no existing model");
         registry.put(location, new ReplacedModel(model, FIRST_PERSON_RIGHT_HAND, FIRST_PERSON_LEFT_HAND, FIXED));
     }

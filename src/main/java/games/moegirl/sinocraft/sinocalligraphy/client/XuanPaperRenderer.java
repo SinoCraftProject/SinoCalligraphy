@@ -6,7 +6,6 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.blaze3d.vertex.VertexFormat;
 import com.mojang.math.Vector3f;
-import games.moegirl.sinocraft.sinocalligraphy.item.SCAItems;
 import games.moegirl.sinocraft.sinocalligraphy.item.XuanPaperItem;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.geom.EntityModelSet;
@@ -31,7 +30,7 @@ public class XuanPaperRenderer extends BlockEntityWithoutLevelRenderer {
     @Nullable
     private static XuanPaperRenderer INSTANCE;
     private final static RenderType XUAN_RENDER = RenderType.create(
-            XuanPaperItem.TAG_NAME, DefaultVertexFormat.POSITION_COLOR,
+            XuanPaperItem.TAG_PIXELS, DefaultVertexFormat.POSITION_COLOR,
             VertexFormat.Mode.QUADS, 256, false, true,
             CompositeState.builder().setShaderState(new RenderStateShard.ShaderStateShard(GameRenderer::getPositionColorShader)).createCompositeState(false));
 
@@ -65,22 +64,25 @@ public class XuanPaperRenderer extends BlockEntityWithoutLevelRenderer {
     }
 
     public static void renderXuanPaper(PoseStack stack, MultiBufferSource buffer, ItemStack item) {
-        if (!item.is(SCAItems.XUAN_PAPER.get())) {
-            return;
-        }
-        byte[] pixels = XuanPaperItem.getDraw(item);
-
         VertexConsumer vertex = buffer.getBuffer(XUAN_RENDER);
-        for (int x1 = 0; x1 < XuanPaperItem.SIZE; x1++) {
-            float x2 = x1 + 1;
-            for (int y1 = 0; y1 < XuanPaperItem.SIZE; y1++) {
-                float pixel = 0.0625f * (16 - pixels[x1 * XuanPaperItem.SIZE + y1]);
-                float y2 = y1 + 1;
-                vertex.vertex(stack.last().pose(), x1, y1, 0).color(pixel, pixel, pixel, 1).endVertex();
-                vertex.vertex(stack.last().pose(), x1, y2, 0).color(pixel, pixel, pixel, 1).endVertex();
-                vertex.vertex(stack.last().pose(), x2, y2, 0).color(pixel, pixel, pixel, 1).endVertex();
-                vertex.vertex(stack.last().pose(), x2, y1, 0).color(pixel, pixel, pixel, 1).endVertex();
+        if (XuanPaperItem.hasDraw(item)) {
+            byte[] pixels = XuanPaperItem.getDraw(item);
+            for (int x1 = 0; x1 < XuanPaperItem.SIZE; x1++) {
+                float x2 = x1 + 1;
+                for (int y1 = 0; y1 < XuanPaperItem.SIZE; y1++) {
+                    float pixel = 0.0625f * (16 - pixels[x1 * XuanPaperItem.SIZE + y1]);
+                    float y2 = y1 + 1;
+                    vertex.vertex(stack.last().pose(), x1, y1, 0).color(pixel, pixel, pixel, 1).endVertex();
+                    vertex.vertex(stack.last().pose(), x1, y2, 0).color(pixel, pixel, pixel, 1).endVertex();
+                    vertex.vertex(stack.last().pose(), x2, y2, 0).color(pixel, pixel, pixel, 1).endVertex();
+                    vertex.vertex(stack.last().pose(), x2, y1, 0).color(pixel, pixel, pixel, 1).endVertex();
+                }
             }
+        } else {
+            vertex.vertex(stack.last().pose(), 0, 0, 0).color(0, 0, 0, 1).endVertex();
+            vertex.vertex(stack.last().pose(), 0, XuanPaperItem.SIZE, 0).color(0, 0, 0, 1).endVertex();
+            vertex.vertex(stack.last().pose(), XuanPaperItem.SIZE, XuanPaperItem.SIZE, 0).color(0, 0, 0, 1).endVertex();
+            vertex.vertex(stack.last().pose(), XuanPaperItem.SIZE, 0, 0).color(0, 0, 0, 1).endVertex();
         }
     }
 }

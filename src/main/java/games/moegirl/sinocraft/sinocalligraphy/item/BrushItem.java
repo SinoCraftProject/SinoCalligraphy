@@ -24,9 +24,9 @@ public class BrushItem extends Item {
         var item = player.getItemInHand(hand);
 
         // qyl27: The argument "limitedTag" is true in general.
+        // lq2007: writeItem equals to writeItemStack(item, true)
         if (!level.isClientSide) {
-            NetworkHooks.openGui((ServerPlayer) player, new BrushMenuProvider(item),
-                    (FriendlyByteBuf byteBuf) -> byteBuf.writeItemStack(item, true));
+            NetworkHooks.openGui((ServerPlayer) player, new BrushMenuProvider(item), (FriendlyByteBuf byteBuf) -> byteBuf.writeItem(item));
         }
 
         return InteractionResultHolder.success(item);

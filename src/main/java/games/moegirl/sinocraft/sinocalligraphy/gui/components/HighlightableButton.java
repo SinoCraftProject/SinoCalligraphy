@@ -2,14 +2,12 @@ package games.moegirl.sinocraft.sinocalligraphy.gui.components;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
-import games.moegirl.sinocraft.sinocore.utility.render.UVOffsetInt;
+import games.moegirl.sinocraft.sinocalligraphy.client.TextureAtlas;
+import games.moegirl.sinocraft.sinocalligraphy.gui.GLSwitcher;
 import games.moegirl.sinocraft.sinocore.utility.render.XYPointInt;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -17,27 +15,20 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 public class HighlightableButton extends Button {
     protected Screen gui;
 
-    protected ResourceLocation guiTexture;
-
-    protected UVOffsetInt uncover;
-    protected UVOffsetInt hovered;
+    protected final TextureAtlas atlas;
+    private final String name;
 
     public HighlightableButton(XYPointInt location, int width, int height,
-                               Component message, OnPress onPress, Screen screen, ResourceLocation texture,
-                               UVOffsetInt uncoverUV, UVOffsetInt hoveredUV) {
+                               Component message, OnPress onPress, Screen screen, TextureAtlas atlas, String name) {
         super(location.x, location.y, width, height, message, onPress);
-
         gui = screen;
-
-        guiTexture = texture;
-        uncover = uncoverUV;
-        hovered = hoveredUV;
+        this.atlas = atlas;
+        this.name = name;
     }
 
     @Override
     public void renderToolTip(PoseStack stack, int mouseX, int mouseY) {
         super.renderToolTip(stack, mouseX, mouseY);
-
         gui.renderTooltip(stack, getMessage(), mouseX, mouseY);
     }
 
@@ -48,17 +39,8 @@ public class HighlightableButton extends Button {
                 && mouseX < x + width
                 && mouseY < y + height;
 
-        RenderSystem.setShader(GameRenderer::getPositionTexShader);
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, alpha);
-        RenderSystem.setShaderTexture(0, guiTexture);
-        RenderSystem.enableBlend();
-        RenderSystem.defaultBlendFunc();
-        RenderSystem.enableDepthTest();
-
-        if (!isHovered) {
-            blit(stack, x, y, uncover.u, uncover.v, width, height);
-        } else {
-            blit(stack, x, y, hovered.u, hovered.v, width, height);
-        }
+        String n = isHovered ? name + "_light" : name + "_dark";
+        atlas.blit(stack, n, x, y, width, height, GLSwitcher.blend().enable(), GLSwitcher.depth().enable());
     }
 }
