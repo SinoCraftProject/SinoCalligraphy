@@ -6,11 +6,11 @@
   },
   "overrides": [
     {
-      "predicate": { "fan": 1 },
+      "predicate": { "custon_model_data": 1 },
       "model": "sinocalligraphy:item/fan"
     },
     {
-      "predicate": { "fan": 2 },
+      "predicate": { "custon_model_data": 2 },
       "model": "sinocalligraphy:item/fan_folded"
     }
   ]
