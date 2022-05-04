@@ -23,7 +23,7 @@ import org.jetbrains.annotations.NotNull;
 public class BrushMenu extends AbstractContainerMenu {
     protected BrushContainer brushContainer;
     protected Inventory playerInventory;
-    protected int brushColor = 0;
+    protected int brushColor = 8;
 
     protected ItemStack brush;
 

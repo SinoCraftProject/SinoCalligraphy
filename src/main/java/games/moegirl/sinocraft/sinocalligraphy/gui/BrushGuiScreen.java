@@ -124,6 +124,12 @@ public class BrushGuiScreen extends AbstractContainerScreen<BrushMenu> {
         return mouseDraw(mouseX, mouseY);
     }
 
+    @Override
+    public boolean mouseReleased(double mouseX,double mouseY,int buttonCode){
+        super.mouseReleased(mouseX,mouseY,buttonCode);
+        return mouseDraw(mouseX,mouseY);
+    }
+
     protected boolean mouseDraw(double mouseX, double mouseY) {
         if ((mouseX >= leftPos + 61)
                 && (mouseX < leftPos + 61 + 128)
@@ -139,8 +145,8 @@ public class BrushGuiScreen extends AbstractContainerScreen<BrushMenu> {
 
             // Fixme: qyl27: Unexpected more pixel in next pixel.
             //               Maybe here is Math.floor?
-            int x = (int) (Math.round(mouseX) - leftPos - 61) / cellSize;
-            int y = (int) (Math.round(mouseY) - topPos - 14) / cellSize;
+            int x = (int) (Math.floor(mouseX) - leftPos - 61) / cellSize;
+            int y = (int) (Math.floor(mouseY) - topPos - 14) / cellSize;
 
             SCANetworks.INSTANCE.sendToServer(new DrawC2SPacket(new XYPointInt(x, y), (byte) menu.getColor()));
 
