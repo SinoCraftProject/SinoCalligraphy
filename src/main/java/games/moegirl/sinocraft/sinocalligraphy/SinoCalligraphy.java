@@ -3,6 +3,7 @@ package games.moegirl.sinocraft.sinocalligraphy;
 import games.moegirl.sinocraft.sinocalligraphy.gui.SCAMenus;
 import games.moegirl.sinocraft.sinocalligraphy.item.SCAItems;
 import games.moegirl.sinocraft.sinocalligraphy.network.SCANetworks;
+import games.moegirl.sinocraft.sinocalligraphy.utils.draw.DrawVersions;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
@@ -23,5 +24,7 @@ public class SinoCalligraphy {
         SCAItems.register(bus);
         SCAMenus.register(bus);
         SCANetworks.setup();
+
+        DrawVersions.addAll();
     }
 }

@@ -1,25 +1,25 @@
 package games.moegirl.sinocraft.sinocalligraphy.gui.components;
 
-import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
-import games.moegirl.sinocraft.sinocalligraphy.item.FilledXuanPaper;
+import games.moegirl.sinocraft.sinocalligraphy.utils.draw.BrushV2Holder;
+import games.moegirl.sinocraft.sinocalligraphy.utils.draw.DrawHolder;
+import games.moegirl.sinocraft.sinocalligraphy.utils.draw.SmallBlackWhiteBrushHolder;
 import games.moegirl.sinocraft.sinocore.api.utility.GLSwitcher;
 import games.moegirl.sinocraft.sinocore.api.utility.TextureAtlas;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.narration.NarratedElementType;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
-import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.util.Mth;
+import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
-import java.awt.*;
+import javax.annotation.Nullable;
 import java.util.function.IntConsumer;
 import java.util.function.IntSupplier;
 
-import static games.moegirl.sinocraft.sinocalligraphy.item.FilledXuanPaper.PIXEL_COUNT;
-import static games.moegirl.sinocraft.sinocalligraphy.item.FilledXuanPaper.SIZE;
+import static games.moegirl.sinocraft.sinocalligraphy.utils.draw.SmallBlackWhiteBrushHolder.SIZE;
 
 @OnlyIn(Dist.CLIENT)
 public class Canvas extends AbstractWidget {
@@ -30,7 +30,7 @@ public class Canvas extends AbstractWidget {
     private final IntConsumer setColor;
     private int canvasSize;
 
-    private byte[] draw = new byte[PIXEL_COUNT];
+    private final SmallBlackWhiteBrushHolder draw = new BrushV2Holder();
     private boolean isEnable = false;
     private boolean isDrag = false;
     private int dragButton = 0;
@@ -84,27 +84,7 @@ public class Canvas extends AbstractWidget {
     @Override
     public void render(PoseStack pPoseStack, int pMouseX, int pMouseY, float pPartialTick) {
         atlas.blit(pPoseStack, name, x, y, width, height);
-
-        RenderSystem.setShader(GameRenderer::getPositionColorShader);
-        RenderSystem.disableTexture();
-        int unit = canvasSize / SIZE;
-        int x1 = x + 1;
-        int x2 = x1 + unit;
-        for (int i = 0; i < SIZE; i++) {
-            int y1 = y + 1;
-            int y2 = y1 + unit;
-            for (int j = 0; j < SIZE; j++) {
-                float color = 0.0625f * (16 - draw[i * SIZE + j]); // qyl27: For calculating grayscale.
-                RenderSystem.setShaderColor(color, color, color, 1.0f);
-                fill(pPoseStack, x1, y1, x2, y2, new Color(color, color, color, 1).getRGB());
-                y1 = y2;
-                y2 += unit;
-            }
-            x1 = x2;
-            x2 += unit;
-        }
-        RenderSystem.enableTexture();
-
+        draw.render().draw(pPoseStack, x + 1, y + 1, canvasSize, canvasSize);
         if (!isEnable()) {
             atlas.blit(pPoseStack, name + "_disable", x, y, width, height, GLSwitcher.blend().enable());
         }
@@ -119,13 +99,13 @@ public class Canvas extends AbstractWidget {
 
     private void drawPoint(double pMouseX, double pMouseY) {
         if (isEnable) {
-            draw[getPointIndex(pMouseX, pMouseY)] = (byte) getColor.getAsInt();
+            draw.getDraw()[getPointIndex(pMouseX, pMouseY)] = (byte) getColor.getAsInt();
         }
     }
 
     private void takeColor(double pMouseX, double pMouseY) {
         if (isEnable) {
-            setColor.accept(draw[getPointIndex(pMouseX, pMouseY)]);
+            setColor.accept(draw.getDraw()[getPointIndex(pMouseX, pMouseY)]);
         }
     }
 
@@ -137,12 +117,16 @@ public class Canvas extends AbstractWidget {
         this.isEnable = isEnable;
     }
 
-    public byte[] getDraw() {
+    public DrawHolder getDraw(@Nullable Player author) {
+        draw.setAuthor(author);
         return draw;
     }
 
-    public void setDraw(byte[] draw) {
-        this.draw = FilledXuanPaper.adjustSize(draw);
+    public boolean setDraw(DrawHolder holder) {
+        if (holder instanceof SmallBlackWhiteBrushHolder) {
+            DrawHolder.copyDirectly(holder, draw);
+        }
+        return false;
     }
 
     public Canvas resize(int x, int y, int size) {
@@ -155,7 +139,7 @@ public class Canvas extends AbstractWidget {
     }
 
     public void clear() {
-        setDraw(new byte[PIXEL_COUNT]);
+        draw.clear();
     }
 
     @Override

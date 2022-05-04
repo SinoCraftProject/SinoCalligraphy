@@ -4,7 +4,8 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Vector3f;
 import games.moegirl.sinocraft.sinocalligraphy.item.SCAItems;
-import games.moegirl.sinocraft.sinocalligraphy.item.FilledXuanPaper;
+import games.moegirl.sinocraft.sinocalligraphy.utils.draw.DrawHolder;
+import games.moegirl.sinocraft.sinocalligraphy.utils.draw.SmallBlackWhiteBrushHolder;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -49,7 +50,7 @@ public class XuanPaperRenderEvent {
             if (!invisible) {
                 stack.mulPose(Vector3f.ZP.rotationDegrees(-45 * frame.getRotation()));
                 stack.translate(0, 0, -0.4375);
-                var dispatcher =  mc.getBlockRenderer();
+                var dispatcher = mc.getBlockRenderer();
                 var model = dispatcher.getBlockModelShaper().getModelManager().getModel(getBigFrameModel(frame));
                 var consumer = buffers.getBuffer(Sheets.solidBlockSheet());
                 stack.pushPose();
@@ -84,30 +85,31 @@ public class XuanPaperRenderEvent {
         LocalPlayer player = mc.player;
         ItemStack stack = event.getItemStack();
         if (stack.is(SCAItems.FILLED_XUAN_PAPER.get()) && player != null && !player.isScoping()) {
+            DrawHolder holder = DrawHolder.parse(stack.getTag()).orElse(DrawHolder.DEFAULT_FOR_XUAN_PAPER);
             InteractionHand hand = event.getHand();
             switch (hand) {
                 case MAIN_HAND -> {
-                    if (player.getOffhandItem().isEmpty()) renderTwoHandedPaper(player, event);
-                    else renderOneHandedPaper(player, event, player.getMainArm());
+                    if (player.getOffhandItem().isEmpty()) renderTwoHandedPaper(player, event, holder);
+                    else renderOneHandedPaper(player, event, player.getMainArm(), holder);
                 }
-                case OFF_HAND -> renderOneHandedPaper(player, event, player.getMainArm().getOpposite());
+                case OFF_HAND -> renderOneHandedPaper(player, event, player.getMainArm().getOpposite(), holder);
             }
             event.setCanceled(true);
         }
     }
 
-    private static void renderXuanPaperInHand(PoseStack stack, MultiBufferSource buffer, ItemStack item) {
+    private static void renderXuanPaperInHand(PoseStack stack, MultiBufferSource buffer, DrawHolder draw) {
         stack.mulPose(Vector3f.YP.rotationDegrees(180.0F));
         stack.mulPose(Vector3f.ZP.rotationDegrees(180.0F));
         stack.scale(0.38F, 0.38F, 0.38F);
         stack.translate(-0.5D, -0.5D, 0.0D);
         stack.scale(0.0078125F, 0.0078125F, 0.0078125F);
-        float step = 128f / FilledXuanPaper.SIZE;
+        float step = 128f / SmallBlackWhiteBrushHolder.SIZE;
         stack.scale(step, step, step);
-        XuanPaperRenderer.renderXuanPaper(stack, buffer, item);
+        draw.render().draw(stack, buffer);
     }
 
-    private static void renderOneHandedPaper(LocalPlayer player, RenderHandEvent event, HumanoidArm arm) {
+    private static void renderOneHandedPaper(LocalPlayer player, RenderHandEvent event, HumanoidArm arm, DrawHolder draw) {
         PoseStack stack = event.getPoseStack();
         MultiBufferSource buffer = event.getMultiBufferSource();
         int light = event.getPackedLight();
@@ -133,11 +135,11 @@ public class XuanPaperRenderEvent {
         stack.translate(f * f3, f4 - 0.3F * f2, f5);
         stack.mulPose(Vector3f.XP.rotationDegrees(f2 * -45.0F));
         stack.mulPose(Vector3f.YP.rotationDegrees(f * f2 * -30.0F));
-        renderXuanPaperInHand(stack, buffer, event.getItemStack());
+        renderXuanPaperInHand(stack, buffer, draw);
         stack.popPose();
     }
 
-    private static void renderTwoHandedPaper(LocalPlayer player, RenderHandEvent event) {
+    private static void renderTwoHandedPaper(LocalPlayer player, RenderHandEvent event, DrawHolder draw) {
         PoseStack stack = event.getPoseStack();
         MultiBufferSource buffer = event.getMultiBufferSource();
         int light = event.getPackedLight();
@@ -163,7 +165,7 @@ public class XuanPaperRenderEvent {
         float f4 = Mth.sin(f * (float) Math.PI);
         stack.mulPose(Vector3f.XP.rotationDegrees(f4 * 20.0F));
         stack.scale(2.0F, 2.0F, 2.0F);
-        renderXuanPaperInHand(stack, buffer, event.getItemStack());
+        renderXuanPaperInHand(stack, buffer, draw);
         stack.popPose();
     }
 

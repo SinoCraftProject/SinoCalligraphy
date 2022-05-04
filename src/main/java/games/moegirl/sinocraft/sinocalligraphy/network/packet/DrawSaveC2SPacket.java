@@ -1,8 +1,9 @@
 package games.moegirl.sinocraft.sinocalligraphy.network.packet;
 
 import games.moegirl.sinocraft.sinocalligraphy.gui.menu.BrushMenu;
-import games.moegirl.sinocraft.sinocalligraphy.item.FilledXuanPaper;
+import games.moegirl.sinocraft.sinocalligraphy.item.SCAItems;
 import games.moegirl.sinocraft.sinocalligraphy.network.SCANetworks;
+import games.moegirl.sinocraft.sinocalligraphy.utils.draw.DrawHolder;
 import games.moegirl.sinocraft.sinocore.network.PacketBase;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
@@ -14,20 +15,19 @@ import java.util.function.Supplier;
 
 public class DrawSaveC2SPacket extends PacketBase {
 
-    private final byte[] draw;
+    private final DrawHolder holder;
 
-    public DrawSaveC2SPacket(byte[] draw) {
-        this.draw = draw;
+    public DrawSaveC2SPacket(DrawHolder holder) {
+        this.holder = holder;
     }
 
     public DrawSaveC2SPacket(FriendlyByteBuf buf) {
-        super(buf);
-        this.draw = buf.readByteArray();
+        holder = DrawHolder.parse(buf).orElseThrow();
     }
 
     @Override
     public void serialize(FriendlyByteBuf friendlyByteBuf) {
-        friendlyByteBuf.writeByteArray(draw);
+        holder.version().write(holder, friendlyByteBuf);
     }
 
     @Override
@@ -46,7 +46,8 @@ public class DrawSaveC2SPacket extends PacketBase {
                 }
                 Player player = net.minecraft.client.Minecraft.getInstance().player;
                 assert player != null;
-                ItemStack filled = FilledXuanPaper.draw(draw, player.getDisplayName());
+                ItemStack filled = new ItemStack(SCAItems.FILLED_XUAN_PAPER.get());
+                holder.version().write(holder, filled.getOrCreateTag());
                 container.setFilled(filled);
                 SCANetworks.send(new SaveSuccessS2CClient(), sender);
             } else {
