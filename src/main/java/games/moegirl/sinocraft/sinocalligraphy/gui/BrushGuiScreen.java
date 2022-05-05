@@ -92,8 +92,8 @@ public class BrushGuiScreen extends AbstractContainerScreen<BrushMenu> {
                 button -> menu.decreaseBrushColor(), this, ATLAS, "down"));
         addRenderableWidget(save.get().resize(leftPos + 15, topPos + 184));
         addRenderableWidget(canvas.get().resize(leftPos + 58, topPos + 11, 130));
-        addRenderableWidget(copy.get().resize(leftPos + 15, topPos + 168));
-        addRenderableWidget(output.get().resize(leftPos + 15, topPos + 152));
+        addRenderableWidget(copy.get().resize(leftPos + 190, topPos + 127));
+        addRenderableWidget(output.get().resize(leftPos + 190, topPos + 111));
         addRenderableOnly(text.get().resize(leftPos + 94, topPos + 121, font));
     }
 
@@ -170,7 +170,7 @@ public class BrushGuiScreen extends AbstractContainerScreen<BrushMenu> {
         DrawHolder holder = canvas.get().getDraw(Minecraft.getInstance().player);
         BufferedImage image = holder.version().toImage(holder);
         try {
-            File name = new File(Minecraft.getInstance().gameDirectory, SinoCalligraphy.MODID + "/output/" + System.currentTimeMillis() + ".png");
+            File name = new File(Minecraft.getInstance().gameDirectory, SinoCalligraphy.MODID + "/draws/" + System.currentTimeMillis() + ".png");
             name.getParentFile().mkdirs();
             if (!name.exists()) {
                 name.createNewFile();

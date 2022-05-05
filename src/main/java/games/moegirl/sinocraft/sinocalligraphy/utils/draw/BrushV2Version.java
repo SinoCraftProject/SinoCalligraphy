@@ -17,7 +17,7 @@ import java.awt.image.BufferedImage;
 public class BrushV2Version extends DrawVersion {
 
     public static final String TAG_HOLDER = SinoCalligraphy.MODID + ".brush";
-    public static final String TAG_VERSION = "pixels";
+    public static final String TAG_VERSION = "version";
     public static final String TAG_PIXELS = "pixels";
     public static final String TAG_AUTHOR = "author";
     public static final String SYMBOL = "DBRUSH2";
