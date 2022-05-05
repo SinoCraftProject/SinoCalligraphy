@@ -5,6 +5,7 @@ import com.mojang.blaze3d.vertex.*;
 import games.moegirl.sinocraft.sinocalligraphy.SinoCalligraphy;
 import games.moegirl.sinocraft.sinocalligraphy.gui.components.HighlightableButton;
 import games.moegirl.sinocraft.sinocalligraphy.gui.menu.BrushMenu;
+import games.moegirl.sinocraft.sinocalligraphy.gui.not_validated_file.BrushB;
 import games.moegirl.sinocraft.sinocalligraphy.network.SCANetworks;
 import games.moegirl.sinocraft.sinocalligraphy.network.packet.DrawC2SPacket;
 import games.moegirl.sinocraft.sinocore.utility.render.UVOffsetInt;
@@ -15,10 +16,13 @@ import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.Tuple;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+
+import java.util.ArrayList;
 
 @OnlyIn(Dist.CLIENT)
 public class BrushGuiScreen extends AbstractContainerScreen<BrushMenu> {
@@ -26,6 +30,9 @@ public class BrushGuiScreen extends AbstractContainerScreen<BrushMenu> {
     public static final String PIXELS_TAG_NAME = "pixels";
     public static final ResourceLocation GUI = new ResourceLocation(SinoCalligraphy.MODID, "textures/gui/chinese_brush.png");
 
+    /** yao_z */
+    private BrushB brush;
+    
     private Button buttonColorDarker;
     private Button buttonColorLighter;
 
@@ -43,6 +50,8 @@ public class BrushGuiScreen extends AbstractContainerScreen<BrushMenu> {
     @Override
     protected void init() {
         super.init();
+        
+        brush=new BrushB();
 
         buttonColorDarker = new HighlightableButton(new XYPointInt(leftPos + 16, topPos + 112),
                 11, 7, new TranslatableComponent("sinocraft.sinocalligraphy.gui.button.darker"),
@@ -124,10 +133,17 @@ public class BrushGuiScreen extends AbstractContainerScreen<BrushMenu> {
         return mouseDraw(mouseX, mouseY);
     }
 
+    /**
+     * 此处使用BrushB笔刷进行处理，以测试新笔刷的
+     * @param mouseX
+     * @param mouseY
+     * @param buttonCode
+     * @return
+     */
     @Override
     public boolean mouseReleased(double mouseX,double mouseY,int buttonCode){
         super.mouseReleased(mouseX,mouseY,buttonCode);
-        return mouseDraw(mouseX,mouseY);
+        return mouseDraw(brush.onBrushLeft(new Tuple<>(mouseX,mouseY),0.125D));
     }
 
     protected boolean mouseDraw(double mouseX, double mouseY) {
@@ -150,6 +166,42 @@ public class BrushGuiScreen extends AbstractContainerScreen<BrushMenu> {
 
             SCANetworks.INSTANCE.sendToServer(new DrawC2SPacket(new XYPointInt(x, y), (byte) menu.getColor()));
 
+            return true;
+        }
+        return false;
+    }
+    /**
+     * 向服务端发送一次笔画结果（有没有本地服务端这个说法？）
+     * @version
+     * @param pixelMap 待叠加的像素
+     * <br>[Tuple(Tuple(位置)，颜色)]
+     * @return
+     */
+    protected boolean mouseDraw(ArrayList<Tuple<Tuple<Integer, Integer>, Integer>> pixelMap) {
+        /** 遍历pixelMap */
+        for (Tuple<Tuple<Integer, Integer>, Integer> pixel :
+                pixelMap) {
+
+            if ((pixel.getA().getA() >= leftPos + 61)
+                    && (pixel.getA().getA() < leftPos + 61 + 128)
+                    && (pixel.getA().getB() >= topPos + 14)
+                    && (pixel.getA().getB() < topPos + 14 + 128)) {
+                ItemStack paper = menu.getPaper();
+
+                if (paper == ItemStack.EMPTY) {
+                    return false;
+                }
+
+                int cellSize = 128 / CANVAS_SIZE;
+
+                // Fixme: qyl27: Unexpected more pixel in next pixel.
+                //               Maybe here is Math.floor?
+                int x = (int) (Math.floor(pixel.getA().getA()) - leftPos - 61) / cellSize;
+                int y = (int) (Math.floor(pixel.getA().getB()) - topPos - 14) / cellSize;
+
+                SCANetworks.INSTANCE.sendToServer(new DrawC2SPacket(new XYPointInt(x, y), (byte) menu.getColor()));
+
+            }
             return true;
         }
         return false;

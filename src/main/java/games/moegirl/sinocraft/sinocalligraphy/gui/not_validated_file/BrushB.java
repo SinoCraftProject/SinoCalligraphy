@@ -1,5 +1,6 @@
 package games.moegirl.sinocraft.sinocalligraphy.gui.not_validated_file;
 
+import net.minecraft.util.FastColor;
 import net.minecraft.util.Tuple;
 import org.checkerframework.checker.units.qual.A;
 

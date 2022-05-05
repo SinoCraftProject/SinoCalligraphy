@@ -13,8 +13,8 @@ import net.minecraft.client.model.geom.EntityModelSet;
 import net.minecraft.client.renderer.*;
 import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
-import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.nbt.Tag;
+import net.minecraft.util.FastColor;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -77,6 +77,7 @@ public class FilledXuanPaperBlockRenderer extends BlockEntityWithoutLevelRendere
             Arrays.fill(pixels, (byte) 0);
         }
 
+
         VertexConsumer vertex = buffer.getBuffer(RenderType.create(
                 BrushGuiScreen.PIXELS_TAG_NAME, DefaultVertexFormat.POSITION_COLOR_LIGHTMAP,
                 VertexFormat.Mode.QUADS, 256, false, true,
@@ -87,12 +88,19 @@ public class FilledXuanPaperBlockRenderer extends BlockEntityWithoutLevelRendere
         for (int x1 = 0; x1 < BrushGuiScreen.CANVAS_SIZE; x1++) {
             float x2 = x1 + 1;
             for (int y1 = 0; y1 < BrushGuiScreen.CANVAS_SIZE; y1++) {
+                /** range 0-1 */
                 float pixel = 0.0625f * (16 - pixels[x1 * BrushGuiScreen.CANVAS_SIZE + y1]);
-                float y2 = y1 + 1;
-                vertex.vertex(stack.last().pose(), x1, y1, 0).color(pixel, pixel, pixel, 1).uv2(combinedLight).endVertex();
-                vertex.vertex(stack.last().pose(), x1, y2, 0).color(pixel, pixel, pixel, 1).uv2(combinedLight).endVertex();
-                vertex.vertex(stack.last().pose(), x2, y2, 0).color(pixel, pixel, pixel, 1).uv2(combinedLight).endVertex();
-                vertex.vertex(stack.last().pose(), x2, y1, 0).color(pixel, pixel, pixel, 1).uv2(combinedLight).endVertex();
+                float y2 = -~y1;
+                // #f9f4dc
+                float r=pixel*0.947306f;
+                float g=pixel*0.90466f;
+                float b=pixel*0.715694f;
+                //int grayScale=(int)pixel*255;
+                //int pColor = FastColor.ARGB32.multiply(FastColor.ARGB32.color(255,249,244,220), FastColor.ARGB32.color(255,grayScale,grayScale,grayScale));
+                vertex.vertex(stack.last().pose(), x1, y1, 0).color(r,g,b, 1).uv2(combinedLight).endVertex();
+                vertex.vertex(stack.last().pose(), x1, y2, 0).color(r,g,b, 1).uv2(combinedLight).endVertex();
+                vertex.vertex(stack.last().pose(), x2, y2, 0).color(r,g,b, 1).uv2(combinedLight).endVertex();
+                vertex.vertex(stack.last().pose(), x2, y1, 0).color(r,g,b, 1).uv2(combinedLight).endVertex();
             }
         }
     }
