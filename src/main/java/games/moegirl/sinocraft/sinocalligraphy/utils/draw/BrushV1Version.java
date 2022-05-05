@@ -9,6 +9,9 @@ import net.minecraft.network.FriendlyByteBuf;
 
 import java.awt.image.BufferedImage;
 
+/**
+ * Origin draw version for brush
+ */
 public class BrushV1Version extends DrawVersion {
 
     public static final String TAG_PIXELS = "pixels";
@@ -36,11 +39,11 @@ public class BrushV1Version extends DrawVersion {
 
     @Override
     public DrawHolder read(String value) {
-        BrushV1Holder holder = new BrushV1Holder();
+        DrawHolder holder = newDraw();
         try {
             String json = value.substring(SYMBOL.length());
             JsonObject object = JsonParser.parseString(json).getAsJsonObject();
-            byte[] draw = holder.getDraw();
+            byte[] draw = (byte[]) holder.data();
             if (object.has(TAG_PIXELS)) {
                 JsonArray array = object.getAsJsonArray(TAG_PIXELS);
                 int len = Math.min(draw.length, array.size());
@@ -59,7 +62,7 @@ public class BrushV1Version extends DrawVersion {
 
     @Override
     public DrawHolder read(FriendlyByteBuf value) {
-        BrushV1Holder holder = new BrushV1Holder();
+        DrawHolder holder = newDraw();
         value.readUtf();
         boolean hasAuthor = value.readBoolean();
         holder.setDraw(value.readByteArray());
@@ -69,66 +72,71 @@ public class BrushV1Version extends DrawVersion {
 
     @Override
     public DrawHolder read(CompoundTag value) {
-        BrushV1Holder holder = new BrushV1Holder();
+        DrawHolder holder = newDraw();
         read(value, TAG_PIXELS, TAG_AUTHOR, holder);
         return holder;
     }
 
     @Override
-    public void write(DrawHolder draw, StringBuffer sb) {
+    public void write(DrawHolder holder, StringBuffer sb) {
         sb.append(SYMBOL);
         JsonObject json = new JsonObject();
         JsonArray pixels = new JsonArray();
-        for (byte b : (byte[]) draw.draw()) {
+        for (byte b : (byte[]) holder.data()) {
             pixels.add(b);
         }
         json.add(TAG_PIXELS, pixels);
-        if (draw.hasAuthor()) {
-            json.addProperty(TAG_AUTHOR, draw.authorAsString());
+        if (holder.hasAuthor()) {
+            json.addProperty(TAG_AUTHOR, holder.authorAsString());
         }
         sb.append(json);
     }
 
     @Override
-    public void write(DrawHolder draw, FriendlyByteBuf buf) {
+    public void write(DrawHolder holder, FriendlyByteBuf buf) {
         buf.writeUtf(SYMBOL);
-        buf.writeBoolean(draw.hasAuthor());
-        buf.writeByteArray((byte[]) draw.draw());
-        if (draw.hasAuthor()) {
-            buf.writeUtf(draw.authorAsString());
+        buf.writeBoolean(holder.hasAuthor());
+        buf.writeByteArray((byte[]) holder.data());
+        if (holder.hasAuthor()) {
+            buf.writeUtf(holder.authorAsString());
         }
     }
 
     @Override
-    public void write(DrawHolder draw, CompoundTag tag) {
-        tag.putByteArray(TAG_PIXELS, (byte[]) draw.draw());
-        if (draw.hasAuthor()) {
-            tag.putString(TAG_AUTHOR, draw.authorAsString());
+    public void write(DrawHolder holder, CompoundTag tag) {
+        tag.putByteArray(TAG_PIXELS, (byte[]) holder.data());
+        if (holder.hasAuthor()) {
+            tag.putString(TAG_AUTHOR, holder.authorAsString());
         }
     }
 
     @Override
-    public BufferedImage toImage(DrawHolder draw) {
-        return ((SmallBlackWhiteBrushHolder) draw).toImage();
+    public BufferedImage toImage(DrawHolder holder) {
+        return ((SmallBlackWhiteBrushHolder) holder).toImage();
     }
 
     @Override
-    protected DrawHolder updateFromPrev(DrawHolder draw) {
-        return draw;
+    public DrawHolder newDraw() {
+        return new SmallBlackWhiteBrushHolder(this);
+    }
+
+    @Override
+    protected DrawHolder updateFrom(DrawHolder oldHolder) {
+        return oldHolder;
     }
 
     public static boolean match(FriendlyByteBuf value, String symbol) {
         int index = value.readerIndex();
+        boolean match = false;
         try {
             if (symbol.equals(value.readUtf())) {
-                value.readerIndex(index);
-                return true;
+                match = true;
             }
-        } catch (Exception e) {
+        } catch (Exception ignored) {
+        } finally {
             value.readerIndex(index);
-            return false;
         }
-        return false;
+        return match;
     }
 
     public static void read(CompoundTag tag, String pixels, String author, DrawHolder holder) {

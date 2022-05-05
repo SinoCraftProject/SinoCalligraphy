@@ -8,6 +8,12 @@ import net.minecraft.network.FriendlyByteBuf;
 
 import java.awt.image.BufferedImage;
 
+/**
+ * <ul>
+ *     <li>Use a CompoundTag save the draw instead of two Tag key, add version to nbt</li>
+ *     <li>Use shorter string value instead of json data</li>
+ * </ul>
+ */
 public class BrushV2Version extends DrawVersion {
 
     public static final String TAG_HOLDER = SinoCalligraphy.MODID + ".brush";
@@ -37,9 +43,9 @@ public class BrushV2Version extends DrawVersion {
 
     @Override
     public DrawHolder read(String value) {
-        BrushV2Holder holder = new BrushV2Holder();
+        DrawHolder holder = newDraw();
         value = value.substring(SYMBOL.length());
-        byte[] draw = holder.getDraw();
+        byte[] draw = (byte[]) holder.data();
         for (int i = 0; i < draw.length; i++) {
             draw[i] = Byte.parseByte(Character.toString(value.charAt(i)), 36);
         }
@@ -51,7 +57,7 @@ public class BrushV2Version extends DrawVersion {
 
     @Override
     public DrawHolder read(FriendlyByteBuf value) {
-        BrushV2Holder holder = new BrushV2Holder();
+        DrawHolder holder = newDraw();
         value.readUtf();
         boolean hasAuthor = value.readBoolean();
         holder.setDraw(value.readByteArray());
@@ -61,7 +67,7 @@ public class BrushV2Version extends DrawVersion {
 
     @Override
     public DrawHolder read(CompoundTag value) {
-        BrushV2Holder holder = new BrushV2Holder();
+        DrawHolder holder = newDraw();
         if (value.contains(TAG_HOLDER, Tag.TAG_COMPOUND)) {
             BrushV1Version.read(value.getCompound(TAG_HOLDER), TAG_PIXELS, TAG_AUTHOR, holder);
         }
@@ -69,47 +75,46 @@ public class BrushV2Version extends DrawVersion {
     }
 
     @Override
-    public void write(DrawHolder draw, StringBuffer sb) {
+    public void write(DrawHolder holder, StringBuffer sb) {
         sb.append(SYMBOL);
-        for (byte b : (byte[]) draw.draw()) {
+        for (byte b : (byte[]) holder.data()) {
+            Verify.verify(b >= 0, "Value must not negative");
             Verify.verify(b < 36, "Value must less than 36");
             sb.append(Integer.toString(b, 36));
         }
-        if (draw.hasAuthor()) {
-            sb.append(draw.authorAsString());
+        if (holder.hasAuthor()) {
+            sb.append(holder.authorAsString());
         }
     }
 
     @Override
-    public void write(DrawHolder draw, FriendlyByteBuf buf) {
+    public void write(DrawHolder holder, FriendlyByteBuf buf) {
         buf.writeUtf(SYMBOL);
-        buf.writeBoolean(draw.hasAuthor());
-        buf.writeByteArray((byte[]) draw.draw());
-        if (draw.hasAuthor()) {
-            buf.writeUtf(draw.authorAsString());
+        buf.writeBoolean(holder.hasAuthor());
+        buf.writeByteArray((byte[]) holder.data());
+        if (holder.hasAuthor()) {
+            buf.writeUtf(holder.authorAsString());
         }
     }
 
     @Override
-    public void write(DrawHolder draw, CompoundTag tag) {
+    public void write(DrawHolder holder, CompoundTag tag) {
         CompoundTag t = new CompoundTag();
         t.putString(TAG_VERSION, SYMBOL);
-        t.putByteArray(TAG_PIXELS, (byte[]) draw.draw());
-        if (draw.hasAuthor()) {
-            t.putString(TAG_AUTHOR, draw.authorAsString());
+        t.putByteArray(TAG_PIXELS, (byte[]) holder.data());
+        if (holder.hasAuthor()) {
+            t.putString(TAG_AUTHOR, holder.authorAsString());
         }
         tag.put(TAG_HOLDER, t);
     }
 
     @Override
-    public BufferedImage toImage(DrawHolder draw) {
-        return ((SmallBlackWhiteBrushHolder) draw).toImage();
+    public BufferedImage toImage(DrawHolder holder) {
+        return ((SmallBlackWhiteBrushHolder) holder).toImage();
     }
 
     @Override
-    protected DrawHolder updateFromPrev(DrawHolder draw) {
-        BrushV2Holder holder = new BrushV2Holder();
-        DrawHolder.copyDirectly(draw, holder);
-        return holder;
+    public DrawHolder newDraw() {
+        return new SmallBlackWhiteBrushHolder(this);
     }
 }

@@ -5,6 +5,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Vector3f;
 import games.moegirl.sinocraft.sinocalligraphy.item.SCAItems;
 import games.moegirl.sinocraft.sinocalligraphy.utils.draw.DrawHolder;
+import games.moegirl.sinocraft.sinocalligraphy.utils.draw.DrawVersions;
 import games.moegirl.sinocraft.sinocalligraphy.utils.draw.SmallBlackWhiteBrushHolder;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
@@ -85,7 +86,7 @@ public class XuanPaperRenderEvent {
         LocalPlayer player = mc.player;
         ItemStack stack = event.getItemStack();
         if (stack.is(SCAItems.FILLED_XUAN_PAPER.get()) && player != null && !player.isScoping()) {
-            DrawHolder holder = DrawHolder.parse(stack.getTag()).orElse(DrawHolder.DEFAULT_FOR_XUAN_PAPER);
+            DrawHolder holder = DrawHolder.parse(stack.getTag()).orElseGet(DrawVersions.LATEST_BRUSH_VERSION::newDraw);
             InteractionHand hand = event.getHand();
             switch (hand) {
                 case MAIN_HAND -> {

@@ -30,9 +30,6 @@ import net.minecraftforge.common.util.Lazy;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
-import java.awt.datatransfer.DataFlavor;
-import java.awt.datatransfer.StringSelection;
-import java.awt.datatransfer.Transferable;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -155,23 +152,18 @@ public class BrushGuiScreen extends AbstractContainerScreen<BrushMenu> {
         DrawHolder holder = canvas.get().getDraw(Minecraft.getInstance().player);
         StringBuffer sb = new StringBuffer();
         holder.version().write(holder, sb);
-        Toolkit.getDefaultToolkit().getSystemClipboard().setContents(new StringSelection(sb.toString()), null);
+        Minecraft.getInstance().keyboardHandler.setClipboard(sb.toString());
         text.get().begin(Duration.ofSeconds(1), 0, Color.GREEN, new TranslatableComponent(KEY_COPIED));
     }
 
     private void pasteDraw(NormalButton button) {
-        Transferable contents = Toolkit.getDefaultToolkit().getSystemClipboard().getContents(null);
-        DataFlavor flavor = DataFlavor.stringFlavor;
-        try {
-            String data = (String) contents.getTransferData(flavor);
-            DrawHolder.parse(data)
-                    .map(DrawVersion::update)
-                    .filter(h -> canvas.get().setDraw(h))
-                    .ifPresentOrElse(c -> {},
-                            () -> text.get().begin(Duration.ofSeconds(1), 0, Color.RED, new TranslatableComponent(KEY_PASTE_FAILED, data)));
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+        String data = Minecraft.getInstance().keyboardHandler.getClipboard();
+        DrawHolder.parse(data)
+                .map(DrawVersion::update)
+                .filter(h -> canvas.get().setDraw(h))
+                .ifPresentOrElse(c -> {
+                        },
+                        () -> text.get().begin(Duration.ofSeconds(1), 0, Color.RED, new TranslatableComponent(KEY_PASTE_FAILED, data)));
     }
 
     private void saveToFile(NormalButton button) {

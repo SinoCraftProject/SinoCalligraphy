@@ -1,8 +1,8 @@
 package games.moegirl.sinocraft.sinocalligraphy.gui.components;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import games.moegirl.sinocraft.sinocalligraphy.utils.draw.BrushV2Holder;
 import games.moegirl.sinocraft.sinocalligraphy.utils.draw.DrawHolder;
+import games.moegirl.sinocraft.sinocalligraphy.utils.draw.DrawVersions;
 import games.moegirl.sinocraft.sinocalligraphy.utils.draw.SmallBlackWhiteBrushHolder;
 import games.moegirl.sinocraft.sinocore.api.utility.GLSwitcher;
 import games.moegirl.sinocraft.sinocore.api.utility.TextureAtlas;
@@ -30,7 +30,7 @@ public class Canvas extends AbstractWidget {
     private final IntConsumer setColor;
     private int canvasSize;
 
-    private final SmallBlackWhiteBrushHolder draw = new BrushV2Holder();
+    private DrawHolder draw = DrawVersions.LATEST_BRUSH_VERSION.newDraw();
     private boolean isEnable = false;
     private boolean isDrag = false;
     private int dragButton = 0;
@@ -99,13 +99,13 @@ public class Canvas extends AbstractWidget {
 
     private void drawPoint(double pMouseX, double pMouseY) {
         if (isEnable) {
-            draw.getDraw()[getPointIndex(pMouseX, pMouseY)] = (byte) getColor.getAsInt();
+            ((byte[]) draw.data())[getPointIndex(pMouseX, pMouseY)] = (byte) getColor.getAsInt();
         }
     }
 
     private void takeColor(double pMouseX, double pMouseY) {
         if (isEnable) {
-            setColor.accept(draw.getDraw()[getPointIndex(pMouseX, pMouseY)]);
+            setColor.accept(((byte[]) draw.data())[getPointIndex(pMouseX, pMouseY)]);
         }
     }
 
@@ -139,7 +139,7 @@ public class Canvas extends AbstractWidget {
     }
 
     public void clear() {
-        draw.clear();
+        draw = draw.version().newDraw();
     }
 
     @Override

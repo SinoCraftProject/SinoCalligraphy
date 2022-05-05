@@ -45,7 +45,6 @@ public class NormalButton extends Button {
                     return true;
                 }
             }
-            return false;
         }
         return super.mouseClicked(pMouseX, pMouseY, pButton);
     }

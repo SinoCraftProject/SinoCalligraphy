@@ -22,11 +22,11 @@ public class SmallBlockWhiteBrushRender implements DrawRender {
 
     private final SmallBlackWhiteBrushHolder holder;
     private final static RenderType RENDER = RenderType.create(
-            BrushV1Version.TAG_PIXELS, DefaultVertexFormat.POSITION_COLOR,
+            "black_white_draw", DefaultVertexFormat.POSITION_COLOR,
             VertexFormat.Mode.QUADS, 256, false, true,
             RenderType.CompositeState.builder().setShaderState(new RenderStateShard.ShaderStateShard(GameRenderer::getPositionColorShader)).createCompositeState(false));
     private final static RenderType RENDER_WITH_LIGHT = RenderType.create(
-            BrushV1Version.TAG_PIXELS, DefaultVertexFormat.POSITION_COLOR_LIGHTMAP,
+            "black_white_draw_with_light", DefaultVertexFormat.POSITION_COLOR_LIGHTMAP,
             VertexFormat.Mode.QUADS, 256, false, true,
             RenderType.CompositeState.builder()
                     .setShaderState(new RenderStateShard.ShaderStateShard(GameRenderer::getPositionColorLightmapShader))
@@ -68,13 +68,13 @@ public class SmallBlockWhiteBrushRender implements DrawRender {
     }
 
     @Override
-    public void draw(PoseStack stack, MultiBufferSource buffer, int packedLight) {
-        VertexConsumer vertex = buffer.getBuffer(RENDER_WITH_LIGHT);
+    public void draw(PoseStack pPoseStack, MultiBufferSource pBuffer, int pPackedLight) {
+        VertexConsumer vertex = pBuffer.getBuffer(RENDER_WITH_LIGHT);
         if (holder.isEmpty()) {
-            vertex.vertex(stack.last().pose(), 0, 0, 0).color(0, 0, 0, 1).uv2(packedLight).endVertex();
-            vertex.vertex(stack.last().pose(), 0, SIZE, 0).color(0, 0, 0, 1).uv2(packedLight).endVertex();
-            vertex.vertex(stack.last().pose(), SIZE, SIZE, 0).color(0, 0, 0, 1).uv2(packedLight).endVertex();
-            vertex.vertex(stack.last().pose(), SIZE, 0, 0).color(0, 0, 0, 1).uv2(packedLight).endVertex();
+            vertex.vertex(pPoseStack.last().pose(), 0, 0, 0).color(1f, 1f, 1f, 1).uv2(pPackedLight).endVertex();
+            vertex.vertex(pPoseStack.last().pose(), 0, SIZE, 0).color(1f, 1f, 1f, 1).uv2(pPackedLight).endVertex();
+            vertex.vertex(pPoseStack.last().pose(), SIZE, SIZE, 0).color(1f, 1f, 1f, 1).uv2(pPackedLight).endVertex();
+            vertex.vertex(pPoseStack.last().pose(), SIZE, 0, 0).color(1f, 1f, 1f, 1).uv2(pPackedLight).endVertex();
         } else {
             byte[] pixels = holder.getDraw();
             for (int x1 = 0; x1 < SIZE; x1++) {
@@ -82,23 +82,23 @@ public class SmallBlockWhiteBrushRender implements DrawRender {
                 for (int y1 = 0; y1 < SIZE; y1++) {
                     float pixel = 0.0625f * (16 - pixels[x1 * SIZE + y1]);
                     float y2 = y1 + 1;
-                    vertex.vertex(stack.last().pose(), x1, y1, 0).color(pixel, pixel, pixel, 1).uv2(packedLight).endVertex();
-                    vertex.vertex(stack.last().pose(), x1, y2, 0).color(pixel, pixel, pixel, 1).uv2(packedLight).endVertex();
-                    vertex.vertex(stack.last().pose(), x2, y2, 0).color(pixel, pixel, pixel, 1).uv2(packedLight).endVertex();
-                    vertex.vertex(stack.last().pose(), x2, y1, 0).color(pixel, pixel, pixel, 1).uv2(packedLight).endVertex();
+                    vertex.vertex(pPoseStack.last().pose(), x1, y1, 0).color(pixel, pixel, pixel, 1).uv2(pPackedLight).endVertex();
+                    vertex.vertex(pPoseStack.last().pose(), x1, y2, 0).color(pixel, pixel, pixel, 1).uv2(pPackedLight).endVertex();
+                    vertex.vertex(pPoseStack.last().pose(), x2, y2, 0).color(pixel, pixel, pixel, 1).uv2(pPackedLight).endVertex();
+                    vertex.vertex(pPoseStack.last().pose(), x2, y1, 0).color(pixel, pixel, pixel, 1).uv2(pPackedLight).endVertex();
                 }
             }
         }
     }
 
     @Override
-    public void draw(PoseStack stack, MultiBufferSource buffer) {
-        VertexConsumer vertex = buffer.getBuffer(RENDER);
+    public void draw(PoseStack pPoseStack, MultiBufferSource pBuffer) {
+        VertexConsumer vertex = pBuffer.getBuffer(RENDER);
         if (holder.isEmpty()) {
-            vertex.vertex(stack.last().pose(), 0, 0, 0).color(0, 0, 0, 1).endVertex();
-            vertex.vertex(stack.last().pose(), 0, SIZE, 0).color(0, 0, 0, 1).endVertex();
-            vertex.vertex(stack.last().pose(), SIZE, SIZE, 0).color(0, 0, 0, 1).endVertex();
-            vertex.vertex(stack.last().pose(), SIZE, 0, 0).color(0, 0, 0, 1).endVertex();
+            vertex.vertex(pPoseStack.last().pose(), 0, 0, 0).color(1f, 1f, 1f, 1f).endVertex();
+            vertex.vertex(pPoseStack.last().pose(), 0, SIZE, 0).color(1f, 1f, 1f, 1f).endVertex();
+            vertex.vertex(pPoseStack.last().pose(), SIZE, SIZE, 0).color(1f, 1f, 1f, 1f).endVertex();
+            vertex.vertex(pPoseStack.last().pose(), SIZE, 0, 0).color(1f, 1f, 1f, 1f).endVertex();
         } else {
             byte[] pixels = holder.getDraw();
             for (int x1 = 0; x1 < SIZE; x1++) {
@@ -106,10 +106,10 @@ public class SmallBlockWhiteBrushRender implements DrawRender {
                 for (int y1 = 0; y1 < SIZE; y1++) {
                     float pixel = 0.0625f * (16 - pixels[x1 * SIZE + y1]);
                     float y2 = y1 + 1;
-                    vertex.vertex(stack.last().pose(), x1, y1, 0).color(pixel, pixel, pixel, 1).endVertex();
-                    vertex.vertex(stack.last().pose(), x1, y2, 0).color(pixel, pixel, pixel, 1).endVertex();
-                    vertex.vertex(stack.last().pose(), x2, y2, 0).color(pixel, pixel, pixel, 1).endVertex();
-                    vertex.vertex(stack.last().pose(), x2, y1, 0).color(pixel, pixel, pixel, 1).endVertex();
+                    vertex.vertex(pPoseStack.last().pose(), x1, y1, 0).color(pixel, pixel, pixel, 1).endVertex();
+                    vertex.vertex(pPoseStack.last().pose(), x1, y2, 0).color(pixel, pixel, pixel, 1).endVertex();
+                    vertex.vertex(pPoseStack.last().pose(), x2, y2, 0).color(pixel, pixel, pixel, 1).endVertex();
+                    vertex.vertex(pPoseStack.last().pose(), x2, y1, 0).color(pixel, pixel, pixel, 1).endVertex();
                 }
             }
         }

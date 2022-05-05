@@ -9,7 +9,10 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.Arrays;
 
-public abstract class SmallBlackWhiteBrushHolder implements DrawHolder {
+/**
+ * A draw holder with a 32*32 black-white draw, saved by byte array
+ */
+public class SmallBlackWhiteBrushHolder implements DrawHolder {
 
     public static final int SIZE = 32;
     public static final int PIXEL_COUNT = SIZE * SIZE;
@@ -17,24 +20,23 @@ public abstract class SmallBlackWhiteBrushHolder implements DrawHolder {
     private byte[] value;
     @Nullable
     private Component author;
+    private final DrawVersion version;
 
-    public SmallBlackWhiteBrushHolder() {
-        this(new byte[PIXEL_COUNT], null);
-    }
+    public SmallBlackWhiteBrushHolder(DrawVersion version) {
+        this.version = version;
 
-    public SmallBlackWhiteBrushHolder(byte[] value, @Nullable Component author) {
-        setDraw(value);
-        setAuthor(author);
+        setDraw(new byte[PIXEL_COUNT]);
+        setAuthor((Component) null);
     }
 
     @Override
-    public Object draw() {
+    public Object data() {
         return value;
     }
 
     @Override
-    public void setDraw(Object draw) {
-        this.value = adjustSize((byte[]) draw);
+    public void setDraw(Object data) {
+        this.value = adjustSize((byte[]) data);
     }
 
     @Override
@@ -53,6 +55,11 @@ public abstract class SmallBlackWhiteBrushHolder implements DrawHolder {
     }
 
     @Override
+    public DrawVersion version() {
+        return version;
+    }
+
+    @Override
     public boolean isEmpty() {
         for (byte b : value) {
             if (b != 0) {
@@ -60,12 +67,6 @@ public abstract class SmallBlackWhiteBrushHolder implements DrawHolder {
             }
         }
         return true;
-    }
-
-    @Override
-    public void clear() {
-        Arrays.fill(value, (byte) 0);
-        author = null;
     }
 
     @Override

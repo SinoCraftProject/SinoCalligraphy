@@ -25,6 +25,6 @@ public class SinoCalligraphy {
         SCAMenus.register(bus);
         SCANetworks.setup();
 
-        DrawVersions.addAll();
+        DrawVersions.register();
     }
 }
