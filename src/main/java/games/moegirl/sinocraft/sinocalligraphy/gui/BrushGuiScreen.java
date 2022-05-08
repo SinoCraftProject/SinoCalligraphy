@@ -179,9 +179,10 @@ public class BrushGuiScreen extends AbstractContainerScreen<BrushMenu> {
      */
     protected boolean mouseDraw(ArrayList<Tuple<Tuple<Integer, Integer>, Integer>> pixelMap) {
         /** 遍历pixelMap */
+        if (pixelMap==null||pixelMap.size()==0) return false;
         for (Tuple<Tuple<Integer, Integer>, Integer> pixel :
                 pixelMap) {
-
+            //fixme: 每次松开鼠标就会画一个像素，为什么mouseClicked和mouseDragged不会触发阿
             if ((pixel.getA().getA() >= leftPos + 61)
                     && (pixel.getA().getA() < leftPos + 61 + 128)
                     && (pixel.getA().getB() >= topPos + 14)
@@ -194,11 +195,10 @@ public class BrushGuiScreen extends AbstractContainerScreen<BrushMenu> {
 
                 int cellSize = 128 / CANVAS_SIZE;
 
-                // Fixme: qyl27: Unexpected more pixel in next pixel.
-                //               Maybe here is Math.floor?
                 int x = (int) (Math.floor(pixel.getA().getA()) - leftPos - 61) / cellSize;
                 int y = (int) (Math.floor(pixel.getA().getB()) - topPos - 14) / cellSize;
 
+                // todo:一个包里发送多个像素点
                 SCANetworks.INSTANCE.sendToServer(new DrawC2SPacket(new XYPointInt(x, y), (byte) menu.getColor()));
 
             }

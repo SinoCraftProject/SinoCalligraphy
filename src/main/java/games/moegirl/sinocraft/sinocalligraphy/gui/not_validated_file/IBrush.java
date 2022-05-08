@@ -8,5 +8,5 @@ public interface IBrush {
     public void onBrushDown(Tuple<Double,Double> _position, double _time);
     public void onBrush(Tuple<Double,Double> _position,double _time);
     public ArrayList<Tuple<Tuple<Integer, Integer>,Integer>> onBrushLeft(Tuple<Double,Double> _position, double _time);
-    public void setColorRGB(int _colorRGB);
+    public void setBrushRGB(int _colorRGB);
 }
