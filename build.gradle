@@ -11,7 +11,7 @@ apply plugin: 'architectury-plugin'   // Parchment mappings.
 apply plugin: 'maven-publish'
 apply plugin: 'dev.architectury.loom'
 
-version = '1.18.2-1.0.2'
+version = '1.18.2-1.1.0'
 group = 'games.moegirl.sinocraft.sinocalligraphy' // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = 'sinocalligraphy'
 
@@ -53,7 +53,10 @@ repositories {
     //     dir 'libs'
     // }
 
-    maven { url 'https://jitpack.io' }
+    maven {
+        name = 'Jitpack'
+        url = 'https://jitpack.io'
+    }
 
     maven {
         name = 'ParchmentMC'
@@ -74,11 +77,15 @@ configurations.all {
 dependencies {
     minecraft "com.mojang:minecraft:1.18.2"
     forge "net.minecraftforge:forge:1.18.2-40.1.0"
+
     mappings loom.layered() {
         officialMojangMappings()
         parchment("org.parchmentmc.data:parchment-1.18.2:2022.05.22@zip")
     }
-    modImplementation 'com.github.SinoCraftProject:SinoCore:main-SNAPSHOT'
+
+    modImplementation('com.github.SinoCraftProject:SinoCore:main-SNAPSHOT:dev') {
+        changing true
+    }
 }
 
 // Example for how to get properties into the manifest for reading at runtime.
@@ -87,7 +94,7 @@ jar {
         attributes([
                 "Specification-Title"     : "sinocalligraphy",
                 "Specification-Vendor"    : "SinoCraft Project Team",
-                "Specification-Version"   : "1", // We are version 1 of ourselves
+                "Specification-Version"   : "3", // We are version 1 of ourselves
                 "Implementation-Title"    : project.name,
                 "Implementation-Version"  : project.jar.archiveVersion,
                 "Implementation-Vendor"   : "MoeGirl Games",
