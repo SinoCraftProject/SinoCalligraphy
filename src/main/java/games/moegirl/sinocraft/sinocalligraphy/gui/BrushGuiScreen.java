@@ -108,8 +108,7 @@ public class BrushGuiScreen extends AbstractContainerScreen<BrushMenu> {
     protected void renderBg(PoseStack stack, float partialTick, int mouseX, int mouseY) {
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
         ATLAS.blit(stack, "background", leftPos, topPos, imageWidth, imageHeight,
-                GLSwitcher.blend().enable(),
-                GLSwitcher.depth().enable());
+                GLSwitcher.blend().enable(), GLSwitcher.depth().enable());
     }
 
     @Override
@@ -161,8 +160,7 @@ public class BrushGuiScreen extends AbstractContainerScreen<BrushMenu> {
         DrawHolder.parse(data)
                 .map(DrawVersion::update)
                 .filter(h -> canvas.get().setDraw(h))
-                .ifPresentOrElse(c -> {
-                        },
+                .ifPresentOrElse(c -> {},
                         () -> text.get().begin(Duration.ofSeconds(1), 0, Color.RED, new TranslatableComponent(KEY_PASTE_FAILED, data)));
     }
 
@@ -170,7 +168,7 @@ public class BrushGuiScreen extends AbstractContainerScreen<BrushMenu> {
         DrawHolder holder = canvas.get().getDraw(Minecraft.getInstance().player);
         BufferedImage image = holder.version().toImage(holder);
         try {
-            File name = new File(Minecraft.getInstance().gameDirectory, SinoCalligraphy.MODID + "/draws/" + System.currentTimeMillis() + ".png");
+            File name = new File(Minecraft.getInstance().gameDirectory, "sinoseries/sinocalligraphy/draws/" + System.currentTimeMillis() + ".png");
             name.getParentFile().mkdirs();
             if (!name.exists()) {
                 name.createNewFile();
