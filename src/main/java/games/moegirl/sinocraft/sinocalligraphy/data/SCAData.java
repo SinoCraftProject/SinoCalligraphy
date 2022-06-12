@@ -4,7 +4,6 @@ import games.moegirl.sinocraft.sinocalligraphy.SinoCalligraphy;
 import games.moegirl.sinocraft.sinocalligraphy.data.lang.SCALanguageProviderENUS;
 import games.moegirl.sinocraft.sinocalligraphy.data.lang.SCALanguageProviderZHCN;
 import games.moegirl.sinocraft.sinocalligraphy.item.SCAItems;
-import games.moegirl.sinocraft.sinocore.SinoCore;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.forge.event.lifecycle.GatherDataEvent;
@@ -21,13 +20,13 @@ public class SCAData {
         }
 
         if (event.includeServer()) {
-            var blockTagsProvider = new SCABlockTagsProvider(generator, SinoCalligraphy.MODID, exHelper, SinoCore.MODID);
+            var blockTagsProvider = new SCABlockTagsProvider(generator, SinoCalligraphy.MODID, exHelper, SinoCalligraphy.MODID);
 
             generator.addProvider(blockTagsProvider);
             generator.addProvider(new SCAItemTagsProvider(generator, blockTagsProvider, SinoCalligraphy.MODID, exHelper));
 
-            generator.addProvider(new SCALanguageProviderZHCN(generator, SinoCalligraphy.MODID, SinoCore.MODID, "zh_cn"));
-            generator.addProvider(new SCALanguageProviderENUS(generator, SinoCalligraphy.MODID, SinoCore.MODID, "en_us"));
+            generator.addProvider(new SCALanguageProviderZHCN(generator, SinoCalligraphy.MODID, SinoCalligraphy.MODID, "zh_cn"));
+            generator.addProvider(new SCALanguageProviderENUS(generator, SinoCalligraphy.MODID, SinoCalligraphy.MODID, "en_us"));
         }
     }
 }

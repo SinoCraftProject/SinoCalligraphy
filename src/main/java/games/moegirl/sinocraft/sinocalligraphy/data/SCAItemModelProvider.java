@@ -4,7 +4,6 @@ import games.moegirl.sinocraft.sinocalligraphy.item.SCAItems;
 import games.moegirl.sinocraft.sinocore.api.data.ItemModelProviderBase;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.world.item.Item;
-import net.minecraftforge.client.model.generators.ItemModelBuilder;
 import net.minecraftforge.common.data.ExistingFileHelper;
 import net.minecraftforge.registries.DeferredRegister;
 
@@ -14,11 +13,9 @@ public class SCAItemModelProvider extends ItemModelProviderBase {
     }
 
     @Override
-    protected void registerModels() {
-        skipItems(SCAItems.BRUSH.get());
-        skipItems(SCAItems.INK.get());
-
-        super.registerModels();
+    protected void registerItemModels() {
+        skipItems.add(SCAItems.BRUSH.get());
+        skipItems.add(SCAItems.INK.get());
     }
 
     // Fixme: qyl27: SC breaks here.

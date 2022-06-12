@@ -1,8 +1,8 @@
 {
-  "item.sinocore.chinese_brush": "\u6BDB\u7B14",
-  "item.sinocore.empty_xuan_paper": "\u5BA3\u7EB8",
-  "item.sinocore.filled_xuan_paper": "\u586B\u5145\u8FC7\u7684\u5BA3\u7EB8",
-  "item.sinocore.ink": "\u58A8\u6C41",
+  "item.sinocalligraphy.chinese_brush": "\u6BDB\u7B14",
+  "item.sinocalligraphy.empty_xuan_paper": "\u5BA3\u7EB8",
+  "item.sinocalligraphy.filled_xuan_paper": "\u586B\u5145\u8FC7\u7684\u5BA3\u7EB8",
+  "item.sinocalligraphy.ink": "\u58A8\u6C41",
   "itemGroup.sino_calligraphy": "\u534E\u590F\u4E39\u9752",
   "sinocalligraphy.gui.brush.copied": "\u5DF2\u590D\u5236",
   "sinocalligraphy.gui.brush.copy": "\u5DE6\u952E\u590D\u5236\uFF0C\u53F3\u952E\u7C98\u8D34",

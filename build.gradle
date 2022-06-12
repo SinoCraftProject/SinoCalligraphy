@@ -41,8 +41,13 @@ loom {
     }
 }
 
+processResources {
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+}
 
-sourceSets.main.resources { srcDir 'src/generated/resources' }
+sourceSets.main.resources {
+    srcDir 'src/generated/resources'
+}
 
 repositories {
     // Put repositories for dependencies here

@@ -1,8 +1,8 @@
 {
-  "item.sinocore.chinese_brush": "Chinese Brush",
-  "item.sinocore.empty_xuan_paper": "Empty Xuan Paper",
-  "item.sinocore.filled_xuan_paper": "Filled Xuan Paper",
-  "item.sinocore.ink": "Ink",
+  "item.sinocalligraphy.chinese_brush": "Chinese Brush",
+  "item.sinocalligraphy.empty_xuan_paper": "Empty Xuan Paper",
+  "item.sinocalligraphy.filled_xuan_paper": "Filled Xuan Paper",
+  "item.sinocalligraphy.ink": "Ink",
   "itemGroup.sino_calligraphy": "SinoCalligraphy",
   "sinocalligraphy.gui.brush.copied": "Copied",
   "sinocalligraphy.gui.brush.copy": "Left click to copy, right click to paste",
