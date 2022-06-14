@@ -1,8 +1,8 @@
 package games.moegirl.sinocraft.sinocalligraphy.data.lang;
 
 import games.moegirl.sinocraft.sinocalligraphy.gui.BrushGuiScreen;
-import games.moegirl.sinocraft.sinocalligraphy.item.SCAItems;
 import games.moegirl.sinocraft.sinocalligraphy.item.FilledXuanPaper;
+import games.moegirl.sinocraft.sinocalligraphy.item.SCAItems;
 import games.moegirl.sinocraft.sinocalligraphy.utils.draw.DrawHolder;
 import games.moegirl.sinocraft.sinocore.api.data.I18nProviderBase;
 import net.minecraft.data.DataGenerator;

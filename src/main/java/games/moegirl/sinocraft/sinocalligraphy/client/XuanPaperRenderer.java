@@ -3,9 +3,11 @@ package games.moegirl.sinocraft.sinocalligraphy.client;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Vector3f;
+import games.moegirl.sinocraft.sinocalligraphy.SinoCalligraphy;
 import games.moegirl.sinocraft.sinocalligraphy.utils.draw.DrawHolder;
 import games.moegirl.sinocraft.sinocalligraphy.utils.draw.DrawVersions;
 import games.moegirl.sinocraft.sinocalligraphy.utils.draw.SmallBlackWhiteBrushHolder;
+import games.moegirl.sinocraft.sinocore.SinoCore;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.geom.EntityModelSet;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
@@ -15,6 +17,7 @@ import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import org.apache.logging.log4j.LogManager;
 
 import javax.annotation.Nullable;
 
@@ -51,12 +54,12 @@ public class XuanPaperRenderer extends BlockEntityWithoutLevelRenderer {
             poseStack.scale(1, -1, 1);
             poseStack.translate(-1.5, -1.5, -0.5);
             poseStack.scale(0.0625f, 0.0625f, 0.0625f);
-            poseStack.translate(0.0D, 0.0D, 0.01D);
+             poseStack.translate(0.0D, 0.0D, 0.01D);
         } else {
             poseStack.scale(0.03125f, 0.03125f, 1.0f);
-            poseStack.scale(SmallBlackWhiteBrushHolder.SIZE, SmallBlackWhiteBrushHolder.SIZE, SmallBlackWhiteBrushHolder.SIZE);
+             poseStack.scale(SmallBlackWhiteBrushHolder.SIZE, SmallBlackWhiteBrushHolder.SIZE, SmallBlackWhiteBrushHolder.SIZE);
         }
-        holder.render().draw(poseStack, buffer, packedLight);
+         holder.render().draw(poseStack, buffer, packedLight);
         poseStack.popPose();
     }
 }

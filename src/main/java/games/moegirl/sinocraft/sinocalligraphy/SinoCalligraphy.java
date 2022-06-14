@@ -27,4 +27,8 @@ public class SinoCalligraphy {
 
         DrawVersions.register();
     }
+
+    public static Logger getLogger() {
+        return LOGGER;
+    }
 }
