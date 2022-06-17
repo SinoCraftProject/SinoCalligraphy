@@ -1,4 +1,4 @@
-package games.moegirl.sinocraft.sinocalligraphy.utils.draw;
+package games.moegirl.sinocraft.sinocalligraphy.drawing;
 
 import com.google.common.base.Verify;
 import games.moegirl.sinocraft.sinocalligraphy.SinoCalligraphy;

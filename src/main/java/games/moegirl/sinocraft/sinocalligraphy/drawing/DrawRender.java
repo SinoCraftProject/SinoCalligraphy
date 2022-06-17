@@ -1,4 +1,4 @@
-package games.moegirl.sinocraft.sinocalligraphy.utils.draw;
+package games.moegirl.sinocraft.sinocalligraphy.drawing;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.renderer.MultiBufferSource;

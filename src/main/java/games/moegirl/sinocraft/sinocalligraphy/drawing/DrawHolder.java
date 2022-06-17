@@ -1,4 +1,4 @@
-package games.moegirl.sinocraft.sinocalligraphy.utils.draw;
+package games.moegirl.sinocraft.sinocalligraphy.drawing;
 
 import games.moegirl.sinocraft.sinocalligraphy.SinoCalligraphy;
 import net.minecraft.nbt.CompoundTag;

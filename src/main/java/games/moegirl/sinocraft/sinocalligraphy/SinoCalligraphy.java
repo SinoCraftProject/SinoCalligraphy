@@ -3,7 +3,7 @@ package games.moegirl.sinocraft.sinocalligraphy;
 import games.moegirl.sinocraft.sinocalligraphy.gui.SCAMenus;
 import games.moegirl.sinocraft.sinocalligraphy.item.SCAItems;
 import games.moegirl.sinocraft.sinocalligraphy.network.SCANetworks;
-import games.moegirl.sinocraft.sinocalligraphy.utils.draw.DrawVersions;
+import games.moegirl.sinocraft.sinocalligraphy.drawing.DrawVersions;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;

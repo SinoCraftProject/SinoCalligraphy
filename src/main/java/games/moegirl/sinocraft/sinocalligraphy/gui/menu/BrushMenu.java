@@ -4,6 +4,8 @@ import games.moegirl.sinocraft.sinocalligraphy.data.SCAItemTags;
 import games.moegirl.sinocraft.sinocalligraphy.gui.SCAMenus;
 import games.moegirl.sinocraft.sinocalligraphy.gui.container.BrushContainer;
 import games.moegirl.sinocraft.sinocalligraphy.item.SCAItems;
+import games.moegirl.sinocraft.sinocalligraphy.network.SCANetworks;
+import games.moegirl.sinocraft.sinocalligraphy.network.packet.DrawSaveC2SPacket;
 import games.moegirl.sinocraft.sinocalligraphy.network.packet.SaveFailedS2CPacket;
 import games.moegirl.sinocraft.sinocore.gui.slot.AcceptSpecialSlot;
 import games.moegirl.sinocraft.sinocore.gui.slot.TakeOnlySlot;
@@ -30,19 +32,33 @@ public class BrushMenu extends AbstractContainerMenu {
     protected ItemStack brush;
     public GuiController gui;
 
+    /**
+     * Initialize BrushMenu.
+     * Don't forget to initController.
+     * @param id Menu Id.
+     * @param playerInv Player inventory.
+     * @param brushIn Brush item.
+     */
     public BrushMenu(int id, Inventory playerInv, ItemStack brushIn) {
         super(SCAMenus.BRUSH.get(), id);
         playerInventory = playerInv;
         brushContainer = new BrushContainer(this);
 
         brush = brushIn;
-        gui = new GuiController();
 
         addSlots();
     }
 
     public BrushMenu(int id, Inventory playerInv, FriendlyByteBuf data) {
         this(id, playerInv, data.readItem());
+    }
+
+    /**
+     * Invoke this before use gui.
+     * @param controller
+     */
+    public void setController(GuiController controller) {
+        gui = controller;
     }
 
     /**
@@ -75,11 +91,13 @@ public class BrushMenu extends AbstractContainerMenu {
             }
 
             @Override
-            public void onTake(Player pPlayer, ItemStack pStack) {
+            public void onTake(Player player, ItemStack stack) {
+                gui.onTake(player, stack);
+
                 brushContainer.paint();
                 brush.setDamageValue(brush.getDamageValue() + 1);
-                super.onTake(pPlayer, pStack);
                 gui.clearCanvas();
+                super.onTake(player, stack);
             }
         });
 
@@ -97,18 +115,18 @@ public class BrushMenu extends AbstractContainerMenu {
      * @param player Player entity.
      */
     @Override
-    public void removed(Player player) {
+    public void removed(@NotNull Player player) {
         super.removed(player);  // qyl27: Keep the brush.
         brushContainer.dropAll(player);
     }
 
     @Override
-    protected void clearContainer(Player player, Container container) {
+    protected void clearContainer(@NotNull Player player, @NotNull Container container) {
         brushContainer.dropAll(player);
     }
 
     @Override
-    public ItemStack quickMoveStack(Player player, int index) {
+    public ItemStack quickMoveStack(@NotNull Player player, int index) {
         ItemStack result = ItemStack.EMPTY;
 
         Slot slot = slots.get(index);
@@ -135,7 +153,7 @@ public class BrushMenu extends AbstractContainerMenu {
     }
 
     public void increaseBrushColor() {
-        brushColor = Math.min(15, brushColor + 1);
+        brushColor = Math.min(16, brushColor + 1);
     }
 
     public void decreaseBrushColor() {
@@ -163,11 +181,10 @@ public class BrushMenu extends AbstractContainerMenu {
     }
 
     public void setColor(int color) {
-        brushColor = Mth.clamp(color, 0, 15);
+        brushColor = Mth.clamp(color, 0, 16);
     }
 
     public static class GuiController {
-
         public void handleSaveResult(SaveFailedS2CPacket.Reason code) {
         }
 
@@ -175,6 +192,9 @@ public class BrushMenu extends AbstractContainerMenu {
         }
 
         public void clearCanvas() {
+        }
+
+        public void onTake(Player player, ItemStack stack) {
         }
     }
 }

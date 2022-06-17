@@ -2,7 +2,7 @@ package games.moegirl.sinocraft.sinocalligraphy.item;
 
 import games.moegirl.sinocraft.sinocalligraphy.SinoCalligraphy;
 import games.moegirl.sinocraft.sinocalligraphy.client.XuanPaperRenderer;
-import games.moegirl.sinocraft.sinocalligraphy.utils.draw.DrawHolder;
+import games.moegirl.sinocraft.sinocalligraphy.drawing.DrawHolder;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;

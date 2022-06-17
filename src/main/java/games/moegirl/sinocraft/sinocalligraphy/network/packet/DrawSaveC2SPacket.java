@@ -3,7 +3,7 @@ package games.moegirl.sinocraft.sinocalligraphy.network.packet;
 import games.moegirl.sinocraft.sinocalligraphy.gui.menu.BrushMenu;
 import games.moegirl.sinocraft.sinocalligraphy.item.SCAItems;
 import games.moegirl.sinocraft.sinocalligraphy.network.SCANetworks;
-import games.moegirl.sinocraft.sinocalligraphy.utils.draw.DrawHolder;
+import games.moegirl.sinocraft.sinocalligraphy.drawing.DrawHolder;
 import games.moegirl.sinocraft.sinocore.network.PacketBase;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;

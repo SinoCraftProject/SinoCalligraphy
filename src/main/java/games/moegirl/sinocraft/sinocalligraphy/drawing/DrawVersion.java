@@ -1,4 +1,4 @@
-package games.moegirl.sinocraft.sinocalligraphy.utils.draw;
+package games.moegirl.sinocraft.sinocalligraphy.drawing;
 
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;

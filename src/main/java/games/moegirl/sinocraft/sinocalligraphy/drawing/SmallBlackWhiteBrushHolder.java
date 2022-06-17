@@ -1,4 +1,4 @@
-package games.moegirl.sinocraft.sinocalligraphy.utils.draw;
+package games.moegirl.sinocraft.sinocalligraphy.drawing;
 
 import net.minecraft.network.chat.Component;
 import net.minecraftforge.api.distmarker.Dist;

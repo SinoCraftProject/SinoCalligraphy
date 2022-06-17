@@ -1,4 +1,4 @@
-package games.moegirl.sinocraft.sinocalligraphy.utils.draw;
+package games.moegirl.sinocraft.sinocalligraphy.drawing;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
@@ -15,7 +15,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 
 import java.awt.*;
 
-import static games.moegirl.sinocraft.sinocalligraphy.utils.draw.SmallBlackWhiteBrushHolder.SIZE;
+import static games.moegirl.sinocraft.sinocalligraphy.drawing.SmallBlackWhiteBrushHolder.SIZE;
 
 @OnlyIn(Dist.CLIENT)
 public class SmallBlockWhiteBrushRender implements DrawRender {

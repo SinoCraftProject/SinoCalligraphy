@@ -9,8 +9,8 @@ import games.moegirl.sinocraft.sinocalligraphy.gui.menu.BrushMenu;
 import games.moegirl.sinocraft.sinocalligraphy.network.SCANetworks;
 import games.moegirl.sinocraft.sinocalligraphy.network.packet.DrawSaveC2SPacket;
 import games.moegirl.sinocraft.sinocalligraphy.network.packet.SaveFailedS2CPacket;
-import games.moegirl.sinocraft.sinocalligraphy.utils.draw.DrawHolder;
-import games.moegirl.sinocraft.sinocalligraphy.utils.draw.DrawVersion;
+import games.moegirl.sinocraft.sinocalligraphy.drawing.DrawHolder;
+import games.moegirl.sinocraft.sinocalligraphy.drawing.DrawVersion;
 import games.moegirl.sinocraft.sinocore.api.client.component.AnimatedText;
 import games.moegirl.sinocraft.sinocore.api.client.component.EnabledButton;
 import games.moegirl.sinocraft.sinocore.api.client.component.HighlightableButton;
@@ -24,6 +24,8 @@ import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.util.Lazy;
@@ -63,15 +65,15 @@ public class BrushGuiScreen extends AbstractContainerScreen<BrushMenu> {
     public static final String KEY_OUTPUT_SUCCEED = SinoCalligraphy.MODID + ".gui.brush.output.succeed";
     public static final String KEY_OUTPUT_FAILED = SinoCalligraphy.MODID + ".gui.brush.output.failed";
 
-    private final Lazy<EnabledButton> save = Lazy.of(() -> new EnabledButton(this, 14, 14, ATLAS, "save", KEY_SAVE, this::saveToServer));
+//    private final Lazy<EnabledButton> save = Lazy.of(() -> new EnabledButton(this, 14, 14, ATLAS, "save", KEY_SAVE, this::saveToServer));
     private final Lazy<Canvas> canvas = Lazy.of(() -> new Canvas(ATLAS, "canvas", menu::getColor, menu::setColor));
     private final Lazy<AnimatedText> text = Lazy.of(() -> new AnimatedText(130, 130));
     private final Lazy<NormalButton> copy = Lazy.of(() -> new NormalButton(this, 14, 14, ATLAS, "copy", KEY_COPY, this::copyDraw, this::pasteDraw));
     private final Lazy<NormalButton> output = Lazy.of(() -> new NormalButton(this, 14, 14, ATLAS, "output", KEY_OUTPUT, this::saveToFile));
 
-    public BrushGuiScreen(BrushMenu pMenu, Inventory pPlayerInventory, Component pTitle) {
-        super(pMenu, pPlayerInventory, pTitle);
-        pMenu.gui = new ClientGuiController();
+    public BrushGuiScreen(BrushMenu menu, Inventory playerInventory, Component title) {
+        super(menu, playerInventory, title);
+        menu.setController(new ClientGuiController());
 
         width = 212;
         height = 236;
@@ -90,7 +92,7 @@ public class BrushGuiScreen extends AbstractContainerScreen<BrushMenu> {
         addRenderableWidget(new HighlightableButton(new Point(leftPos + 16, topPos + 166),
                 11, 7, new TranslatableComponent("sinocraft.sinocalligraphy.gui.button.lighter"),
                 button -> menu.decreaseBrushColor(), this, ATLAS, "down"));
-        addRenderableWidget(save.get().resize(leftPos + 15, topPos + 184));
+//        addRenderableWidget(save.get().resize(leftPos + 15, topPos + 184));
         addRenderableWidget(canvas.get().resize(leftPos + 58, topPos + 11, 130));
         addRenderableWidget(copy.get().resize(leftPos + 190, topPos + 127));
         addRenderableWidget(output.get().resize(leftPos + 190, topPos + 111));
@@ -100,8 +102,8 @@ public class BrushGuiScreen extends AbstractContainerScreen<BrushMenu> {
     @Override
     public void render(PoseStack stack, int mouseX, int mouseY, float partialTick) {
         renderBackground(stack);
-        super.render(stack, mouseX, mouseY, partialTick);
         renderTooltip(stack, mouseX, mouseY);
+        super.render(stack, mouseX, mouseY, partialTick);
     }
 
     @Override
@@ -119,7 +121,7 @@ public class BrushGuiScreen extends AbstractContainerScreen<BrushMenu> {
     @Override
     public void onClose() {
         super.onClose();
-        menu.gui = new BrushMenu.GuiController();
+        menu.setController(new BrushMenu.GuiController());
     }
 
     @Override
@@ -188,9 +190,9 @@ public class BrushGuiScreen extends AbstractContainerScreen<BrushMenu> {
         private ClientGuiController() {
         }
 
-        public void handleSaveResult(SaveFailedS2CPacket.Reason code) {
-            save.get().setEnable(true);
-            switch (code) {
+        public void handleSaveResult(SaveFailedS2CPacket.Reason result) {
+//            save.get().setEnable(true);
+            switch (result) {
                 case Succeed -> text.get().begin(Duration.ofSeconds(2), 0, Color.GREEN, KEY_SAVE_SUCCEED);
                 case NoInk -> text.get().begin(Duration.ofSeconds(2), 0, Color.RED, KEY_SAVE_ERR_INK);
                 case NoPaper -> text.get().begin(Duration.ofSeconds(2), 0, Color.RED, KEY_SAVE_ERR_PAPER);
@@ -200,12 +202,19 @@ public class BrushGuiScreen extends AbstractContainerScreen<BrushMenu> {
         @Override
         public void setCanvasEnable(boolean isEnable) {
             canvas.get().setEnable(isEnable);
-            save.get().setEnable(isEnable);
+//            save.get().setEnable(isEnable);
         }
 
         @Override
         public void clearCanvas() {
             canvas.get().clear();
+        }
+
+        @Override
+        public void onTake(Player player, ItemStack stack) {
+            SCANetworks.send(new DrawSaveC2SPacket(canvas.get().getDraw(player)));
+
+            super.onTake(player, stack);
         }
     }
 }

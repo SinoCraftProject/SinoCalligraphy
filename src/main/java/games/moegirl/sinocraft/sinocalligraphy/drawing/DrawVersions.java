@@ -1,6 +1,4 @@
-package games.moegirl.sinocraft.sinocalligraphy.utils.draw;
-
-import java.lang.reflect.Field;
+package games.moegirl.sinocraft.sinocalligraphy.drawing;
 
 public class DrawVersions {
 

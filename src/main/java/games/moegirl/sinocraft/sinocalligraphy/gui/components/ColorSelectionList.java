@@ -3,17 +3,22 @@ package games.moegirl.sinocraft.sinocalligraphy.gui.components;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.AbstractSelectionList;
+import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.narration.NarratedElementType;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
+import org.jetbrains.annotations.Nullable;
 
 public class ColorSelectionList extends AbstractSelectionList<ColorSelectionList.ColorEntry> {
+    public ColorSelectionList(int width, int height, int y0, int y1, int itemHeight) {
+        super(Minecraft.getInstance(), width, height, y0, y1, itemHeight);
 
-    public ColorSelectionList(int pWidth, int pHeight, int pY0, int pY1, int pItemHeight) {
-        super(Minecraft.getInstance(), pWidth, pHeight, pY0, pY1, pItemHeight);
+        for (var i = 0; i < 16; i++) {
+            add(new ColorEntry(i, this));
+        }
     }
 
-    protected ColorSelectionList add(ColorEntry pEntry) {
-        addEntry(pEntry);
+    protected ColorSelectionList add(ColorEntry entry) {
+        addEntry(entry);
         return this;
     }
 
@@ -22,17 +27,47 @@ public class ColorSelectionList extends AbstractSelectionList<ColorSelectionList
         pNarrationElementOutput.add(NarratedElementType.TITLE, "Color List");
     }
 
+    @Nullable
+    @Override
+    public ColorEntry getFocused() {
+        return super.getFocused();
+    }
+
+    @Override
+    public void setFocused(@Nullable GuiEventListener focused) {
+        super.setFocused(focused);
+    }
+
     public static class ColorEntry extends Entry<ColorEntry> {
+        public final ColorSelectionList parentList;
+        public final int colorValue;
 
-        public final int color;
-
-        public ColorEntry(int color) {
-            this.color = color;
+        public ColorEntry(int color, ColorSelectionList parent) {
+            colorValue = color;
+            parentList = parent;
         }
 
         @Override
-        public void render(PoseStack pPoseStack, int pIndex, int pTop, int pLeft, int pWidth, int pHeight, int pMouseX, int pMouseY, boolean pIsMouseOver, float pPartialTick) {
-            
+        public void render(PoseStack stack, int index, int top, int left, int width, int height,
+                           int mouseX, int mouseY, boolean isMouseOver, float partialTick) {
+            stack.pushPose();
+
         }
+
+        @Override
+        public boolean mouseClicked(double mouseX, double mouseY, int button) {
+            parentList.setFocused(this);
+            return super.mouseClicked(mouseX, mouseY, button);
+        }
+    }
+
+    @Override
+    public boolean mouseScrolled(double mouseX, double mouseY, double delta) {
+        return super.mouseScrolled(mouseX, mouseY, delta);
+    }
+
+    @Override
+    public boolean mouseReleased(double mouseX, double mouseY, int button) {
+        return super.mouseReleased(mouseX, mouseY, button);
     }
 }

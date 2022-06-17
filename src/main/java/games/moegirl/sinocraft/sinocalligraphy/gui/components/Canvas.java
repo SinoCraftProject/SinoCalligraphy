@@ -1,9 +1,9 @@
 package games.moegirl.sinocraft.sinocalligraphy.gui.components;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import games.moegirl.sinocraft.sinocalligraphy.utils.draw.DrawHolder;
-import games.moegirl.sinocraft.sinocalligraphy.utils.draw.DrawVersions;
-import games.moegirl.sinocraft.sinocalligraphy.utils.draw.SmallBlackWhiteBrushHolder;
+import games.moegirl.sinocraft.sinocalligraphy.drawing.DrawHolder;
+import games.moegirl.sinocraft.sinocalligraphy.drawing.DrawVersions;
+import games.moegirl.sinocraft.sinocalligraphy.drawing.SmallBlackWhiteBrushHolder;
 import games.moegirl.sinocraft.sinocore.api.utility.GLSwitcher;
 import games.moegirl.sinocraft.sinocore.api.utility.TextureAtlas;
 import net.minecraft.client.gui.components.AbstractWidget;
@@ -19,7 +19,7 @@ import javax.annotation.Nullable;
 import java.util.function.IntConsumer;
 import java.util.function.IntSupplier;
 
-import static games.moegirl.sinocraft.sinocalligraphy.utils.draw.SmallBlackWhiteBrushHolder.SIZE;
+import static games.moegirl.sinocraft.sinocalligraphy.drawing.SmallBlackWhiteBrushHolder.SIZE;
 
 @OnlyIn(Dist.CLIENT)
 public class Canvas extends AbstractWidget {

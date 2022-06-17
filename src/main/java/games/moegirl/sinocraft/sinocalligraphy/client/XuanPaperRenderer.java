@@ -3,11 +3,9 @@ package games.moegirl.sinocraft.sinocalligraphy.client;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Vector3f;
-import games.moegirl.sinocraft.sinocalligraphy.SinoCalligraphy;
-import games.moegirl.sinocraft.sinocalligraphy.utils.draw.DrawHolder;
-import games.moegirl.sinocraft.sinocalligraphy.utils.draw.DrawVersions;
-import games.moegirl.sinocraft.sinocalligraphy.utils.draw.SmallBlackWhiteBrushHolder;
-import games.moegirl.sinocraft.sinocore.SinoCore;
+import games.moegirl.sinocraft.sinocalligraphy.drawing.DrawHolder;
+import games.moegirl.sinocraft.sinocalligraphy.drawing.DrawVersions;
+import games.moegirl.sinocraft.sinocalligraphy.drawing.SmallBlackWhiteBrushHolder;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.geom.EntityModelSet;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
@@ -17,7 +15,6 @@ import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import org.apache.logging.log4j.LogManager;
 
 import javax.annotation.Nullable;
 
