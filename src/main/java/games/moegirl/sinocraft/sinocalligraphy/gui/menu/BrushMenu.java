@@ -5,10 +5,10 @@ import games.moegirl.sinocraft.sinocalligraphy.data.SCAItemTags;
 import games.moegirl.sinocraft.sinocalligraphy.gui.SCAMenus;
 import games.moegirl.sinocraft.sinocalligraphy.gui.container.BrushContainer;
 import games.moegirl.sinocraft.sinocalligraphy.gui.slot.BrushInputSlot;
-import games.moegirl.sinocraft.sinocalligraphy.gui.texture.SlotStrategy;
-import games.moegirl.sinocraft.sinocalligraphy.gui.texture.TextureMap;
 import games.moegirl.sinocraft.sinocalligraphy.item.SCAItems;
 import games.moegirl.sinocraft.sinocalligraphy.network.packet.SaveFailedS2CPacket;
+import games.moegirl.sinocraft.sinocore.api.utility.texture.SlotStrategy;
+import games.moegirl.sinocraft.sinocore.api.utility.texture.TextureMap;
 import games.moegirl.sinocraft.sinocore.gui.slot.TakeOnlySlot;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
@@ -20,8 +20,6 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
-
-import javax.annotation.Nullable;
 
 /**
  * Menu(Container) of Chinese brush.

@@ -1,7 +1,6 @@
 package games.moegirl.sinocraft.sinocalligraphy;
 
 import games.moegirl.sinocraft.sinocalligraphy.gui.SCAMenus;
-import games.moegirl.sinocraft.sinocalligraphy.gui.texture.DebugCommand;
 import games.moegirl.sinocraft.sinocalligraphy.item.SCAItems;
 import games.moegirl.sinocraft.sinocalligraphy.network.SCANetworks;
 import games.moegirl.sinocraft.sinocalligraphy.drawing.DrawVersions;
@@ -27,8 +26,6 @@ public class SinoCalligraphy {
         SCANetworks.setup();
 
         DrawVersions.register();
-
-        DebugCommand.REGISTRY.register();
     }
 
     public static Logger getLogger() {
