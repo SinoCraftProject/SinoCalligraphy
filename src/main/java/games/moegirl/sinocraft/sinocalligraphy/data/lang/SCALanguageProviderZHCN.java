@@ -35,5 +35,7 @@ public class SCALanguageProviderZHCN extends I18nProviderBase {
         add(BrushGuiScreen.KEY_OUTPUT, "导出到文件");
         add(BrushGuiScreen.KEY_OUTPUT_SUCCEED, "导出成功");
         add(BrushGuiScreen.KEY_OUTPUT_FAILED, "导出失败: %s");
+        add("sinocalligraphy.gui.button.up", "上一个颜色");
+        add("sinocalligraphy.gui.button.down", "下一个颜色");
     }
 }

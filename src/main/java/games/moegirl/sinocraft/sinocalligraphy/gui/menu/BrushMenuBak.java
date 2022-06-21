@@ -1,17 +1,14 @@
 package games.moegirl.sinocraft.sinocalligraphy.gui.menu;
 
-import games.moegirl.sinocraft.sinocalligraphy.SinoCalligraphy;
 import games.moegirl.sinocraft.sinocalligraphy.data.SCAItemTags;
 import games.moegirl.sinocraft.sinocalligraphy.gui.SCAMenus;
 import games.moegirl.sinocraft.sinocalligraphy.gui.container.BrushContainer;
-import games.moegirl.sinocraft.sinocalligraphy.gui.slot.BrushInputSlot;
-import games.moegirl.sinocraft.sinocalligraphy.gui.texture.SlotStrategy;
-import games.moegirl.sinocraft.sinocalligraphy.gui.texture.TextureMap;
 import games.moegirl.sinocraft.sinocalligraphy.item.SCAItems;
 import games.moegirl.sinocraft.sinocalligraphy.network.packet.SaveFailedS2CPacket;
+import games.moegirl.sinocraft.sinocore.gui.slot.AcceptSpecialSlot;
 import games.moegirl.sinocraft.sinocore.gui.slot.TakeOnlySlot;
+import games.moegirl.sinocraft.sinocore.utility.SlotHelper;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.player.Inventory;
@@ -21,82 +18,88 @@ import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.Nullable;
-
 /**
  * Menu(Container) of Chinese brush.
- *
  * @author qyl27
  */
-public class BrushMenu extends AbstractContainerMenu {
-    public static final ResourceLocation GUI = new ResourceLocation(SinoCalligraphy.MODID, "textures/gui/chinese_brush.png");
-    public static TextureMap TEXTURE = TextureMap.of(GUI);
-
+public class BrushMenuBak extends AbstractContainerMenu {
     protected BrushContainer brushContainer;
     protected Inventory playerInventory;
     protected int brushColor = 0;
 
     protected ItemStack brush;
-    public GuiController gui = new GuiController();
+    public GuiController gui;
 
     /**
      * Initialize BrushMenu.
      * Don't forget to initController.
-     *
-     * @param id        Menu Id.
+     * @param id Menu Id.
      * @param playerInv Player inventory.
-     * @param brushIn   Brush item.
+     * @param brushIn Brush item.
      */
-    public BrushMenu(int id, Inventory playerInv, ItemStack brushIn) {
+    public BrushMenuBak(int id, Inventory playerInv, ItemStack brushIn) {
         super(SCAMenus.BRUSH.get(), id);
         playerInventory = playerInv;
         brushContainer = new BrushContainer(this);
 
         brush = brushIn;
 
-        TEXTURE.placeSlot(brushContainer, "paper", BrushContainer.XUAN_PAPER_SLOT, this::addSlot,
-                (container, slot, x, y) -> new BrushInputSlot(brushContainer, slot, x, y, SCAItems.EMPTY_XUAN_PAPER, this));
-        TEXTURE.placeSlot(brushContainer, "ink", BrushContainer.INK_SLOT, this::addSlot,
-                (container, slot, x, y) ->  new BrushInputSlot(brushContainer, slot, x, y, SCAItemTags.INKS, this));
-        TEXTURE.placeSlot(brushContainer, "result", BrushContainer.FILLED_XUAN_PAPER_SLOT, this::addSlot,
-                (container, slot, x, y) -> new TakeOnlySlot(container, slot, x, y) {
-                    // qyl27: There are some **** code.
-                    @Override
-                    public @NotNull ItemStack safeTake(int p_150648_, int p_150649_, @NotNull Player player) {
-                        if (brushContainer.canPaint()) {
-                            return super.safeTake(p_150648_, p_150649_, player);
-                        } else {
-                            return ItemStack.EMPTY;
-                        }
-                    }
-
-                    @Override
-                    public void onTake(Player player, ItemStack stack) {
-                        gui.onTake(player, stack);
-
-                        brushContainer.paint();
-                        brush.setDamageValue(brush.getDamageValue() + 1);
-                        gui.clearCanvas();
-                        super.onTake(player, stack);
-                    }
-                });
-        TEXTURE.placeSlots(playerInventory, "inventory", 10, this::addSlot, SlotStrategy.noLimit());
-        TEXTURE.placeSlots(playerInventory, "selection", 0, this::addSlot, SlotStrategy.noLimit());
+        addSlots();
     }
 
-    public BrushMenu(int id, Inventory playerInv, FriendlyByteBuf data) {
+    public BrushMenuBak(int id, Inventory playerInv, FriendlyByteBuf data) {
         this(id, playerInv, data.readItem());
     }
 
     /**
      * Invoke this before use gui.
+     * @param controller
      */
     public void setController(GuiController controller) {
         gui = controller;
     }
 
-    public GuiController getController() {
-        return gui;
+    /**
+     * Add slots of the container.
+     */
+    protected void addSlots() {
+        addSlot(new AcceptSpecialSlot(brushContainer, BrushContainer.XUAN_PAPER_SLOT, 14, 23, SCAItems.EMPTY_XUAN_PAPER.get()) {
+            @Override
+            public void setChanged() {
+                super.setChanged();
+                gui.setCanvasEnable(brushContainer.canPaint());
+            }
+        });
+        addSlot(new AcceptSpecialSlot(brushContainer, BrushContainer.INK_SLOT, 14, 66, SCAItemTags.INKS) {
+            @Override
+            public void setChanged() {
+                super.setChanged();
+                gui.setCanvasEnable(brushContainer.canPaint());
+            }
+        });
+        addSlot(new TakeOnlySlot(brushContainer, BrushContainer.FILLED_XUAN_PAPER_SLOT, 14, 203) {
+            // qyl27: There are some **** code.
+            @Override
+            public @NotNull ItemStack safeTake(int p_150648_, int p_150649_, @NotNull Player player) {
+                if (brushContainer.canPaint()) {
+                    return super.safeTake(p_150648_, p_150649_, player);
+                } else {
+                    return ItemStack.EMPTY;
+                }
+            }
+
+            @Override
+            public void onTake(Player player, ItemStack stack) {
+                gui.onTake(player, stack);
+
+                brushContainer.paint();
+                brush.setDamageValue(brush.getDamageValue() + 1);
+                gui.clearCanvas();
+                super.onTake(player, stack);
+            }
+        });
+
+        SlotHelper.addPlayerInventory(this, playerInventory, 45, 155, 18, 18);
     }
 
     @Override
@@ -107,7 +110,6 @@ public class BrushMenu extends AbstractContainerMenu {
 
     /**
      * qyl27: Don't forget to rewrite removed method to put back items.
-     *
      * @param player Player entity.
      */
     @Override
@@ -181,7 +183,7 @@ public class BrushMenu extends AbstractContainerMenu {
     }
 
     public static class GuiController {
-        public void handleSaveResult(SaveFailedS2CPacket.Reason code, int button) {
+        public void handleSaveResult(SaveFailedS2CPacket.Reason code) {
         }
 
         public void setCanvasEnable(boolean isEnable) {
@@ -192,6 +194,5 @@ public class BrushMenu extends AbstractContainerMenu {
 
         public void onTake(Player player, ItemStack stack) {
         }
-
     }
 }

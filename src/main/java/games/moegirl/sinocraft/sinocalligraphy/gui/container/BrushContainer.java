@@ -69,7 +69,9 @@ public class BrushContainer implements Container {
         menu.broadcastChanges();
 
         if (getPaper().isEmpty() || getInk().isEmpty()) {
-            removeItemNoUpdate(FILLED_XUAN_PAPER_SLOT);
+            setItem(FILLED_XUAN_PAPER_SLOT, ItemStack.EMPTY);
+        } else {
+            setItem(FILLED_XUAN_PAPER_SLOT, new ItemStack(SCAItems.FILLED_XUAN_PAPER.get()));
         }
     }
 

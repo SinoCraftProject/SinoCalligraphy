@@ -11,30 +11,34 @@ import java.util.function.Supplier;
 public class SaveFailedS2CPacket extends PacketBase {
 
     private final Reason reason;
+    private final int button;
 
-    public static SaveFailedS2CPacket unknownScreen() {
-        return new SaveFailedS2CPacket(Reason.UnknownScreen);
+    public static SaveFailedS2CPacket unknownScreen(int button) {
+        return new SaveFailedS2CPacket(Reason.UnknownScreen, button);
     }
 
-    public static SaveFailedS2CPacket noPaper() {
-        return new SaveFailedS2CPacket(Reason.NoPaper);
+    public static SaveFailedS2CPacket noPaper(int button) {
+        return new SaveFailedS2CPacket(Reason.NoPaper, button);
     }
 
-    public static SaveFailedS2CPacket noInk() {
-        return new SaveFailedS2CPacket(Reason.NoInk);
+    public static SaveFailedS2CPacket noInk(int button) {
+        return new SaveFailedS2CPacket(Reason.NoInk, button);
     }
 
-    public SaveFailedS2CPacket(Reason reason) {
+    public SaveFailedS2CPacket(Reason reason, int button) {
         this.reason = reason;
+        this.button = button;
     }
 
     public SaveFailedS2CPacket(FriendlyByteBuf buf) {
         this.reason = buf.readEnum(Reason.class);
+        this.button = buf.readByte();
     }
 
     @Override
     public void serialize(FriendlyByteBuf friendlyByteBuf) {
         friendlyByteBuf.writeEnum(reason);
+        friendlyByteBuf.writeByte(button);
     }
 
     @Override
@@ -43,7 +47,7 @@ public class SaveFailedS2CPacket extends PacketBase {
         context.enqueueWork(() -> {
             Player player = net.minecraft.client.Minecraft.getInstance().player;
             if (player.containerMenu instanceof BrushMenu container) {
-                container.gui.handleSaveResult(reason);
+                container.gui.handleSaveResult(reason, button);
             }
             context.setPacketHandled(true);
         });

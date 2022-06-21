@@ -16,17 +16,21 @@ import java.util.function.Supplier;
 public class DrawSaveC2SPacket extends PacketBase {
 
     private final DrawHolder holder;
+    private final int button;
 
-    public DrawSaveC2SPacket(DrawHolder holder) {
+    public DrawSaveC2SPacket(DrawHolder holder, int button) {
         this.holder = holder;
+        this.button = button;
     }
 
     public DrawSaveC2SPacket(FriendlyByteBuf buf) {
+        button = buf.readByte();
         holder = DrawHolder.parse(buf).orElseThrow();
     }
 
     @Override
     public void serialize(FriendlyByteBuf friendlyByteBuf) {
+        friendlyByteBuf.writeByte(button);
         holder.version().write(holder, friendlyByteBuf);
     }
 
@@ -37,11 +41,11 @@ public class DrawSaveC2SPacket extends PacketBase {
             ServerPlayer sender = context.getSender();
             if (sender.containerMenu instanceof BrushMenu container) {
                 if (container.getPaper().isEmpty()) {
-                    SCANetworks.send(SaveFailedS2CPacket.noPaper(), sender);
+                    SCANetworks.send(SaveFailedS2CPacket.noPaper(button), sender);
                     return;
                 }
                 if (container.getInk().isEmpty()) {
-                    SCANetworks.send(SaveFailedS2CPacket.noInk(), sender);
+                    SCANetworks.send(SaveFailedS2CPacket.noInk(button), sender);
                     return;
                 }
                 Player player = net.minecraft.client.Minecraft.getInstance().player;
@@ -49,9 +53,9 @@ public class DrawSaveC2SPacket extends PacketBase {
                 ItemStack filled = new ItemStack(SCAItems.FILLED_XUAN_PAPER.get());
                 holder.version().write(holder, filled.getOrCreateTag());
                 container.setFilled(filled);
-                SCANetworks.send(new SaveSuccessS2CClient(), sender);
+                SCANetworks.send(new SaveSuccessS2CClient(button), sender);
             } else {
-                SCANetworks.send(SaveFailedS2CPacket.unknownScreen(), sender);
+                SCANetworks.send(SaveFailedS2CPacket.unknownScreen(button), sender);
             }
             context.setPacketHandled(true);
         });

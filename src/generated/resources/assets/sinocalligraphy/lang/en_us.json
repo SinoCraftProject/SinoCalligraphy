@@ -14,6 +14,8 @@
   "sinocalligraphy.gui.brush.save.err.ink": "No enough ink",
   "sinocalligraphy.gui.brush.save.err.paper": "No enough paper",
   "sinocalligraphy.gui.brush.save.succeed": "Save Succeed!",
+  "sinocalligraphy.gui.button.down": "Next Color",
+  "sinocalligraphy.gui.button.up": "Previous Color",
   "sinocalligraphy.hover.author.empty": "Unknown",
   "sinocalligraphy.hover.author.prefix": "Author: "
 }

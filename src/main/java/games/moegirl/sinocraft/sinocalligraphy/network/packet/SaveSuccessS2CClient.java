@@ -10,16 +10,20 @@ import java.util.function.Supplier;
 
 public class SaveSuccessS2CClient extends PacketBase {
 
-    public SaveSuccessS2CClient() {
+    private final int button;
+
+    public SaveSuccessS2CClient(int button) {
+        this.button = button;
     }
 
     public SaveSuccessS2CClient(FriendlyByteBuf buf) {
         super(buf);
+        button = buf.readByte();
     }
 
     @Override
     public void serialize(FriendlyByteBuf friendlyByteBuf) {
-
+        friendlyByteBuf.writeByte(button);
     }
 
     @Override
@@ -28,7 +32,7 @@ public class SaveSuccessS2CClient extends PacketBase {
         context.enqueueWork(() -> {
             Player player = net.minecraft.client.Minecraft.getInstance().player;
             if (player.containerMenu instanceof BrushMenu container) {
-                container.gui.handleSaveResult(SaveFailedS2CPacket.Reason.Succeed);
+                container.gui.handleSaveResult(SaveFailedS2CPacket.Reason.Succeed, button);
             }
             context.setPacketHandled(true);
         });

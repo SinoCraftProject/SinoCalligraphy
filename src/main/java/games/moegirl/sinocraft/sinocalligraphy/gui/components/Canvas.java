@@ -4,11 +4,12 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import games.moegirl.sinocraft.sinocalligraphy.drawing.DrawHolder;
 import games.moegirl.sinocraft.sinocalligraphy.drawing.DrawVersions;
 import games.moegirl.sinocraft.sinocalligraphy.drawing.SmallBlackWhiteBrushHolder;
+import games.moegirl.sinocraft.sinocalligraphy.gui.texture.TextureMap;
 import games.moegirl.sinocraft.sinocore.api.utility.GLSwitcher;
-import games.moegirl.sinocraft.sinocore.api.utility.TextureAtlas;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.narration.NarratedElementType;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
+import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Player;
@@ -24,10 +25,11 @@ import static games.moegirl.sinocraft.sinocalligraphy.drawing.SmallBlackWhiteBru
 @OnlyIn(Dist.CLIENT)
 public class Canvas extends AbstractWidget {
 
-    private final TextureAtlas atlas;
-    private final String name;
+    private final TextureMap atlas;
+    private final String canvas, shadow;
     private final IntSupplier getColor;
     private final IntConsumer setColor;
+    private final AbstractContainerScreen<?> parent;
     private int canvasSize;
 
     private DrawHolder draw = DrawVersions.LATEST_BRUSH_VERSION.newDraw();
@@ -35,10 +37,12 @@ public class Canvas extends AbstractWidget {
     private boolean isDrag = false;
     private int dragButton = 0;
 
-    public Canvas(TextureAtlas atlas, String name, IntSupplier getColor, IntConsumer setColor) {
+    public Canvas(AbstractContainerScreen<?> parent, TextureMap atlas, String canvas, String shadow, IntSupplier getColor, IntConsumer setColor) {
         super(0, 0, 0, 0, TextComponent.EMPTY);
         this.atlas = atlas;
-        this.name = name;
+        this.parent = parent;
+        this.canvas = canvas;
+        this.shadow = shadow;
         this.getColor = getColor;
         this.setColor = setColor;
     }
@@ -83,10 +87,10 @@ public class Canvas extends AbstractWidget {
 
     @Override
     public void render(PoseStack pPoseStack, int pMouseX, int pMouseY, float pPartialTick) {
-        atlas.blit(pPoseStack, name, x, y, width, height);
+        atlas.blitTexture(pPoseStack, canvas, parent);
         draw.render().draw(pPoseStack, x + 1, y + 1, canvasSize, canvasSize);
         if (!isEnable()) {
-            atlas.blit(pPoseStack, name + "_disable", x, y, width, height, GLSwitcher.blend().enable());
+            atlas.blitTexture(pPoseStack, shadow, parent, GLSwitcher.blend().enable());
         }
     }
 

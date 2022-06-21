@@ -1,35 +1,35 @@
 package games.moegirl.sinocraft.sinocalligraphy.gui;
 
+import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import games.moegirl.sinocraft.sinocalligraphy.SinoCalligraphy;
+import games.moegirl.sinocraft.sinocalligraphy.drawing.DrawHolder;
+import games.moegirl.sinocraft.sinocalligraphy.drawing.DrawVersion;
 import games.moegirl.sinocraft.sinocalligraphy.gui.components.Canvas;
-import games.moegirl.sinocraft.sinocalligraphy.gui.components.NormalButton;
+import games.moegirl.sinocraft.sinocalligraphy.gui.container.BrushContainer;
 import games.moegirl.sinocraft.sinocalligraphy.gui.menu.BrushMenu;
 import games.moegirl.sinocraft.sinocalligraphy.network.SCANetworks;
 import games.moegirl.sinocraft.sinocalligraphy.network.packet.DrawSaveC2SPacket;
 import games.moegirl.sinocraft.sinocalligraphy.network.packet.SaveFailedS2CPacket;
-import games.moegirl.sinocraft.sinocalligraphy.drawing.DrawHolder;
-import games.moegirl.sinocraft.sinocalligraphy.drawing.DrawVersion;
 import games.moegirl.sinocraft.sinocore.api.client.component.AnimatedText;
-import games.moegirl.sinocraft.sinocore.api.client.component.EnabledButton;
-import games.moegirl.sinocraft.sinocore.api.client.component.HighlightableButton;
 import games.moegirl.sinocraft.sinocore.api.utility.GLSwitcher;
-import games.moegirl.sinocraft.sinocore.api.utility.TextureAtlas;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.network.chat.ClickEvent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.chat.TranslatableComponent;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.util.Lazy;
 
+import javax.annotation.Nullable;
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -37,23 +37,10 @@ import java.io.File;
 import java.io.IOException;
 import java.time.Duration;
 
+import static games.moegirl.sinocraft.sinocalligraphy.gui.menu.BrushMenu.TEXTURE;
+
 @OnlyIn(Dist.CLIENT)
 public class BrushGuiScreen extends AbstractContainerScreen<BrushMenu> {
-    public static final ResourceLocation GUI = new ResourceLocation(SinoCalligraphy.MODID, "textures/gui/chinese_brush.png");
-    public static final TextureAtlas ATLAS = new TextureAtlas(GUI, 512, 256)
-            .add("background", 0, 0, 212, 236)
-            .add("save", 38, 236, 14, 14)
-            .add("save_disable", 24, 236, 14, 14)
-            .add("save_hover", 52, 236, 14, 14)
-            .add("canvas", 212, 0, 130, 130)
-            .add("canvas_disable", 342, 0, 130, 130)
-            .add("up_dark", 11, 236, 11, 7)
-            .add("up_light", 11, 243, 11, 7)
-            .add("down_dark", 0, 236, 11, 7)
-            .add("down_light", 0, 243, 11, 7)
-            .add("copy", 78, 236, 12, 14)
-            .add("output", 66, 236, 12, 14);
-
     public static final String KEY_SAVE = SinoCalligraphy.MODID + ".gui.brush.save";
     public static final String KEY_SAVE_SUCCEED = SinoCalligraphy.MODID + ".gui.brush.save.succeed";
     public static final String KEY_SAVE_ERR_INK = SinoCalligraphy.MODID + ".gui.brush.save.err.ink";
@@ -65,11 +52,9 @@ public class BrushGuiScreen extends AbstractContainerScreen<BrushMenu> {
     public static final String KEY_OUTPUT_SUCCEED = SinoCalligraphy.MODID + ".gui.brush.output.succeed";
     public static final String KEY_OUTPUT_FAILED = SinoCalligraphy.MODID + ".gui.brush.output.failed";
 
-//    private final Lazy<EnabledButton> save = Lazy.of(() -> new EnabledButton(this, 14, 14, ATLAS, "save", KEY_SAVE, this::saveToServer));
-    private final Lazy<Canvas> canvas = Lazy.of(() -> new Canvas(ATLAS, "canvas", menu::getColor, menu::setColor));
+    private final Lazy<Canvas> canvas = Lazy.of(() -> new Canvas(this, TEXTURE, "canvas", "shadow", menu::getColor, menu::setColor));
     private final Lazy<AnimatedText> text = Lazy.of(() -> new AnimatedText(130, 130));
-    private final Lazy<NormalButton> copy = Lazy.of(() -> new NormalButton(this, 14, 14, ATLAS, "copy", KEY_COPY, this::copyDraw, this::pasteDraw));
-    private final Lazy<NormalButton> output = Lazy.of(() -> new NormalButton(this, 14, 14, ATLAS, "output", KEY_OUTPUT, this::saveToFile));
+    private boolean saving = false;
 
     public BrushGuiScreen(BrushMenu menu, Inventory playerInventory, Component title) {
         super(menu, playerInventory, title);
@@ -85,32 +70,25 @@ public class BrushGuiScreen extends AbstractContainerScreen<BrushMenu> {
     @Override
     protected void init() {
         super.init();
-
-        addRenderableWidget(new HighlightableButton(new Point(leftPos + 16, topPos + 112),
-                11, 7, new TranslatableComponent("sinocraft.sinocalligraphy.gui.button.darker"),
-                button -> menu.increaseBrushColor(), this, ATLAS, "up"));
-        addRenderableWidget(new HighlightableButton(new Point(leftPos + 16, topPos + 166),
-                11, 7, new TranslatableComponent("sinocraft.sinocalligraphy.gui.button.lighter"),
-                button -> menu.decreaseBrushColor(), this, ATLAS, "down"));
-//        addRenderableWidget(save.get().resize(leftPos + 15, topPos + 184));
         addRenderableWidget(canvas.get().resize(leftPos + 58, topPos + 11, 130));
-        addRenderableWidget(copy.get().resize(leftPos + 190, topPos + 127));
-        addRenderableWidget(output.get().resize(leftPos + 190, topPos + 111));
         addRenderableOnly(text.get().resize(leftPos + 94, topPos + 121, font));
+        TEXTURE.placeButton("up", this, b -> menu.increaseBrushColor(), this::addRenderableWidget);
+        TEXTURE.placeButton("down", this, b -> menu.decreaseBrushColor(), this::addRenderableWidget);
+        TEXTURE.placeButton("copy", this, this::copyDraw, this::pasteDraw, this::addRenderableWidget);
+        TEXTURE.placeButton("output", this, this::saveToFile, this::addRenderableWidget);
     }
 
     @Override
     public void render(PoseStack stack, int mouseX, int mouseY, float partialTick) {
         renderBackground(stack);
-        renderTooltip(stack, mouseX, mouseY);
         super.render(stack, mouseX, mouseY, partialTick);
+        renderTooltip(stack, mouseX, mouseY);
     }
 
     @Override
     protected void renderBg(PoseStack stack, float partialTick, int mouseX, int mouseY) {
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-        ATLAS.blit(stack, "background", leftPos, topPos, imageWidth, imageHeight,
-                GLSwitcher.blend().enable(), GLSwitcher.depth().enable());
+        TEXTURE.blitTexture(stack, "background", this, GLSwitcher.blend().enable(), GLSwitcher.depth().enable());
     }
 
     @Override
@@ -144,12 +122,37 @@ public class BrushGuiScreen extends AbstractContainerScreen<BrushMenu> {
         super.mouseMoved(pMouseX, pMouseY);
     }
 
-    private void saveToServer(EnabledButton button) {
-        SCANetworks.send(new DrawSaveC2SPacket(canvas.get().getDraw(Minecraft.getInstance().player)));
-        button.setEnable(false);
+    @Override
+    public boolean mouseClicked(double mouseX, double mouseY, int button) {
+        Slot slot;
+        if ((slot = findSlot(mouseX, mouseY)) != null && slot.getContainerSlot() == BrushContainer.FILLED_XUAN_PAPER_SLOT) {
+            if (saving) {
+                text.get().begin(Duration.ofSeconds(3), 1, Color.cyan, new TextComponent("Waiting..."));
+            } else {
+                saving = true;
+                text.get().begin(Duration.ofSeconds(3), 1, Color.cyan, new TextComponent("Saving..."));
+                SCANetworks.send(new DrawSaveC2SPacket(canvas.get().getDraw(Minecraft.getInstance().player), button));
+            }
+            return true;
+        }
+        return superMouseClicked(mouseX, mouseY, button);
     }
 
-    private void copyDraw(NormalButton button) {
+    public boolean superMouseClicked(double mouseX, double mouseY, int button) {
+        return super.mouseClicked(mouseX, mouseY, button);
+    }
+
+    @Nullable
+    private Slot findSlot(double mouseX, double mouseY) {
+        for (int i = 0; i < menu.slots.size(); ++i) {
+            Slot slot = menu.slots.get(i);
+            if (!isHovering(slot.x, slot.y, 16, 16, mouseX, mouseY) || !slot.isActive()) continue;
+            return slot;
+        }
+        return null;
+    }
+
+    private void copyDraw(Button button) {
         DrawHolder holder = canvas.get().getDraw(Minecraft.getInstance().player);
         StringBuffer sb = new StringBuffer();
         holder.version().write(holder, sb);
@@ -157,7 +160,7 @@ public class BrushGuiScreen extends AbstractContainerScreen<BrushMenu> {
         text.get().begin(Duration.ofSeconds(1), 0, Color.GREEN, new TranslatableComponent(KEY_COPIED));
     }
 
-    private void pasteDraw(NormalButton button) {
+    private void pasteDraw(Button button) {
         String data = Minecraft.getInstance().keyboardHandler.getClipboard();
         DrawHolder.parse(data)
                 .map(DrawVersion::update)
@@ -166,7 +169,7 @@ public class BrushGuiScreen extends AbstractContainerScreen<BrushMenu> {
                         () -> text.get().begin(Duration.ofSeconds(1), 0, Color.RED, new TranslatableComponent(KEY_PASTE_FAILED, data)));
     }
 
-    private void saveToFile(NormalButton button) {
+    private void saveToFile(Button button) {
         DrawHolder holder = canvas.get().getDraw(Minecraft.getInstance().player);
         BufferedImage image = holder.version().toImage(holder);
         try {
@@ -190,19 +193,25 @@ public class BrushGuiScreen extends AbstractContainerScreen<BrushMenu> {
         private ClientGuiController() {
         }
 
-        public void handleSaveResult(SaveFailedS2CPacket.Reason result) {
-//            save.get().setEnable(true);
+        public void handleSaveResult(SaveFailedS2CPacket.Reason result, int button) {
+            saving = false;
             switch (result) {
-                case Succeed -> text.get().begin(Duration.ofSeconds(2), 0, Color.GREEN, KEY_SAVE_SUCCEED);
                 case NoInk -> text.get().begin(Duration.ofSeconds(2), 0, Color.RED, KEY_SAVE_ERR_INK);
                 case NoPaper -> text.get().begin(Duration.ofSeconds(2), 0, Color.RED, KEY_SAVE_ERR_PAPER);
+                case Succeed -> {
+                    text.get().begin(Duration.ofSeconds(2), 0, Color.GREEN, KEY_SAVE_SUCCEED);
+                    Minecraft mc = Minecraft.getInstance();
+                    Window w = mc.getWindow();
+                    double x = mc.mouseHandler.xpos() * w.getGuiScaledWidth() / w.getScreenWidth();
+                    double y = mc.mouseHandler.ypos() * w.getGuiScaledHeight() / w.getScreenHeight();
+                    superMouseClicked(x, y, button);
+                }
             }
         }
 
         @Override
         public void setCanvasEnable(boolean isEnable) {
             canvas.get().setEnable(isEnable);
-//            save.get().setEnable(isEnable);
         }
 
         @Override
@@ -212,7 +221,7 @@ public class BrushGuiScreen extends AbstractContainerScreen<BrushMenu> {
 
         @Override
         public void onTake(Player player, ItemStack stack) {
-            SCANetworks.send(new DrawSaveC2SPacket(canvas.get().getDraw(player)));
+            SCANetworks.send(new DrawSaveC2SPacket(canvas.get().getDraw(player), 0/*???*/));
 
             super.onTake(player, stack);
         }

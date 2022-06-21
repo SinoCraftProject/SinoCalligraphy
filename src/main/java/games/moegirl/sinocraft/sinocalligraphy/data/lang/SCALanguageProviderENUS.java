@@ -35,5 +35,7 @@ public class SCALanguageProviderENUS extends I18nProviderBase {
         add(BrushGuiScreen.KEY_OUTPUT, "Output to file");
         add(BrushGuiScreen.KEY_OUTPUT_SUCCEED, "Output succeed");
         add(BrushGuiScreen.KEY_OUTPUT_FAILED, "Output failed: %s");
+        add("sinocalligraphy.gui.button.up", "Previous Color");
+        add("sinocalligraphy.gui.button.down", "Next Color");
     }
 }
