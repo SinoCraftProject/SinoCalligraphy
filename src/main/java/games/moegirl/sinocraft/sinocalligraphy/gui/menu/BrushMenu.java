@@ -190,6 +190,5 @@ public class BrushMenu extends AbstractContainerMenu {
 
         public void onTake(Player player, ItemStack stack) {
         }
-
     }
 }
