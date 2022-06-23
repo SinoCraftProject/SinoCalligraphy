@@ -101,7 +101,7 @@ public class XuanPaperRenderEvent {
 
     private static void renderXuanPaperInHand(PoseStack stack, MultiBufferSource buffer, DrawHolder draw) {
         stack.mulPose(Vector3f.YP.rotationDegrees(180.0F));
-         stack.mulPose(Vector3f.ZP.rotationDegrees(180.0F));
+        stack.mulPose(Vector3f.ZP.rotationDegrees(180.0F));
         stack.scale(0.38F, 0.38F, 0.38F);
         stack.translate(-0.5D, -0.5D, 0.0D);
         stack.scale(0.0078125F, 0.0078125F, 0.0078125F);
@@ -119,7 +119,7 @@ public class XuanPaperRenderEvent {
 
         float f = arm == HumanoidArm.RIGHT ? 1.0F : -1.0F;
         // Timicasto: This broke the itemstack rendering in the offhand
-       // stack.translate(f * 0.125F, -0.125D, 0.0D);
+        // stack.translate(f * 0.125F, -0.125D, 0.0D);
         if (!player.isInvisible()) {
             stack.pushPose();
             stack.mulPose(Vector3f.ZP.rotationDegrees(f * 10.0F));
@@ -134,7 +134,7 @@ public class XuanPaperRenderEvent {
         float f3 = -0.5F * f2;
         float f4 = 0.4F * Mth.sin(f1 * ((float) Math.PI * 2F));
         float f5 = -0.3F * Mth.sin(swingProgress * (float) Math.PI);
-         stack.translate(f * f3, f4 - 0.3F * f2, f5);
+        stack.translate(f * f3, f4 - 0.3F * f2, f5);
         stack.mulPose(Vector3f.XP.rotationDegrees(f2 * -45.0F));
         stack.mulPose(Vector3f.YP.rotationDegrees(f * f2 * -30.0F));
         renderXuanPaperInHand(stack, buffer, draw);

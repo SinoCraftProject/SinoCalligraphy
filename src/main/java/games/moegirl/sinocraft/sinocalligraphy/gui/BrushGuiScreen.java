@@ -222,7 +222,7 @@ public class BrushGuiScreen extends AbstractContainerScreen<BrushMenu> {
         @Override
         public void onTake(Player player, ItemStack stack) {
             SCANetworks.send(new DrawSaveC2SPacket(canvas.get().getDraw(player), 0/*???*/));
-
+            clearCanvas();
             super.onTake(player, stack);
         }
     }

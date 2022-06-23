@@ -51,12 +51,12 @@ public class XuanPaperRenderer extends BlockEntityWithoutLevelRenderer {
             poseStack.scale(1, -1, 1);
             poseStack.translate(-1.5, -1.5, -0.5);
             poseStack.scale(0.0625f, 0.0625f, 0.0625f);
-             poseStack.translate(0.0D, 0.0D, 0.01D);
+            poseStack.translate(0.0D, 0.0D, 0.01D);
         } else {
             poseStack.scale(0.03125f, 0.03125f, 1.0f);
-             poseStack.scale(SmallBlackWhiteBrushHolder.SIZE, SmallBlackWhiteBrushHolder.SIZE, SmallBlackWhiteBrushHolder.SIZE);
+            poseStack.scale(SmallBlackWhiteBrushHolder.SIZE, SmallBlackWhiteBrushHolder.SIZE, SmallBlackWhiteBrushHolder.SIZE);
         }
-         holder.render().draw(poseStack, buffer, packedLight);
+        holder.render().draw(poseStack, buffer, packedLight);
         poseStack.popPose();
     }
 }
