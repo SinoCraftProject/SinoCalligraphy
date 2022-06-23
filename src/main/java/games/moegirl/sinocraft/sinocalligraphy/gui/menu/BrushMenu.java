@@ -78,7 +78,7 @@ public class BrushMenu extends AbstractContainerMenu {
                         super.onTake(player, stack);
                     }
                 });
-        TEXTURE.placeSlots(playerInventory, "inventory", 10, this::addSlot, SlotStrategy.noLimit());
+        TEXTURE.placeSlots(playerInventory, "inventory", 9, this::addSlot, SlotStrategy.noLimit());
         TEXTURE.placeSlots(playerInventory, "selection", 0, this::addSlot, SlotStrategy.noLimit());
     }
 
