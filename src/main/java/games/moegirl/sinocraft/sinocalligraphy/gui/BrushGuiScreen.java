@@ -125,7 +125,9 @@ public class BrushGuiScreen extends AbstractContainerScreen<BrushMenu> {
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
         Slot slot;
-        if ((slot = findSlot(mouseX, mouseY)) != null && slot.getContainerSlot() == BrushContainer.FILLED_XUAN_PAPER_SLOT) {
+        if ((slot = findSlot(mouseX, mouseY)) != null
+                && slot.container instanceof BrushContainer
+                && slot.getContainerSlot() == BrushContainer.FILLED_XUAN_PAPER_SLOT) {
             if (saving) {
                 text.get().begin(Duration.ofSeconds(3), 1, Color.cyan, new TextComponent("Waiting..."));
             } else {
