@@ -5,8 +5,6 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 import javax.annotation.Nullable;
-import java.awt.*;
-import java.awt.image.BufferedImage;
 import java.util.Arrays;
 
 /**
@@ -92,13 +90,14 @@ public class SmallBlackWhiteBrushHolder implements DrawHolder {
         return b;
     }
 
-    public BufferedImage toImage() {
-        BufferedImage image = new BufferedImage(SIZE, SIZE, BufferedImage.TYPE_INT_RGB);
+    @OnlyIn(Dist.CLIENT)
+    public java.awt.image.BufferedImage toImage() {
+        java.awt.image.BufferedImage image = new java.awt.image.BufferedImage(SIZE, SIZE, java.awt.image.BufferedImage.TYPE_INT_RGB);
         int index = 0;
         for (int w = 0; w < SmallBlackWhiteBrushHolder.SIZE; w++) {
             for (int h = 0; h < SmallBlackWhiteBrushHolder.SIZE; h++) {
                 float color = 0.0625f * (16 - value[index++]);
-                image.setRGB(w, h, new Color(color, color, color).getRGB());
+                image.setRGB(w, h, new java.awt.Color(color, color, color).getRGB());
             }
         }
         return image;

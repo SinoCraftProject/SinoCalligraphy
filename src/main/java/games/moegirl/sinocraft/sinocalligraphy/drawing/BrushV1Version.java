@@ -6,8 +6,8 @@ import com.google.gson.JsonParser;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.FriendlyByteBuf;
-
-import java.awt.image.BufferedImage;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 /**
  * Origin draw version for brush
@@ -111,7 +111,8 @@ public class BrushV1Version extends DrawVersion {
     }
 
     @Override
-    public BufferedImage toImage(DrawHolder holder) {
+    @OnlyIn(Dist.CLIENT)
+    public java.awt.image.BufferedImage toImage(DrawHolder holder) {
         return ((SmallBlackWhiteBrushHolder) holder).toImage();
     }
 

@@ -7,6 +7,7 @@ import games.moegirl.sinocraft.sinocalligraphy.SinoCalligraphy;
 import games.moegirl.sinocraft.sinocalligraphy.drawing.DrawHolder;
 import games.moegirl.sinocraft.sinocalligraphy.drawing.DrawVersion;
 import games.moegirl.sinocraft.sinocalligraphy.gui.components.Canvas;
+import games.moegirl.sinocraft.sinocalligraphy.gui.components.ColorSelectionList;
 import games.moegirl.sinocraft.sinocalligraphy.gui.container.BrushContainer;
 import games.moegirl.sinocraft.sinocalligraphy.gui.menu.BrushMenu;
 import games.moegirl.sinocraft.sinocalligraphy.network.SCANetworks;
@@ -54,6 +55,7 @@ public class BrushGuiScreen extends AbstractContainerScreen<BrushMenu> {
 
     private final Lazy<Canvas> canvas = Lazy.of(() -> new Canvas(this, TEXTURE, "canvas", "shadow", menu::getColor, menu::setColor));
     private final Lazy<AnimatedText> text = Lazy.of(() -> new AnimatedText(130, 130));
+    private Lazy<ColorSelectionList> list = Lazy.of(() -> ColorSelectionList.create(this));
     private boolean saving = false;
 
     public BrushGuiScreen(BrushMenu menu, Inventory playerInventory, Component title) {
@@ -72,8 +74,7 @@ public class BrushGuiScreen extends AbstractContainerScreen<BrushMenu> {
         super.init();
         addRenderableWidget(canvas.get().resize(leftPos + 58, topPos + 11, 130));
         addRenderableOnly(text.get().resize(leftPos + 94, topPos + 121, font));
-        TEXTURE.placeButton("up", this, b -> menu.increaseBrushColor(), this::addRenderableWidget);
-        TEXTURE.placeButton("down", this, b -> menu.decreaseBrushColor(), this::addRenderableWidget);
+        addRenderableWidget(list.get().resize(leftPos, topPos));
         TEXTURE.placeButton("copy", this, this::copyDraw, this::pasteDraw, this::addRenderableWidget);
         TEXTURE.placeButton("output", this, this::saveToFile, this::addRenderableWidget);
     }
@@ -89,11 +90,6 @@ public class BrushGuiScreen extends AbstractContainerScreen<BrushMenu> {
     protected void renderBg(PoseStack stack, float partialTick, int mouseX, int mouseY) {
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
         TEXTURE.blitTexture(stack, "background", this, GLSwitcher.blend().enable(), GLSwitcher.depth().enable());
-    }
-
-    @Override
-    protected void renderLabels(PoseStack stack, int mouseX, int mouseY) {
-        font.draw(stack, Integer.toString(menu.getColor()), 18, 139, 0xffffff);
     }
 
     @Override
@@ -163,12 +159,19 @@ public class BrushGuiScreen extends AbstractContainerScreen<BrushMenu> {
     }
 
     private void pasteDraw(Button button) {
-        String data = Minecraft.getInstance().keyboardHandler.getClipboard();
-        DrawHolder.parse(data)
-                .map(DrawVersion::update)
-                .filter(h -> canvas.get().setDraw(h))
-                .ifPresentOrElse(c -> {},
-                        () -> text.get().begin(Duration.ofSeconds(1), 0, Color.RED, new TranslatableComponent(KEY_PASTE_FAILED, data)));
+        // todo by lq2007: fix in sc: check mouse
+        Minecraft mc = Minecraft.getInstance();
+        Window w = mc.getWindow();
+        double x = mc.mouseHandler.xpos() * w.getGuiScaledWidth() / w.getScreenWidth();
+        double y = mc.mouseHandler.ypos() * w.getGuiScaledHeight() / w.getScreenHeight();
+        if (button.isMouseOver(x, y)) {
+            String data = Minecraft.getInstance().keyboardHandler.getClipboard();
+            DrawHolder.parse(data)
+                    .map(DrawVersion::update)
+                    .filter(h -> canvas.get().setDraw(h))
+                    .ifPresentOrElse(c -> {},
+                            () -> text.get().begin(Duration.ofSeconds(1), 0, Color.RED, new TranslatableComponent(KEY_PASTE_FAILED, data)));
+        }
     }
 
     private void saveToFile(Button button) {

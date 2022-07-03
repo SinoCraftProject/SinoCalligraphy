@@ -2,9 +2,10 @@ package games.moegirl.sinocraft.sinocalligraphy.drawing;
 
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 import javax.annotation.Nullable;
-import java.awt.image.BufferedImage;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
@@ -160,7 +161,8 @@ public abstract class DrawVersion {
      * @param holder holder suitable the version
      * @return image
      */
-    public abstract BufferedImage toImage(DrawHolder holder);
+    @OnlyIn(Dist.CLIENT)
+    public abstract java.awt.image.BufferedImage toImage(DrawHolder holder);
 
     /**
      * Create a new draw holder

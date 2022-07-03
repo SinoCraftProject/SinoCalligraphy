@@ -1,17 +1,30 @@
 width = 512
 height = 256
 
+selected = [22, 127]
+
 [background]
 type = "texture"
 size = [212, 236]
 
+[color_selector]
+type = "texture"
+size = [18, 138]
+uv = [472, 0]
+position = [13, 60]
+
+[color]
+type = "texture"
+size = [8, 8]
+uv = [0, 236]
+
 [paper]
 type = "slot"
-position = [14, 23]
+position = [14, 17]
 
 [ink]
 type = "slot"
-position = [14, 66]
+position = [14, 39]
 
 [result]
 type = "slot"
@@ -39,26 +52,6 @@ size = [130, 130]
 uv = [342, 0]
 position = [58, 11]
 
-[up_normal]
-type = "texture"
-size = [11, 7]
-uv = [11, 236]
-
-[up_hover]
-type = "texture"
-size = [11, 7]
-uv = [11, 243]
-
-[down_normal]
-type = "texture"
-size = [11, 7]
-uv = [0, 236]
-
-[down_hover]
-type = "texture"
-size = [11, 7]
-uv = [0, 243]
-
 [output_normal]
 type = "texture"
 size = [12, 14]
@@ -68,22 +61,6 @@ uv = [66, 236]
 type = "texture"
 size = [12, 14]
 uv = [78, 236]
-
-[up]
-type = "button"
-size = [11, 7]
-position = [16, 112]
-tooltip = "sinocalligraphy.gui.button.up"
-texture = "up_normal"
-texture_hover = "up_hover"
-
-[down]
-type = "button"
-size = [11, 7]
-position = [16, 166]
-tooltip = "sinocalligraphy.gui.button.down"
-texture = "down_normal"
-texture_hover = "down_hover"
 
 [output]
 type = "button"

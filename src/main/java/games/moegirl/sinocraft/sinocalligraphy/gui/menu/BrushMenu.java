@@ -7,7 +7,9 @@ import games.moegirl.sinocraft.sinocalligraphy.gui.container.BrushContainer;
 import games.moegirl.sinocraft.sinocalligraphy.gui.slot.BrushInputSlot;
 import games.moegirl.sinocraft.sinocalligraphy.item.SCAItems;
 import games.moegirl.sinocraft.sinocalligraphy.network.packet.SaveFailedS2CPacket;
+import games.moegirl.sinocraft.sinocore.api.utility.texture.ButtonEntry;
 import games.moegirl.sinocraft.sinocore.api.utility.texture.SlotStrategy;
+import games.moegirl.sinocraft.sinocore.api.utility.texture.TextureEntry;
 import games.moegirl.sinocraft.sinocore.api.utility.texture.TextureMap;
 import games.moegirl.sinocraft.sinocore.gui.slot.TakeOnlySlot;
 import net.minecraft.network.FriendlyByteBuf;
@@ -175,7 +177,7 @@ public class BrushMenu extends AbstractContainerMenu {
     }
 
     public void setColor(int color) {
-        brushColor = Mth.clamp(color, 0, 16);
+        brushColor = Mth.clamp(color, 0, 15);
     }
 
     public static class GuiController {

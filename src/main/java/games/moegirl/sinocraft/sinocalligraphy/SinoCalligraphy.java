@@ -10,8 +10,13 @@ import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.util.HashMap;
+import java.util.Map;
+
 @Mod("sinocalligraphy")
 public class SinoCalligraphy {
+    public static final Map<String, Object> DEBUG = new HashMap<>();
+
     public static final String MODID = "sinocalligraphy";
     public static final String VERSION = "1.18.2-1.0.2";
     private static final Logger LOGGER = LogManager.getLogger();
