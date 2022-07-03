@@ -1,6 +1,8 @@
 package games.moegirl.sinocraft.sinocalligraphy.data;
 
 import games.moegirl.sinocraft.sinocalligraphy.SinoCalligraphy;
+import games.moegirl.sinocraft.sinocalligraphy.block.SCABlockItems;
+import games.moegirl.sinocraft.sinocalligraphy.block.SCABlocks;
 import games.moegirl.sinocraft.sinocalligraphy.data.lang.SCALanguageProviderENUS;
 import games.moegirl.sinocraft.sinocalligraphy.data.lang.SCALanguageProviderZHCN;
 import games.moegirl.sinocraft.sinocalligraphy.item.SCAItems;
@@ -16,6 +18,9 @@ public class SCAData {
         var exHelper = event.getExistingFileHelper();
 
         if (event.includeClient()) {
+            generator.addProvider(new SCABlockStateProvider(generator, SinoCalligraphy.MODID, exHelper, SCABlocks.BLOCKS));
+
+            generator.addProvider(new SCAItemModelProvider(generator, SinoCalligraphy.MODID, exHelper, SCABlockItems.BLOCK_ITEMS));
             generator.addProvider(new SCAItemModelProvider(generator, SinoCalligraphy.MODID, exHelper, SCAItems.ITEMS));
         }
 
@@ -24,6 +29,7 @@ public class SCAData {
 
             generator.addProvider(blockTagsProvider);
             generator.addProvider(new SCAItemTagsProvider(generator, blockTagsProvider, SinoCalligraphy.MODID, exHelper));
+            generator.addProvider(new SCARecipeProvider(generator));
 
             generator.addProvider(new SCALanguageProviderZHCN(generator, SinoCalligraphy.MODID, SinoCalligraphy.MODID, "zh_cn"));
             generator.addProvider(new SCALanguageProviderENUS(generator, SinoCalligraphy.MODID, SinoCalligraphy.MODID, "en_us"));

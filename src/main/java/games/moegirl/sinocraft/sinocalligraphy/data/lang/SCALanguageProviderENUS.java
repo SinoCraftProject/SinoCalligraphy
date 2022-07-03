@@ -18,6 +18,7 @@ public class SCALanguageProviderENUS extends I18nProviderBase {
         addItem(SCAItems.INK, "Ink");
         addItem(SCAItems.EMPTY_XUAN_PAPER, "Empty Xuan Paper");
         addItem(SCAItems.FILLED_XUAN_PAPER, "Filled Xuan Paper");
+        addItem(SCAItems.WOOD_PULP_BUCKET, "Bucket of wood pulp");
 
         add("itemGroup.sino_calligraphy", "SinoCalligraphy");
 
