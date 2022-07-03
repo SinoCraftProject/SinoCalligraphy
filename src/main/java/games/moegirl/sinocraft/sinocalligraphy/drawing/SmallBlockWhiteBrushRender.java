@@ -10,10 +10,9 @@ import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderStateShard;
 import net.minecraft.client.renderer.RenderType;
+import net.minecraft.util.FastColor;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-
-import java.awt.*;
 
 import static games.moegirl.sinocraft.sinocalligraphy.drawing.SmallBlackWhiteBrushHolder.SIZE;
 
@@ -42,7 +41,7 @@ public class SmallBlockWhiteBrushRender implements DrawRender {
         RenderSystem.setShader(GameRenderer::getPositionColorShader);
         RenderSystem.disableTexture();
         if (holder.isEmpty()) {
-            GuiComponent.fill(pPoseStack, x, y, x + width, y + height, Color.WHITE.getRGB());
+            GuiComponent.fill(pPoseStack, x, y, x + width, y + height, FastColor.ARGB32.color(255, 255, 255, 255));
         } else {
             int unitX = width / SIZE;
             int unitY = height / SIZE;
@@ -54,9 +53,10 @@ public class SmallBlockWhiteBrushRender implements DrawRender {
                 int y1 = y;
                 int y2 = y1 + unitY;
                 for (int j = 0; j < SIZE; j++) {
+                    int c = 16 * (16 - draw[index]) - 1;
                     float color = 0.0625f * (16 - draw[index++]); // qyl27: For calculating grayscale.
                     RenderSystem.setShaderColor(color, color, color, 1.0f);
-                    GuiComponent.fill(pPoseStack, x1, y1, x2, y2, new Color(color, color, color, 1).getRGB());
+                    GuiComponent.fill(pPoseStack, x1, y1, x2, y2, FastColor.ARGB32.color(255, c, c, c));
                     y1 = y2;
                     y2 += unitY;
                 }

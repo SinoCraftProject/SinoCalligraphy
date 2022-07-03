@@ -1,7 +1,7 @@
 @ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
 @FieldsAreNonnullByDefault
-package games.moegirl.sinocraft.sinocalligraphy.gui.menu;
+package games.moegirl.sinocraft.sinocalligraphy.gui;
 
 import net.minecraft.FieldsAreNonnullByDefault;
 import net.minecraft.MethodsReturnNonnullByDefault;

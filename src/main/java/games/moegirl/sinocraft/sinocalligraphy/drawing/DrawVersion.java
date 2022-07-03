@@ -1,9 +1,8 @@
 package games.moegirl.sinocraft.sinocalligraphy.drawing;
 
+import com.mojang.blaze3d.platform.NativeImage;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 
 import javax.annotation.Nullable;
 import java.util.LinkedList;
@@ -161,8 +160,7 @@ public abstract class DrawVersion {
      * @param holder holder suitable the version
      * @return image
      */
-    @OnlyIn(Dist.CLIENT)
-    public abstract java.awt.image.BufferedImage toImage(DrawHolder holder);
+    public abstract NativeImage toImage(DrawHolder holder);
 
     /**
      * Create a new draw holder

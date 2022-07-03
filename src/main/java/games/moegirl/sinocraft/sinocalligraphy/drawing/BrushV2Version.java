@@ -1,6 +1,7 @@
 package games.moegirl.sinocraft.sinocalligraphy.drawing;
 
 import com.google.common.base.Verify;
+import com.mojang.blaze3d.platform.NativeImage;
 import games.moegirl.sinocraft.sinocalligraphy.SinoCalligraphy;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
@@ -110,7 +111,7 @@ public class BrushV2Version extends DrawVersion {
 
     @Override
     @OnlyIn(Dist.CLIENT)
-    public java.awt.image.BufferedImage toImage(DrawHolder holder) {
+    public NativeImage toImage(DrawHolder holder) {
         return ((SmallBlackWhiteBrushHolder) holder).toImage();
     }
 

@@ -1,5 +1,6 @@
 package games.moegirl.sinocraft.sinocalligraphy.gui;
 
+import com.mojang.blaze3d.platform.NativeImage;
 import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -18,6 +19,7 @@ import games.moegirl.sinocraft.sinocore.api.utility.GLSwitcher;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
+import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.network.chat.ClickEvent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
@@ -31,9 +33,6 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.util.Lazy;
 
 import javax.annotation.Nullable;
-import javax.imageio.ImageIO;
-import java.awt.*;
-import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.time.Duration;
@@ -55,7 +54,7 @@ public class BrushGuiScreen extends AbstractContainerScreen<BrushMenu> {
 
     private final Lazy<Canvas> canvas = Lazy.of(() -> new Canvas(this, TEXTURE, "canvas", "shadow", menu::getColor, menu::setColor));
     private final Lazy<AnimatedText> text = Lazy.of(() -> new AnimatedText(130, 130));
-    private Lazy<ColorSelectionList> list = Lazy.of(() -> ColorSelectionList.create(this));
+    private final Lazy<ColorSelectionList> list = Lazy.of(() -> ColorSelectionList.create(this));
     private boolean saving = false;
 
     public BrushGuiScreen(BrushMenu menu, Inventory playerInventory, Component title) {
@@ -125,10 +124,10 @@ public class BrushGuiScreen extends AbstractContainerScreen<BrushMenu> {
                 && slot.container instanceof BrushContainer
                 && slot.getContainerSlot() == BrushContainer.FILLED_XUAN_PAPER_SLOT) {
             if (saving) {
-                text.get().begin(Duration.ofSeconds(3), 1, Color.cyan, new TextComponent("Waiting..."));
+                text.get().begin(Duration.ofSeconds(3), 1, 0, 255, 255, new TextComponent("Waiting..."));
             } else {
                 saving = true;
-                text.get().begin(Duration.ofSeconds(3), 1, Color.cyan, new TextComponent("Saving..."));
+                text.get().begin(Duration.ofSeconds(3), 1, 0, 255, 255, new TextComponent("Saving..."));
                 SCANetworks.send(new DrawSaveC2SPacket(canvas.get().getDraw(Minecraft.getInstance().player), button));
             }
             return true;
@@ -155,42 +154,36 @@ public class BrushGuiScreen extends AbstractContainerScreen<BrushMenu> {
         StringBuffer sb = new StringBuffer();
         holder.version().write(holder, sb);
         Minecraft.getInstance().keyboardHandler.setClipboard(sb.toString());
-        text.get().begin(Duration.ofSeconds(1), 0, Color.GREEN, new TranslatableComponent(KEY_COPIED));
+        text.get().begin(Duration.ofSeconds(1), 0, 0, 255, 0, new TranslatableComponent(KEY_COPIED));
     }
 
     private void pasteDraw(Button button) {
-        // todo by lq2007: fix in sc: check mouse
-        Minecraft mc = Minecraft.getInstance();
-        Window w = mc.getWindow();
-        double x = mc.mouseHandler.xpos() * w.getGuiScaledWidth() / w.getScreenWidth();
-        double y = mc.mouseHandler.ypos() * w.getGuiScaledHeight() / w.getScreenHeight();
-        if (button.isMouseOver(x, y)) {
-            String data = Minecraft.getInstance().keyboardHandler.getClipboard();
-            DrawHolder.parse(data)
-                    .map(DrawVersion::update)
-                    .filter(h -> canvas.get().setDraw(h))
-                    .ifPresentOrElse(c -> {},
-                            () -> text.get().begin(Duration.ofSeconds(1), 0, Color.RED, new TranslatableComponent(KEY_PASTE_FAILED, data)));
-        }
+        String data = Minecraft.getInstance().keyboardHandler.getClipboard();
+        DrawHolder.parse(data)
+                .map(DrawVersion::update)
+                .filter(h -> canvas.get().setDraw(h))
+                .ifPresentOrElse(c -> {},
+                        () -> text.get().begin(Duration.ofSeconds(1), 0, 255, 0, 0, new TranslatableComponent(KEY_PASTE_FAILED, data)));
     }
 
+    @SuppressWarnings("ResultOfMethodCallIgnored")
     private void saveToFile(Button button) {
-        DrawHolder holder = canvas.get().getDraw(Minecraft.getInstance().player);
-        BufferedImage image = holder.version().toImage(holder);
-        try {
+        LocalPlayer player = Minecraft.getInstance().player;
+        DrawHolder holder = canvas.get().getDraw(player);
+        try (NativeImage image = holder.version().toImage(holder)) {
             File name = new File(Minecraft.getInstance().gameDirectory, "sinoseries/sinocalligraphy/draws/" + System.currentTimeMillis() + ".png");
             name.getParentFile().mkdirs();
             if (!name.exists()) {
                 name.createNewFile();
             }
-            ImageIO.write(image, "png", name);
-            Minecraft.getInstance().player.displayClientMessage(new TranslatableComponent(KEY_OUTPUT_SUCCEED), false);
+            image.writeToFile(name);
+            if (player != null) player.displayClientMessage(new TranslatableComponent(KEY_OUTPUT_SUCCEED), false);
             TextComponent path = new TextComponent(name.toString());
             path.getStyle().withClickEvent(new ClickEvent(ClickEvent.Action.OPEN_FILE, name.getAbsolutePath()));
-            Minecraft.getInstance().player.displayClientMessage(path, false);
+            if (player != null) player.displayClientMessage(path, false);
         } catch (IOException e) {
             e.printStackTrace();
-            Minecraft.getInstance().player.displayClientMessage(new TranslatableComponent(KEY_OUTPUT_FAILED, e.getMessage()), false);
+            if (player != null) player.displayClientMessage(new TranslatableComponent(KEY_OUTPUT_FAILED, e.getMessage()), false);
         }
     }
 
@@ -201,10 +194,10 @@ public class BrushGuiScreen extends AbstractContainerScreen<BrushMenu> {
         public void handleSaveResult(SaveFailedS2CPacket.Reason result, int button) {
             saving = false;
             switch (result) {
-                case NoInk -> text.get().begin(Duration.ofSeconds(2), 0, Color.RED, KEY_SAVE_ERR_INK);
-                case NoPaper -> text.get().begin(Duration.ofSeconds(2), 0, Color.RED, KEY_SAVE_ERR_PAPER);
+                case NoInk -> text.get().begin(Duration.ofSeconds(2), 0, 255, 0, 0, KEY_SAVE_ERR_INK);
+                case NoPaper -> text.get().begin(Duration.ofSeconds(2), 0, 255, 0, 0, KEY_SAVE_ERR_PAPER);
                 case Succeed -> {
-                    text.get().begin(Duration.ofSeconds(2), 0, Color.GREEN, KEY_SAVE_SUCCEED);
+                    text.get().begin(Duration.ofSeconds(2), 0, 0, 255, 0, KEY_SAVE_SUCCEED);
                     Minecraft mc = Minecraft.getInstance();
                     Window w = mc.getWindow();
                     double x = mc.mouseHandler.xpos() * w.getGuiScaledWidth() / w.getScreenWidth();

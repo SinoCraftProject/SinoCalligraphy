@@ -1,6 +1,8 @@
 package games.moegirl.sinocraft.sinocalligraphy.drawing;
 
+import com.mojang.blaze3d.platform.NativeImage;
 import net.minecraft.network.chat.Component;
+import net.minecraft.util.FastColor;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -90,14 +92,13 @@ public class SmallBlackWhiteBrushHolder implements DrawHolder {
         return b;
     }
 
-    @OnlyIn(Dist.CLIENT)
-    public java.awt.image.BufferedImage toImage() {
-        java.awt.image.BufferedImage image = new java.awt.image.BufferedImage(SIZE, SIZE, java.awt.image.BufferedImage.TYPE_INT_RGB);
+    public NativeImage toImage() {
+        NativeImage image = new NativeImage(SIZE, SIZE, false);
         int index = 0;
         for (int w = 0; w < SmallBlackWhiteBrushHolder.SIZE; w++) {
             for (int h = 0; h < SmallBlackWhiteBrushHolder.SIZE; h++) {
-                float color = 0.0625f * (16 - value[index++]);
-                image.setRGB(w, h, new java.awt.Color(color, color, color).getRGB());
+                int color = 16 * (16 - value[index++]) - 1;
+                image.setPixelRGBA(w, h, FastColor.ARGB32.color(255, color, color, color));
             }
         }
         return image;

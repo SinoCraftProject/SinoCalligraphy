@@ -3,11 +3,10 @@ package games.moegirl.sinocraft.sinocalligraphy.drawing;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import com.mojang.blaze3d.platform.NativeImage;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 
 /**
  * Origin draw version for brush
@@ -111,8 +110,7 @@ public class BrushV1Version extends DrawVersion {
     }
 
     @Override
-    @OnlyIn(Dist.CLIENT)
-    public java.awt.image.BufferedImage toImage(DrawHolder holder) {
+    public NativeImage toImage(DrawHolder holder) {
         return ((SmallBlackWhiteBrushHolder) holder).toImage();
     }
 
