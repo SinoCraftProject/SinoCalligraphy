@@ -1,5 +1,8 @@
 package games.moegirl.sinocraft.sinocalligraphy;
 
+import games.moegirl.sinocraft.sinocalligraphy.block.SCABlockItems;
+import games.moegirl.sinocraft.sinocalligraphy.block.SCABlocks;
+import games.moegirl.sinocraft.sinocalligraphy.fluid.SCAFluids;
 import games.moegirl.sinocraft.sinocalligraphy.gui.SCAMenus;
 import games.moegirl.sinocraft.sinocalligraphy.item.SCAItems;
 import games.moegirl.sinocraft.sinocalligraphy.network.SCANetworks;
@@ -22,6 +25,9 @@ public class SinoCalligraphy {
         IEventBus bus = FMLJavaModLoadingContext.get().getModEventBus();
 
         SCAItems.register(bus);
+        SCABlocks.register(bus);
+        SCABlockItems.register(bus);
+        SCAFluids.register(bus);
         SCAMenus.register(bus);
         SCANetworks.setup();
 

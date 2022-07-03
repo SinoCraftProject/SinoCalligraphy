@@ -1,0 +1,199 @@
+{
+  "multipart": [
+    {
+      "when": {
+        "process": "0",
+        "facing": "north"
+      },
+      "apply": {
+        "model": "sinocalligraphy:block/paper_drying_rack_0"
+      }
+    },
+    {
+      "when": {
+        "process": "0",
+        "facing": "east"
+      },
+      "apply": {
+        "model": "sinocalligraphy:block/paper_drying_rack_0",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "process": "0",
+        "facing": "south"
+      },
+      "apply": {
+        "model": "sinocalligraphy:block/paper_drying_rack_0",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "process": "0",
+        "facing": "west"
+      },
+      "apply": {
+        "model": "sinocalligraphy:block/paper_drying_rack_0",
+        "y": 270
+      }
+    },
+    {
+      "when": {
+        "process": "1",
+        "facing": "north"
+      },
+      "apply": {
+        "model": "sinocalligraphy:block/paper_drying_rack_1"
+      }
+    },
+    {
+      "when": {
+        "process": "1",
+        "facing": "east"
+      },
+      "apply": {
+        "model": "sinocalligraphy:block/paper_drying_rack_1",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "process": "1",
+        "facing": "south"
+      },
+      "apply": {
+        "model": "sinocalligraphy:block/paper_drying_rack_1",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "process": "1",
+        "facing": "west"
+      },
+      "apply": {
+        "model": "sinocalligraphy:block/paper_drying_rack_1",
+        "y": 270
+      }
+    },
+    {
+      "when": {
+        "process": "2",
+        "facing": "north"
+      },
+      "apply": {
+        "model": "sinocalligraphy:block/paper_drying_rack_2"
+      }
+    },
+    {
+      "when": {
+        "process": "2",
+        "facing": "east"
+      },
+      "apply": {
+        "model": "sinocalligraphy:block/paper_drying_rack_2",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "process": "2",
+        "facing": "south"
+      },
+      "apply": {
+        "model": "sinocalligraphy:block/paper_drying_rack_2",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "process": "2",
+        "facing": "west"
+      },
+      "apply": {
+        "model": "sinocalligraphy:block/paper_drying_rack_2",
+        "y": 270
+      }
+    },
+    {
+      "when": {
+        "process": "3",
+        "facing": "north"
+      },
+      "apply": {
+        "model": "sinocalligraphy:block/paper_drying_rack_3"
+      }
+    },
+    {
+      "when": {
+        "process": "3",
+        "facing": "east"
+      },
+      "apply": {
+        "model": "sinocalligraphy:block/paper_drying_rack_3",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "process": "3",
+        "facing": "south"
+      },
+      "apply": {
+        "model": "sinocalligraphy:block/paper_drying_rack_3",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "process": "3",
+        "facing": "west"
+      },
+      "apply": {
+        "model": "sinocalligraphy:block/paper_drying_rack_3",
+        "y": 270
+      }
+    },
+    {
+      "when": {
+        "process": "4",
+        "facing": "north"
+      },
+      "apply": {
+        "model": "sinocalligraphy:block/paper_drying_rack_4"
+      }
+    },
+    {
+      "when": {
+        "process": "4",
+        "facing": "east"
+      },
+      "apply": {
+        "model": "sinocalligraphy:block/paper_drying_rack_4",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "process": "4",
+        "facing": "south"
+      },
+      "apply": {
+        "model": "sinocalligraphy:block/paper_drying_rack_4",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "process": "4",
+        "facing": "west"
+      },
+      "apply": {
+        "model": "sinocalligraphy:block/paper_drying_rack_4",
+        "y": 270
+      }
+    }
+  ]
+}

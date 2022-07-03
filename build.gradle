@@ -88,7 +88,7 @@ dependencies {
         parchment("org.parchmentmc.data:parchment-1.18.2:2022.05.22@zip")
     }
 
-    modImplementation 'com.github.SinoCraftProject:SinoCore:main-SNAPSHOT:dev'
+    modImplementation 'com.github.SinoCraftProject:SinoCore:main-SNAPSHOT'
 }
 
 // Example for how to get properties into the manifest for reading at runtime.

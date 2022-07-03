@@ -18,11 +18,11 @@ public class SCALanguageProviderZHCN extends I18nProviderBase {
         addItem(SCAItems.INK, "墨汁");
         addItem(SCAItems.EMPTY_XUAN_PAPER, "宣纸");
         addItem(SCAItems.FILLED_XUAN_PAPER, "填充过的宣纸");
+        addItem(SCAItems.WOOD_PULP_BUCKET, "木浆桶");
 
         add("itemGroup.sino_calligraphy", "华夏丹青");
 
         add(FilledXuanPaper.HOVER_AUTHOR_PREFIX, "作者：");
-
         add(DrawHolder.KEY_NO_AUTHOR, "佚名");
 
         add(BrushGuiScreen.KEY_SAVE, "保存");
