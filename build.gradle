@@ -73,6 +73,12 @@ repositories {
         name = "Local Maven"
         url = "file://${projectDir}/../mavenLocal"
     }
+
+    maven {
+        // location of the maven that hosts JEI files
+        name = "Progwml6 maven"
+        url = "https://dvs1.progwml6.com/files/maven/"
+    }
 }
 
 configurations.all {
@@ -88,7 +94,8 @@ dependencies {
         parchment("org.parchmentmc.data:parchment-1.18.2:2022.05.22@zip")
     }
 
-    modImplementation 'com.github.SinoCraftProject:SinoCore:main-SNAPSHOT'
+    modImplementation 'com.github.SinoCraftProject:SinoCore:1.2.2'
+    modImplementation 'mezz.jei:jei-1.18.2-forge:10.0.0.191'
 }
 
 // Example for how to get properties into the manifest for reading at runtime.
