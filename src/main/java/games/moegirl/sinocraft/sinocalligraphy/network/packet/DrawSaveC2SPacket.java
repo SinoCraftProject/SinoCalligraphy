@@ -7,7 +7,6 @@ import games.moegirl.sinocraft.sinocalligraphy.drawing.DrawHolder;
 import games.moegirl.sinocraft.sinocore.network.PacketBase;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.network.NetworkEvent;
 
@@ -48,8 +47,6 @@ public class DrawSaveC2SPacket extends PacketBase {
                     SCANetworks.send(SaveFailedS2CPacket.noInk(button), sender);
                     return;
                 }
-                Player player = net.minecraft.client.Minecraft.getInstance().player;
-                assert player != null;
                 ItemStack filled = new ItemStack(SCAItems.FILLED_XUAN_PAPER.get());
                 holder.version().write(holder, filled.getOrCreateTag());
                 container.setFilled(filled);

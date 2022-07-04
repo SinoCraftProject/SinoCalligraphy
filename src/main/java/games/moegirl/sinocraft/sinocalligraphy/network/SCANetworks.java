@@ -5,6 +5,7 @@ import games.moegirl.sinocraft.sinocalligraphy.network.packet.DrawSaveC2SPacket;
 import games.moegirl.sinocraft.sinocalligraphy.network.packet.SaveFailedS2CPacket;
 import games.moegirl.sinocraft.sinocalligraphy.network.packet.SaveSuccessS2CClient;
 import games.moegirl.sinocraft.sinocore.api.utility.Id;
+import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
