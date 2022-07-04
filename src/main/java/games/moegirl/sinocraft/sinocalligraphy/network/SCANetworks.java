@@ -3,9 +3,8 @@ package games.moegirl.sinocraft.sinocalligraphy.network;
 import games.moegirl.sinocraft.sinocalligraphy.SinoCalligraphy;
 import games.moegirl.sinocraft.sinocalligraphy.network.packet.DrawSaveC2SPacket;
 import games.moegirl.sinocraft.sinocalligraphy.network.packet.SaveFailedS2CPacket;
-import games.moegirl.sinocraft.sinocalligraphy.network.packet.SaveSuccessS2CClient;
+import games.moegirl.sinocraft.sinocalligraphy.network.packet.SaveSuccessS2CPacket;
 import games.moegirl.sinocraft.sinocore.api.utility.Id;
-import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
@@ -27,7 +26,7 @@ public class SCANetworks {
 
         INSTANCE.registerMessage(ID.nextId(), DrawSaveC2SPacket.class, DrawSaveC2SPacket::serialize, DrawSaveC2SPacket::new, DrawSaveC2SPacket::handle);
         INSTANCE.registerMessage(ID.nextId(), SaveFailedS2CPacket.class, SaveFailedS2CPacket::serialize, SaveFailedS2CPacket::new, SaveFailedS2CPacket::handle);
-        INSTANCE.registerMessage(ID.nextId(), SaveSuccessS2CClient.class, SaveSuccessS2CClient::serialize, SaveSuccessS2CClient::new, SaveSuccessS2CClient::handle);
+        INSTANCE.registerMessage(ID.nextId(), SaveSuccessS2CPacket.class, SaveSuccessS2CPacket::serialize, SaveSuccessS2CPacket::new, SaveSuccessS2CPacket::handle);
     }
 
     public static void send(Object message) {

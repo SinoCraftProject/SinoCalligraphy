@@ -50,7 +50,7 @@ public class DrawSaveC2SPacket extends PacketBase {
                 ItemStack filled = new ItemStack(SCAItems.FILLED_XUAN_PAPER.get());
                 holder.version().write(holder, filled.getOrCreateTag());
                 container.setFilled(filled);
-                SCANetworks.send(new SaveSuccessS2CClient(button), sender);
+                SCANetworks.send(new SaveSuccessS2CPacket(button), sender);
             } else {
                 SCANetworks.send(SaveFailedS2CPacket.unknownScreen(button), sender);
             }

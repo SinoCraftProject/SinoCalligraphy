@@ -1,6 +1,7 @@
 package games.moegirl.sinocraft.sinocalligraphy.network.packet;
 
 import games.moegirl.sinocraft.sinocalligraphy.gui.menu.BrushMenu;
+import games.moegirl.sinocraft.sinocalligraphy.utility.NetworkHelper;
 import games.moegirl.sinocraft.sinocore.network.PacketBase;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
@@ -46,10 +47,7 @@ public class SaveFailedS2CPacket extends PacketBase {
     public void handle(Supplier<NetworkEvent.Context> supplier) {
         NetworkEvent.Context context = supplier.get();
         context.enqueueWork(() -> {
-            ServerPlayer player = context.getSender();
-            if (player.containerMenu instanceof BrushMenu container) {
-                container.gui.handleSaveResult(reason, button);
-            }
+            NetworkHelper.onClientHandleDraw(reason, button);
             context.setPacketHandled(true);
         });
     }
