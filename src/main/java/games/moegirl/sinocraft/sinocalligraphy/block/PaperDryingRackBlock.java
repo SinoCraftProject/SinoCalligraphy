@@ -91,7 +91,10 @@ public class PaperDryingRackBlock extends HorizontalDirectionalBlock {
                 level.playSound(player, pos, SoundEvents.BUCKET_EMPTY, SoundSource.BLOCKS, 1.0f, 1.0f);
             } else {
                 level.scheduleTick(pos, this, 20 * 15);
-                player.setItemInHand(hand, new ItemStack(Items.BUCKET));
+
+                if (!player.isCreative()) {
+                    player.setItemInHand(hand, new ItemStack(Items.BUCKET));
+                }
             }
             return InteractionResult.SUCCESS;
         }
@@ -99,7 +102,7 @@ public class PaperDryingRackBlock extends HorizontalDirectionalBlock {
         if (process == 4) {
             setState(level, pos, state, 0);
             if (level.isClientSide()) {
-                level.playSound(player, pos, SoundEvents.ITEM_PICKUP, SoundSource.PLAYERS, 1.0f, 1.0f);
+                level.playSound(player, pos, SoundEvents.VILLAGER_WORK_CARTOGRAPHER, SoundSource.PLAYERS, 1.0f, 1.0f);
             } else {
                 setState(level, pos, state, 0);
                 level.addFreshEntity(new ItemEntity(level, pos.getX(), pos.getY(), pos.getZ(),
@@ -118,9 +121,11 @@ public class PaperDryingRackBlock extends HorizontalDirectionalBlock {
     public void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean isMoving) {
         var process = state.getValue(PROCESS);
 
-        if (!level.isClientSide() && process == 4) {
-            level.addFreshEntity(new ItemEntity(level, pos.getX(), pos.getY(), pos.getZ(),
-                    new ItemStack(SCAItems.EMPTY_XUAN_PAPER.get())));
+        if (!newState.is(state.getBlock())) {
+            if (!level.isClientSide() && process == 4) {
+                level.addFreshEntity(new ItemEntity(level, pos.getX(), pos.getY(), pos.getZ(),
+                        new ItemStack(SCAItems.EMPTY_XUAN_PAPER.get())));
+            }
         }
     }
 }
