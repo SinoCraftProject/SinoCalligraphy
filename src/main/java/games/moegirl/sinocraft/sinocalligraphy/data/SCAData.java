@@ -25,7 +25,7 @@ public class SCAData {
         }
 
         if (event.includeServer()) {
-            var blockTagsProvider = new SCABlockTagsProvider(generator, SinoCalligraphy.MODID, exHelper, SinoCalligraphy.MODID);
+            var blockTagsProvider = new SCABlockTagsProvider(generator, SinoCalligraphy.MODID, exHelper);
 
             generator.addProvider(blockTagsProvider);
             generator.addProvider(new SCAItemTagsProvider(generator, blockTagsProvider, SinoCalligraphy.MODID, exHelper));
@@ -33,6 +33,8 @@ public class SCAData {
 
             generator.addProvider(new SCALanguageProviderZHCN(generator, SinoCalligraphy.MODID, SinoCalligraphy.MODID, "zh_cn"));
             generator.addProvider(new SCALanguageProviderENUS(generator, SinoCalligraphy.MODID, SinoCalligraphy.MODID, "en_us"));
+
+            generator.addProvider(new SCAAdvancementProvider(generator, exHelper));
         }
     }
 }

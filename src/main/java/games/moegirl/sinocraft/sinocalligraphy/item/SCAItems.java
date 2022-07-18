@@ -21,6 +21,9 @@ public class SCAItems {
 
     public static final RegistryObject<BucketItem> WOOD_PULP_BUCKET = ITEMS.register("wood_pulp_bucket", () -> new BucketItem(SCAFluids.WOOD_PULP, new Item.Properties().tab(SCACreativeTab.CALLIGRAPHY).setNoRepair().stacksTo(1)));
 
+    public static final RegistryObject<Item> FAN = ITEMS.register("fan", FanItem::new);
+    public static final RegistryObject<Item> FAN_FOLDED = ITEMS.register("fan_folded", FanFoldedItem::new);
+
     public static void register(IEventBus bus) {
         ITEMS.register(bus);
     }

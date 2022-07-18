@@ -1,0 +1,38 @@
+{
+  "parent": "sinocalligraphy:root",
+  "display": {
+    "icon": {
+      "item": "sinocalligraphy:ink"
+    },
+    "title": {
+      "translate": "sinocalligraphy.advancements.ink"
+    },
+    "description": {
+      "translate": "sinocalligraphy.advancements.ink.desc"
+    },
+    "frame": "task",
+    "show_toast": false,
+    "announce_to_chat": true,
+    "hidden": false,
+    "background": "sinocalligraphy:textures/advancement/white_marble.png"
+  },
+  "criteria": {
+    "ink": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "sinocalligraphy:ink"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "ink"
+    ]
+  ]
+}

@@ -1,0 +1,38 @@
+{
+  "parent": "sinocalligraphy:root",
+  "display": {
+    "icon": {
+      "item": "sinocalligraphy:filled_xuan_paper"
+    },
+    "title": {
+      "translate": "sinocalligraphy.advancements.draw"
+    },
+    "description": {
+      "translate": "sinocalligraphy.advancements.draw.desc"
+    },
+    "frame": "task",
+    "show_toast": false,
+    "announce_to_chat": true,
+    "hidden": false,
+    "background": "sinocalligraphy:textures/advancement/white_marble.png"
+  },
+  "criteria": {
+    "draw": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "sinocalligraphy:filled_xuan_paper"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "draw"
+    ]
+  ]
+}

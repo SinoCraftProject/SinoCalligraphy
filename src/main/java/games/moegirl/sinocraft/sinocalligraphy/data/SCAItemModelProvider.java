@@ -33,12 +33,5 @@ public class SCAItemModelProvider extends ItemModelProviderBase {
     protected ModelFile getModel(String loc) {
         return new ModelFile.UncheckedModelFile(new ResourceLocation(modid, loc));
     }
-
-
-    // Fixme: qyl27: SC breaks here.
-//    @Override
-//    protected ItemModelBuilder generatedItem(String name) {
-//        return this.withExistingParent("sinocore:" + name, GENERATED).texture("layer0", this.modLoc("item/" + name));
-//    }
 }
 

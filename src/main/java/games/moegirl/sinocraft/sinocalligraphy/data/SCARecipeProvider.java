@@ -1,6 +1,7 @@
 package games.moegirl.sinocraft.sinocalligraphy.data;
 
 import games.moegirl.sinocraft.sinocalligraphy.SinoCalligraphy;
+import games.moegirl.sinocraft.sinocalligraphy.block.SCABlocks;
 import games.moegirl.sinocraft.sinocalligraphy.item.SCAItems;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.recipes.FinishedRecipe;
@@ -25,6 +26,14 @@ public class SCARecipeProvider extends RecipeProvider {
                 .pattern("W")
                 .define('S', Items.STICK)
                 .define('W', Items.WHITE_WOOL)
+                .save(consumer);
+
+        shaped(SCABlocks.PAPER_DRYING_RACK, Items.STICK)
+                .pattern("  S")
+                .pattern(" TS")
+                .pattern("S S")
+                .define('S', Items.STICK)
+                .define('T', Items.STRING)
                 .save(consumer);
 
         // Todo: Better Xuan paper recipe.

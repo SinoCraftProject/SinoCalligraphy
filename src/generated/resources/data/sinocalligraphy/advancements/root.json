@@ -1,0 +1,30 @@
+{
+  "display": {
+    "icon": {
+      "item": "sinocalligraphy:chinese_brush",
+      "nbt": "{Damage:0}"
+    },
+    "title": {
+      "translate": "sinocalligraphy.advancements.sca"
+    },
+    "description": {
+      "translate": "sinocalligraphy.advancements.sca.desc"
+    },
+    "frame": "task",
+    "show_toast": false,
+    "announce_to_chat": true,
+    "hidden": false,
+    "background": "sinocalligraphy:textures/advancement/white_marble.png"
+  },
+  "criteria": {
+    "login": {
+      "trigger": "minecraft:tick",
+      "conditions": {}
+    }
+  },
+  "requirements": [
+    [
+      "login"
+    ]
+  ]
+}

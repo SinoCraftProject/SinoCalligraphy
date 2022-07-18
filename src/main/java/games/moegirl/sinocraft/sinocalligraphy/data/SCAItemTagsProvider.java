@@ -15,5 +15,7 @@ public class SCAItemTagsProvider extends ItemTagsProviderBase {
     @Override
     protected void addTags() {
         tag(SCAItemTags.INKS).add(SCAItems.INK.get());
+
+        tag(SCAItemTags.FAN).add(SCAItems.FAN.get(), SCAItems.FAN_FOLDED.get());
     }
 }
