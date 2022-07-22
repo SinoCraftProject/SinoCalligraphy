@@ -10,4 +10,6 @@ import net.minecraft.world.item.Item;
 public class SCAItemTags {
     public static final TagKey<Item> INKS = ItemTags.create(new ResourceLocation(SinoCalligraphy.MODID, "inks"));
     public static final TagKey<Item> FAN = ItemTags.create(new ResourceLocation(SinoCalligraphy.MODID, "fan"));
+
+    public static final TagKey<Item> GARLIC = ItemTags.create(new ResourceLocation("noceat", "flames"));
 }

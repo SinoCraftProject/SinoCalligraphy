@@ -47,6 +47,7 @@ public class SCALanguageProviderZHCN extends I18nProviderBase {
 
         add(FanFoldedItem.FOLDED_DESCRIPTION_LINE_1, "传说，道家深湖在演讲时就用过这把扇子");
         add(FanFoldedItem.FOLDED_DESCRIPTION_LINE_2, "他浪迹天地，无长剑在手");
+        add(SCAItems.FAN_FOLDED.get().getDescriptionId() + ".clue", "去墨染的山河中寻找说书人吧。");
 
         add(FanItem.UNFOLDED_DESCRIPTION_LINE_1, "开此扇，上有淡墨河山");
         add(FanItem.UNFOLDED_DESCRIPTION_LINE_2, "携此扇，无惧此生风雨");

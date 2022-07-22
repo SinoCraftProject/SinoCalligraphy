@@ -17,5 +17,7 @@ public class SCAItemTagsProvider extends ItemTagsProviderBase {
         tag(SCAItemTags.INKS).add(SCAItems.INK.get());
 
         tag(SCAItemTags.FAN).add(SCAItems.FAN.get(), SCAItems.FAN_FOLDED.get());
+
+        tag(SCAItemTags.GARLIC).add(SCAItems.FAN_FOLDED.get());
     }
 }
