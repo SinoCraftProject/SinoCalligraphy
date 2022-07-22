@@ -60,6 +60,7 @@ public class FanFoldedItem extends Item implements Vanishable {
         return true;
     }
 
+    // Todo: qyl27: No action for now?
     @Override
     public boolean canPerformAction(ItemStack stack, ToolAction toolAction) {
         return ToolActions.DEFAULT_SWORD_ACTIONS.contains(toolAction);

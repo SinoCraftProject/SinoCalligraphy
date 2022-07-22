@@ -72,7 +72,8 @@ public class BrushGuiScreen extends AbstractContainerScreen<BrushMenu> {
     protected void init() {
         super.init();
         addRenderableWidget(canvas.get().resize(leftPos + 58, topPos + 11, 130));
-        addRenderableOnly(text.get().resize(leftPos + 94, topPos + 121, font));
+        // qyl27: Ensure the text below the canvas.
+        addRenderableOnly(text.get().resize(leftPos + 58 + (130 / 2 - 15), topPos + 11 + 130, font));
         addRenderableWidget(list.get().resize(leftPos, topPos));
         TEXTURE.placeButton("copy", this, this::copyDraw, this::pasteDraw, this::addRenderableWidget);
         TEXTURE.placeButton("output", this, this::saveToFile, this::addRenderableWidget);
@@ -185,6 +186,18 @@ public class BrushGuiScreen extends AbstractContainerScreen<BrushMenu> {
             e.printStackTrace();
             if (player != null) player.displayClientMessage(new TranslatableComponent(KEY_OUTPUT_FAILED, e.getMessage()), false);
         }
+    }
+
+    @Override
+    public boolean mouseScrolled(double mouseX, double mouseY, double delta) {
+        if (mouseX >= canvas.get().x
+                && mouseX < (canvas.get().x + 130)
+                && mouseY >= canvas.get().y
+                && mouseY < (canvas.get().y + 130)) {
+            return list.get().mouseScrolled(mouseX, mouseY, delta);
+        }
+
+        return super.mouseScrolled(mouseX, mouseY, delta);
     }
 
     public class ClientGuiController extends BrushMenu.GuiController {
