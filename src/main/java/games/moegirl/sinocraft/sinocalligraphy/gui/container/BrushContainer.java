@@ -1,5 +1,6 @@
 package games.moegirl.sinocraft.sinocalligraphy.gui.container;
 
+import games.moegirl.sinocraft.sinocalligraphy.gui.menu.BrushMenu;
 import games.moegirl.sinocraft.sinocalligraphy.item.SCAItems;
 import games.moegirl.sinocraft.sinocore.SinoCore;
 import net.minecraft.core.NonNullList;
@@ -116,6 +117,14 @@ public class BrushContainer implements Container {
 
     public boolean canPaint() {
         return hasPaper() && hasInk();
+    }
+
+    public boolean isDrawEmpty() {
+        if (menu instanceof BrushMenu brush) {
+            return brush.gui.isEmpty();
+        }
+
+        return true;
     }
 
     public ItemStack paint() {

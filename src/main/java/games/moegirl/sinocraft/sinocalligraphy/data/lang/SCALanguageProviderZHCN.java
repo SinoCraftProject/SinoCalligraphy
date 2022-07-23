@@ -44,6 +44,7 @@ public class SCALanguageProviderZHCN extends I18nProviderBase {
         add(BrushGuiScreen.KEY_OUTPUT_FAILED, "导出失败: %s");
         add("sinocalligraphy.gui.button.up", "上一个颜色");
         add("sinocalligraphy.gui.button.down", "下一个颜色");
+        add(BrushGuiScreen.KEY_DRAW_EMPTY, "在纸上画些什么吧");
 
         add(FanFoldedItem.FOLDED_DESCRIPTION_LINE_1, "传说，道家深湖在演讲时就用过这把扇子");
         add(FanFoldedItem.FOLDED_DESCRIPTION_LINE_2, "他浪迹天地，无长剑在手");

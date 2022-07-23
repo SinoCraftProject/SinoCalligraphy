@@ -51,6 +51,7 @@ public class BrushGuiScreen extends AbstractContainerScreen<BrushMenu> {
     public static final String KEY_OUTPUT = SinoCalligraphy.MODID + ".gui.brush.output";
     public static final String KEY_OUTPUT_SUCCEED = SinoCalligraphy.MODID + ".gui.brush.output.succeed";
     public static final String KEY_OUTPUT_FAILED = SinoCalligraphy.MODID + ".gui.brush.output.failed";
+    public static final String KEY_DRAW_EMPTY = SinoCalligraphy.MODID + ".gui.brush.draw.empty";
 
     private final Lazy<Canvas> canvas = Lazy.of(() -> new Canvas(this, TEXTURE, "canvas", "shadow", menu::getColor, menu::setColor));
     private final Lazy<AnimatedText> text = Lazy.of(() -> new AnimatedText(130, 130));
@@ -73,7 +74,7 @@ public class BrushGuiScreen extends AbstractContainerScreen<BrushMenu> {
         super.init();
         addRenderableWidget(canvas.get().resize(leftPos + 58, topPos + 11, 130));
         // qyl27: Ensure the text below the canvas.
-        addRenderableOnly(text.get().resize(leftPos + 58 + (130 / 2 - 15), topPos + 11 + 130, font));
+        addRenderableOnly(text.get().resize(leftPos + 58 + (130 / 2 - 10), topPos + 11 + 132, font));
         addRenderableWidget(list.get().resize(leftPos, topPos));
         TEXTURE.placeButton("copy", this, this::copyDraw, this::pasteDraw, this::addRenderableWidget);
         TEXTURE.placeButton("output", this, this::saveToFile, this::addRenderableWidget);
@@ -200,6 +201,22 @@ public class BrushGuiScreen extends AbstractContainerScreen<BrushMenu> {
         return super.mouseScrolled(mouseX, mouseY, delta);
     }
 
+    @Override
+    public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
+        canvas.get().keyPressed(keyCode, scanCode, modifiers);
+        return super.keyPressed(keyCode, scanCode, modifiers);
+    }
+
+    @Override
+    public boolean keyReleased(int keyCode, int scanCode, int modifiers) {
+        canvas.get().keyReleased(keyCode, scanCode, modifiers);
+        return super.keyReleased(keyCode, scanCode, modifiers);
+    }
+
+    public ColorSelectionList getColorSelection() {
+        return list.get();
+    }
+
     public class ClientGuiController extends BrushMenu.GuiController {
         private ClientGuiController() {
         }
@@ -232,9 +249,14 @@ public class BrushGuiScreen extends AbstractContainerScreen<BrushMenu> {
 
         @Override
         public void onTake(Player player, ItemStack stack) {
-            SCANetworks.send(new DrawSaveC2SPacket(canvas.get().getDraw(player), 0/*???*/));
+            SCANetworks.send(new DrawSaveC2SPacket(canvas.get().getDraw(player), 0));
             clearCanvas();
             super.onTake(player, stack);
+        }
+
+        @Override
+        public boolean isEmpty() {
+            return canvas.get().isEmpty();
         }
     }
 }

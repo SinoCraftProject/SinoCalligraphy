@@ -4,6 +4,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import games.moegirl.sinocraft.sinocalligraphy.drawing.DrawHolder;
 import games.moegirl.sinocraft.sinocalligraphy.drawing.DrawVersions;
 import games.moegirl.sinocraft.sinocalligraphy.drawing.SmallBlackWhiteBrushHolder;
+import games.moegirl.sinocraft.sinocalligraphy.gui.BrushGuiScreen;
 import games.moegirl.sinocraft.sinocore.api.utility.GLSwitcher;
 import games.moegirl.sinocraft.sinocore.api.utility.texture.TextureMap;
 import net.minecraft.client.gui.components.AbstractWidget;
@@ -15,6 +16,7 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import org.lwjgl.glfw.GLFW;
 
 import javax.annotation.Nullable;
 import java.util.function.IntConsumer;
@@ -36,6 +38,8 @@ public class Canvas extends AbstractWidget {
     private boolean isEnable = false;
     private boolean isDrag = false;
     private int dragButton = 0;
+
+    private boolean altPressed = false;
 
     public Canvas(AbstractContainerScreen<?> parent, TextureMap atlas, String canvas, String shadow, IntSupplier getColor, IntConsumer setColor) {
         super(0, 0, 0, 0, TextComponent.EMPTY);
@@ -62,7 +66,11 @@ public class Canvas extends AbstractWidget {
             if (isValidClickButton(dragButton)) {
                 drawPoint(pMouseX, pMouseY);
             } else {
-                takeColor(pMouseX, pMouseY);
+                if (altPressed) {
+                    takeColor(pMouseX, pMouseY);
+                } else {
+                    removeColor(pMouseX, pMouseY);
+                }
             }
         }
     }
@@ -79,10 +87,32 @@ public class Canvas extends AbstractWidget {
             if (isValidClickButton(pButton)) {
                 drawPoint(pMouseX, pMouseY);
             } else {
-                takeColor(pMouseX, pMouseY);
+                if (altPressed) {
+                    takeColor(pMouseX, pMouseY);
+                } else {
+                    removeColor(pMouseX, pMouseY);
+                }
             }
         }
         return false;
+    }
+
+    @Override
+    public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
+        if (keyCode == GLFW.GLFW_KEY_LEFT_ALT || keyCode == GLFW.GLFW_KEY_RIGHT_ALT) {
+            altPressed = true;
+        }
+
+        return true;
+    }
+
+    @Override
+    public boolean keyReleased(int keyCode, int scanCode, int modifiers) {
+        if (keyCode == GLFW.GLFW_KEY_LEFT_ALT || keyCode == GLFW.GLFW_KEY_RIGHT_ALT) {
+            altPressed = false;
+        }
+
+        return true;
     }
 
     @Override
@@ -107,9 +137,19 @@ public class Canvas extends AbstractWidget {
         }
     }
 
-    private void takeColor(double pMouseX, double pMouseY) {
+    private void removeColor(double pMouseX, double pMouseY) {
         if (isEnable) {
-            setColor.accept(((byte[]) draw.data())[getPointIndex(pMouseX, pMouseY)]);
+            ((byte[]) draw.data())[getPointIndex(pMouseX, pMouseY)] = (byte) 0;
+        }
+    }
+
+    private void takeColor(double mouseX, double mouseY) {
+        if (isEnable && altPressed) {
+            setColor.accept(((byte[]) draw.data())[getPointIndex(mouseX, mouseY)]);
+            if (parent instanceof BrushGuiScreen gui) {
+                var list = gui.getColorSelection();
+                list.setSelectedItem(list.getEntry(getColor.getAsInt()));
+            }
         }
     }
 
@@ -149,5 +189,9 @@ public class Canvas extends AbstractWidget {
     @Override
     public void updateNarration(NarrationElementOutput pNarrationElementOutput) {
         pNarrationElementOutput.add(NarratedElementType.TITLE, new TextComponent("Canvas"));
+    }
+
+    public boolean isEmpty() {
+        return draw.isEmpty();
     }
 }

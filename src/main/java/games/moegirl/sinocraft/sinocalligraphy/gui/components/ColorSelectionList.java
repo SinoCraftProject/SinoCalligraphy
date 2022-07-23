@@ -133,6 +133,17 @@ public class ColorSelectionList extends SelectionList<ColorSelectionList.ColorEn
         return false;
     }
 
+    public SelectionEntry<ColorEntry> getEntry(int color) {
+        var c = 0;
+        if (color >= 0 && color <= 16) {
+            c = color;
+        }
+
+        final var fC = c;
+        var result = getItems().stream().filter(i -> i.getValue().index == fC).findFirst();
+        return result.orElseThrow();
+    }
+
     record ColorEntry(int index, float color, int rollTarget) {
         ColorEntry(ColorSelectionList list, int index) {
             this(index, 1 - index / 16f, COLOR.h() * index + list.top - SELECTED.y() - COLOR.h() / 2);

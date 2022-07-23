@@ -45,6 +45,7 @@ public class SCALanguageProviderENUS extends I18nProviderBase {
         add(BrushGuiScreen.KEY_OUTPUT_FAILED, "Output failed: %s");
         add("sinocalligraphy.gui.button.up", "Previous Color");
         add("sinocalligraphy.gui.button.down", "Next Color");
+        add(BrushGuiScreen.KEY_DRAW_EMPTY, "Draw something on the paper");
 
         add(FanFoldedItem.FOLDED_DESCRIPTION_LINE_1, "Legend said, TaoismDeeplake used this fan during his speech.");
         add(FanFoldedItem.FOLDED_DESCRIPTION_LINE_2, "He wandered the world without a sword in his hand.");

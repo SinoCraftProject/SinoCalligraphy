@@ -64,6 +64,10 @@ public class BrushMenu extends AbstractContainerMenu {
                     @Override
                     public @NotNull ItemStack safeTake(int p_150648_, int p_150649_, @NotNull Player player) {
                         if (brushContainer.canPaint()) {
+                            if (brushContainer.isDrawEmpty()) {
+                                return ItemStack.EMPTY;
+                            }
+
                             return super.safeTake(p_150648_, p_150649_, player);
                         } else {
                             return ItemStack.EMPTY;
@@ -191,6 +195,10 @@ public class BrushMenu extends AbstractContainerMenu {
         }
 
         public void onTake(Player player, ItemStack stack) {
+        }
+
+        public boolean isEmpty() {
+            return true;
         }
     }
 }
