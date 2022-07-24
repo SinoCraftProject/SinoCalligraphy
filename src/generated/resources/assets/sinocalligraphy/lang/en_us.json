@@ -22,6 +22,7 @@
   "sinocalligraphy.fan_folded.desc.2": "He wandered the world without a sword in his hand.",
   "sinocalligraphy.gui.brush.copied": "Copied",
   "sinocalligraphy.gui.brush.copy": "Left click to copy, right click to paste",
+  "sinocalligraphy.gui.brush.draw.empty": "Draw something on the paper",
   "sinocalligraphy.gui.brush.output": "Output to file",
   "sinocalligraphy.gui.brush.output.failed": "Output failed: %s",
   "sinocalligraphy.gui.brush.output.succeed": "Output succeed",

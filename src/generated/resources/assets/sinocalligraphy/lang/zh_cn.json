@@ -23,6 +23,7 @@
   "sinocalligraphy.fan_folded.desc.2": "\u4ED6\u6D6A\u8FF9\u5929\u5730\uFF0C\u65E0\u957F\u5251\u5728\u624B",
   "sinocalligraphy.gui.brush.copied": "\u5DF2\u590D\u5236",
   "sinocalligraphy.gui.brush.copy": "\u5DE6\u952E\u590D\u5236\uFF0C\u53F3\u952E\u7C98\u8D34",
+  "sinocalligraphy.gui.brush.draw.empty": "\u5728\u7EB8\u4E0A\u753B\u4E9B\u4EC0\u4E48\u5427",
   "sinocalligraphy.gui.brush.output": "\u5BFC\u51FA\u5230\u6587\u4EF6",
   "sinocalligraphy.gui.brush.output.failed": "\u5BFC\u51FA\u5931\u8D25: %s",
   "sinocalligraphy.gui.brush.output.succeed": "\u5BFC\u51FA\u6210\u529F",
