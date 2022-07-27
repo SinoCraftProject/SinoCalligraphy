@@ -65,8 +65,7 @@ public class SmallBlockWhiteBrushRender implements DrawRender {
                 for (int j = 0; j < SIZE; j++) {
                     var alpha = 16 * (16 - draw[index++]) - 1;
                     if (alpha != 255) {
-                        var al = DrawHelper.singleInvert(alpha);
-                        var mixed = DrawHelper.mix(foreground, background, al);
+                        var mixed = type.mix(alpha);
 
                         RenderSystem.setShaderColor(1, 1, 1, 1);
                         GuiComponent.fill(pPoseStack, x1, y1, x2, y2, mixed);
@@ -85,13 +84,8 @@ public class SmallBlockWhiteBrushRender implements DrawRender {
     public void draw(PoseStack stack, MultiBufferSource buffer, int light) {
         var type = holder.getType();
         var background = type.getBackground();
-        var foreground = type.getForeground();
 
-//        RenderSystem.setShader(GameRenderer::getPositionColorShader);
-//        RenderSystem.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
-//        RenderSystem.enableBlend();
-//        RenderSystem.disableDepthTest();
-
+        RenderSystem.setShader(GameRenderer::getPositionColorLightmapShader);
         VertexConsumer vertex = buffer.getBuffer(RENDER_WITH_LIGHT);
 
         if (holder.isEmpty()) {
@@ -100,39 +94,17 @@ public class SmallBlockWhiteBrushRender implements DrawRender {
             byte[] pixels = holder.getDraw();
             for (int x = 0; x < SIZE; x++) {
                 for (int y = 0; y < SIZE; y++) {
-                    int alpha = (16 - pixels[x * SIZE + y]);
+                    var alpha = 16 * (16 - pixels[x * SIZE + y]) - 1;
 
-                    if (alpha == 16) {
+                    if (alpha == 255) {
                         drawSquare(stack, vertex, background, x, y, 1, light);
                     } else {
-                        var al = DrawHelper.singleInvert(alpha);
-                        var mixed = DrawHelper.mix(foreground, background, al);
-
-                        var a = 0.0625f * alpha - 1;
-                        var r = 0.00390625f * FastColor.ARGB32.red(foreground);
-                        var g = 0.00390625f * FastColor.ARGB32.green(foreground);
-                        var b = 0.00390625f * FastColor.ARGB32.blue(foreground);
-
-//                        vertex.vertex(stack.last().pose(), x, y, 0).color(r, g, b, a).uv2(light).endVertex();
-//                        vertex.vertex(stack.last().pose(), x, y + 1, 0).color(r, g, b, a).uv2(light).endVertex();
-//                        vertex.vertex(stack.last().pose(), x + 1, y + 1, 0).color(r, g, b, a).uv2(light).endVertex();
-//                        vertex.vertex(stack.last().pose(), x + 1, y, 0).color(r, g, b, a).uv2(light).endVertex();
-
-//                        var color = DrawHelper.mix(foreground, background, alpha);
-//
-//                        alpha = DrawHelper.singleInvert(alpha);
-//                        var color = FastColor.ARGB32.color(alpha, FastColor.ARGB32.red(foreground),
-//                                FastColor.ARGB32.green(foreground),
-//                                FastColor.ARGB32.blue(foreground));
-//
+                        var mixed = type.mix(alpha);
                         drawSquare(stack, vertex, mixed, x, y, 1, light);
                     }
                 }
             }
         }
-
-//        RenderSystem.disableBlend();
-//        RenderSystem.enableDepthTest();
     }
 
     private void drawSquare(PoseStack stack, VertexConsumer vertex, int color, int x, int y, int size, int light) {

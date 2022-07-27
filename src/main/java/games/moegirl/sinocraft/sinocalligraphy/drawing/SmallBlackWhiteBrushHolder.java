@@ -165,7 +165,12 @@ public class SmallBlackWhiteBrushHolder implements DrawHolder {
 
     public NativeImage toImage() {
         NativeImage image = new NativeImage(SIZE, SIZE, false);
-        image.fillRect(0, 0, SIZE, SIZE, type.getBackground());
+
+        var foreground = type.getForeground();
+        var background = type.getBackground();
+
+        var bgColor = DrawHelper.toNativeImage(background);
+        image.fillRect(0, 0, SIZE, SIZE, bgColor);
 
         int index = 0;
         for (int w = 0; w < SmallBlackWhiteBrushHolder.SIZE; w++) {
@@ -176,13 +181,9 @@ public class SmallBlackWhiteBrushHolder implements DrawHolder {
                     continue;
                 }
 
-                var foreground = DrawHelper.invert(type.getForeground());
-                var argb = FastColor.ARGB32.color(alpha,
-                        FastColor.ARGB32.red(foreground),
-                        FastColor.ARGB32.green(foreground),
-                        FastColor.ARGB32.blue(foreground));
-
-                image.setPixelRGBA(w, h, argb);
+                var mixed = type.mix(alpha);
+                var abgr = DrawHelper.toNativeImage(mixed);
+                image.setPixelRGBA(w, h, abgr);
             }
         }
         return image;

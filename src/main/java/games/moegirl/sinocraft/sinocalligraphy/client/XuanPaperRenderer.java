@@ -3,16 +3,14 @@ package games.moegirl.sinocraft.sinocalligraphy.client;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Vector3f;
-import games.moegirl.sinocraft.sinocalligraphy.drawing.DrawHolder;
-import games.moegirl.sinocraft.sinocalligraphy.drawing.DrawVersion;
-import games.moegirl.sinocraft.sinocalligraphy.drawing.DrawVersions;
-import games.moegirl.sinocraft.sinocalligraphy.drawing.SmallBlackWhiteBrushHolder;
+import games.moegirl.sinocraft.sinocalligraphy.drawing.*;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.geom.EntityModelSet;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -43,7 +41,15 @@ public class XuanPaperRenderer extends BlockEntityWithoutLevelRenderer {
 
     @Override
     public void renderByItem(ItemStack stack, ItemTransforms.TransformType transformType, PoseStack poseStack, MultiBufferSource buffer, int packedLight, int packedOverlay) {
-        DrawHolder holder = DrawHolder.parse(stack.getTag()).orElseGet(DrawVersions.LATEST_BRUSH_VERSION::newDraw);
+        var tag = stack.getOrCreateTag();
+        CompoundTag nbt = null;
+        if (tag.contains(Constants.TAG_HOLDER)) {
+            nbt = tag.getCompound(Constants.TAG_HOLDER);
+        } else {
+            nbt = new CompoundTag();
+        }
+
+        DrawHolder holder = DrawHolder.parse(nbt).orElseGet(DrawVersions.LATEST_BRUSH_VERSION::newDraw);
         RenderSystem.disableDepthTest();
         RenderSystem.disableCull();
         poseStack.pushPose();
