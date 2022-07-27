@@ -21,6 +21,7 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * Menu(Container) of Chinese brush.
@@ -29,7 +30,9 @@ import org.jetbrains.annotations.NotNull;
  */
 public class BrushMenu extends AbstractContainerMenu {
     public static final ResourceLocation GUI = new ResourceLocation(SinoCalligraphy.MODID, "textures/gui/chinese_brush.png");
-    public static TextureMap TEXTURE = TextureMap.of(GUI);
+
+    @Nullable
+    public static TextureMap TEXTURE = null;
 
     protected BrushContainer brushContainer;
     protected Inventory playerInventory;
@@ -52,6 +55,14 @@ public class BrushMenu extends AbstractContainerMenu {
         brushContainer = new BrushContainer(this);
 
         brush = brushIn;
+
+        if (TEXTURE == null) {
+            if (!playerInv.player.level.isClientSide && playerInv.player.getServer().isDedicatedServer()) {
+                TEXTURE = TextureMap.of(GUI, false);
+            } else {
+                TEXTURE = TextureMap.of(GUI);
+            }
+        }
 
         TEXTURE.placeSlot(brushContainer, "paper", BrushContainer.XUAN_PAPER_SLOT, this::addSlot,
                 (container, slot, x, y) -> new BrushInputSlot(brushContainer, slot, x, y, SCAItemTags.PAPERS, this) {
