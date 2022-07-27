@@ -167,6 +167,10 @@ public class Canvas extends AbstractWidget {
     }
 
     public DrawHolder getDraw(@Nullable Player author) {
+        if (draw.hasAuthor()) {
+            return draw;
+        }
+
         draw.setAuthor(author);
         return draw;
     }
