@@ -88,7 +88,7 @@ public class DrawHelper {
 
         var a = alphaFromIntAndInvert(alpha);
 
-        return innerMix(foreground, background, 1 - a);
+        return innerMix(foreground, background, a);
     }
 
     public static Integer mixWithBackgroundBlack(Triple<Integer, Integer, Integer> tripleFgBgAlpha) {
