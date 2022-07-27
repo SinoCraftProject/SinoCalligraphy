@@ -4,6 +4,7 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Vector3f;
 import games.moegirl.sinocraft.sinocalligraphy.drawing.DrawHolder;
+import games.moegirl.sinocraft.sinocalligraphy.drawing.DrawVersion;
 import games.moegirl.sinocraft.sinocalligraphy.drawing.DrawVersions;
 import games.moegirl.sinocraft.sinocalligraphy.drawing.SmallBlackWhiteBrushHolder;
 import net.minecraft.client.Minecraft;

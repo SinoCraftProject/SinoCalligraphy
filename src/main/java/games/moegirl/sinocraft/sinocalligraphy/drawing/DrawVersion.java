@@ -1,7 +1,10 @@
 package games.moegirl.sinocraft.sinocalligraphy.drawing;
 
+import com.google.gson.Gson;
 import com.mojang.blaze3d.platform.NativeImage;
+import games.moegirl.sinocraft.sinocalligraphy.utility.XuanPaperType;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.TagParser;
 import net.minecraft.network.FriendlyByteBuf;
 
 import javax.annotation.Nullable;
@@ -10,6 +13,7 @@ import java.util.List;
 import java.util.Optional;
 
 public abstract class DrawVersion {
+    public static final Gson GSON = new Gson();
 
     private static final List<DrawVersion> VERSIONS = new LinkedList<>();
 
@@ -23,58 +27,55 @@ public abstract class DrawVersion {
 
     /**
      * Find version from string
-     * @param value string from {@link #write(DrawHolder, StringBuffer)}
+     * @param versionId string from {@link #write(DrawHolder, StringBuffer)}
      * @return version if exist
      */
-    public static Optional<DrawVersion> find(String value) {
+    public static Optional<DrawVersion> find(String versionId) {
         for (int i = VERSIONS.size() - 1; i >= 0; i--) {
-            DrawVersion version = VERSIONS.get(i);
-            if (version.match(value)) {
-                return Optional.of(version);
+            DrawVersion holder = VERSIONS.get(i);
+            if (holder.match(versionId)) {
+                return Optional.of(holder);
             }
         }
+
         return Optional.empty();
     }
 
     /**
      * Find version from network
-     * @param value buffer from {@link #write(DrawHolder, FriendlyByteBuf)}
+     * @param buf buffer from {@link #write(DrawHolder, FriendlyByteBuf)}
      * @return version if exist
      */
-    public static Optional<DrawVersion> find(FriendlyByteBuf value) {
-        for (int i = VERSIONS.size() - 1; i >= 0; i--) {
-            DrawVersion version = VERSIONS.get(i);
-            if (version.match(value)) {
-                return Optional.of(version);
-            }
-        }
-        return Optional.empty();
+    public static Optional<DrawVersion> find(FriendlyByteBuf buf) {
+        var ver = buf.readUtf();
+        return find(ver);
     }
 
     /**
      * Find version from nbt
-     * @param value tag from {@link #write(DrawHolder, CompoundTag)}
+     * @param tag tag from {@link #write(DrawHolder, CompoundTag)}
      * @return version if exist
      */
-    public static Optional<DrawVersion> find(@Nullable CompoundTag value) {
-        if (value == null) {
+    public static Optional<DrawVersion> find(@Nullable CompoundTag tag) {
+        if (tag == null) {
             return Optional.empty();
         }
-        for (int i = VERSIONS.size() - 1; i >= 0; i--) {
-            DrawVersion version = VERSIONS.get(i);
-            if (version.match(value)) {
-                return Optional.of(version);
-            }
+
+        if (!tag.contains(Constants.TAG_VERSION)) {
+            return Optional.empty();
         }
-        return Optional.empty();
+
+        var versionId = tag.getString(Constants.TAG_VERSION);
+
+        return find(versionId);
     }
 
     public static DrawHolder update(DrawHolder draw) {
         DrawHolder holder = draw;
-        DrawVersion version = draw.version();
+        DrawVersion version = draw.getVersion();
         while (version.nextVersion != null) {
             holder = version.nextVersion.updateFrom(holder);
-            version = holder.version();
+            version = holder.getVersion();
         }
         return holder;
     }
@@ -169,6 +170,16 @@ public abstract class DrawVersion {
     public abstract DrawHolder newDraw();
 
     /**
+     * Create a new draw holder with type.
+     * Ignore type by default for BrushV1 and BrushV2.
+     *
+     * @param type Type of paper.
+     * @return holder
+     * @since BrushV3
+     */
+    public abstract DrawHolder newDraw(XuanPaperType type);
+
+    /**
      * Create a holder from the old version
      * @param oldHolder old version holder
      * @return new version holder
@@ -177,5 +188,26 @@ public abstract class DrawVersion {
         DrawHolder holder = newDraw();
         holder.apply(oldHolder);
         return holder;
+    }
+
+    protected String getVersionId() {
+        return "oldVersion";
+    }
+
+    public static Optional<DrawVersion> from(String str) {
+        CompoundTag nbt = null;
+
+        try {
+            GSON.fromJson(str, Object.class);
+            nbt = TagParser.parseTag(str);
+        } catch (Exception ignored) {
+
+        }
+
+        if (nbt != null) {
+            return find(nbt);
+        } else {
+            return find(str);
+        }
     }
 }

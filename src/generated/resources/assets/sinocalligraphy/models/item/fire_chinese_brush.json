@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "sinocalligraphy:item/fire_chinese_brush"
+  }
+}

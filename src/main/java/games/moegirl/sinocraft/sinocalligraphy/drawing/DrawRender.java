@@ -2,6 +2,7 @@ package games.moegirl.sinocraft.sinocalligraphy.drawing;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -13,6 +14,8 @@ public interface DrawRender {
 
     /**
      * Render the draw directly
+     * qyl27: This was used for GUI.
+     *
      * @param pPoseStack stack
      * @param x x
      * @param y y
@@ -34,5 +37,6 @@ public interface DrawRender {
      * @param pPoseStack stack
      * @param pBuffer buffer
      */
+    @Deprecated(since = "BrushV3")
     void draw(PoseStack pPoseStack, MultiBufferSource pBuffer);
 }

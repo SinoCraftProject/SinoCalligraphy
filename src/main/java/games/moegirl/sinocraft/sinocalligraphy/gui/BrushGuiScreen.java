@@ -14,6 +14,7 @@ import games.moegirl.sinocraft.sinocalligraphy.gui.menu.BrushMenu;
 import games.moegirl.sinocraft.sinocalligraphy.network.SCANetworks;
 import games.moegirl.sinocraft.sinocalligraphy.network.packet.DrawSaveC2SPacket;
 import games.moegirl.sinocraft.sinocalligraphy.network.packet.SaveFailedS2CPacket;
+import games.moegirl.sinocraft.sinocalligraphy.utility.XuanPaperType;
 import games.moegirl.sinocraft.sinocore.api.client.component.AnimatedText;
 import games.moegirl.sinocraft.sinocore.api.utility.GLSwitcher;
 import net.minecraft.client.Minecraft;
@@ -48,12 +49,14 @@ public class BrushGuiScreen extends AbstractContainerScreen<BrushMenu> {
     public static final String KEY_COPY = SinoCalligraphy.MODID + ".gui.brush.copy";
     public static final String KEY_COPIED = SinoCalligraphy.MODID + ".gui.brush.copied";
     public static final String KEY_PASTE_FAILED = SinoCalligraphy.MODID + ".gui.brush.paste.failed";
+    public static final String KEY_PASTE_SUCCEED = SinoCalligraphy.MODID + ".gui.brush.paste.succeed";
     public static final String KEY_OUTPUT = SinoCalligraphy.MODID + ".gui.brush.output";
     public static final String KEY_OUTPUT_SUCCEED = SinoCalligraphy.MODID + ".gui.brush.output.succeed";
     public static final String KEY_OUTPUT_FAILED = SinoCalligraphy.MODID + ".gui.brush.output.failed";
     public static final String KEY_DRAW_EMPTY = SinoCalligraphy.MODID + ".gui.brush.draw.empty";
+    public static final String KEY_SAVING = SinoCalligraphy.MODID + ".gui.brush.save.waiting";
 
-    private final Lazy<Canvas> canvas = Lazy.of(() -> new Canvas(this, TEXTURE, "canvas", "shadow", menu::getColor, menu::setColor));
+    private final Lazy<Canvas> canvas = Lazy.of(() -> new Canvas(this, TEXTURE, "canvas", "shadow", menu::getColor, menu::setColor, XuanPaperType.WHITE));
     private final Lazy<AnimatedText> text = Lazy.of(() -> new AnimatedText(130, 130));
     private final Lazy<ColorSelectionList> list = Lazy.of(() -> ColorSelectionList.create(this));
     private boolean saving = false;
@@ -126,10 +129,10 @@ public class BrushGuiScreen extends AbstractContainerScreen<BrushMenu> {
                 && slot.container instanceof BrushContainer
                 && slot.getContainerSlot() == BrushContainer.FILLED_XUAN_PAPER_SLOT) {
             if (saving) {
-                text.get().begin(Duration.ofSeconds(3), 1, 0, 255, 255, new TextComponent("Waiting..."));
+                text.get().begin(Duration.ofSeconds(3), 1, 0, 255, 255, new TranslatableComponent(KEY_SAVING));
             } else {
                 saving = true;
-                text.get().begin(Duration.ofSeconds(3), 1, 0, 255, 255, new TextComponent("Saving..."));
+                text.get().begin(Duration.ofSeconds(3), 1, 0, 255, 255, new TranslatableComponent(KEY_SAVE_SUCCEED));
                 SCANetworks.send(new DrawSaveC2SPacket(canvas.get().getDraw(Minecraft.getInstance().player), button));
             }
             return true;
@@ -154,15 +157,14 @@ public class BrushGuiScreen extends AbstractContainerScreen<BrushMenu> {
     private void copyDraw(Button button) {
         DrawHolder holder = canvas.get().getDraw(Minecraft.getInstance().player);
         StringBuffer sb = new StringBuffer();
-        holder.version().write(holder, sb);
+        holder.getVersion().write(holder, sb);
         Minecraft.getInstance().keyboardHandler.setClipboard(sb.toString());
         text.get().begin(Duration.ofSeconds(1), 0, 0, 255, 0, new TranslatableComponent(KEY_COPIED));
     }
 
     private void pasteDraw(Button button) {
         String data = Minecraft.getInstance().keyboardHandler.getClipboard();
-        DrawHolder.parse(data)
-                .map(DrawVersion::update)
+        DrawHolder.from(data)
                 .filter(h -> canvas.get().setDraw(h))
                 .ifPresentOrElse(c -> {},
                         () -> text.get().begin(Duration.ofSeconds(1), 0, 255, 0, 0, new TranslatableComponent(KEY_PASTE_FAILED, data)));
@@ -172,20 +174,31 @@ public class BrushGuiScreen extends AbstractContainerScreen<BrushMenu> {
     private void saveToFile(Button button) {
         LocalPlayer player = Minecraft.getInstance().player;
         DrawHolder holder = canvas.get().getDraw(player);
-        try (NativeImage image = holder.version().toImage(holder)) {
-            File name = new File(Minecraft.getInstance().gameDirectory, "sinoseries/sinocalligraphy/draws/" + System.currentTimeMillis() + ".png");
+        try (NativeImage image = holder.getVersion().toImage(holder)) {
+            File name = new File(Minecraft.getInstance().gameDirectory,
+                    "sinoseries/sinocalligraphy/draws/" + holder.getAuthor().getString() +
+                            "/" + System.currentTimeMillis() + ".png");
             name.getParentFile().mkdirs();
             if (!name.exists()) {
                 name.createNewFile();
             }
             image.writeToFile(name);
-            if (player != null) player.displayClientMessage(new TranslatableComponent(KEY_OUTPUT_SUCCEED), false);
+            if (player != null) {
+                player.displayClientMessage(new TranslatableComponent(KEY_OUTPUT_SUCCEED), false);
+            }
+
             TextComponent path = new TextComponent(name.toString());
             path.getStyle().withClickEvent(new ClickEvent(ClickEvent.Action.OPEN_FILE, name.getAbsolutePath()));
-            if (player != null) player.displayClientMessage(path, false);
+
+            if (player != null) {
+                player.displayClientMessage(path, false);
+            }
+
         } catch (IOException e) {
             e.printStackTrace();
-            if (player != null) player.displayClientMessage(new TranslatableComponent(KEY_OUTPUT_FAILED, e.getMessage()), false);
+            if (player != null) {
+                player.displayClientMessage(new TranslatableComponent(KEY_OUTPUT_FAILED, e.getMessage()), false);
+            }
         }
     }
 
@@ -252,6 +265,11 @@ public class BrushGuiScreen extends AbstractContainerScreen<BrushMenu> {
             SCANetworks.send(new DrawSaveC2SPacket(canvas.get().getDraw(player), 0));
             clearCanvas();
             super.onTake(player, stack);
+        }
+
+        @Override
+        public void setPaperType(XuanPaperType type) {
+            canvas.get().setDrawType(type);
         }
 
         @Override

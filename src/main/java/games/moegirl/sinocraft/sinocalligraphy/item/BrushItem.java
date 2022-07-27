@@ -19,6 +19,10 @@ public class BrushItem extends Item {
                 .setNoRepair());
     }
 
+    public BrushItem(Properties properties) {
+        super(properties);
+    }
+
     @Override
     public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
         var item = player.getItemInHand(hand);

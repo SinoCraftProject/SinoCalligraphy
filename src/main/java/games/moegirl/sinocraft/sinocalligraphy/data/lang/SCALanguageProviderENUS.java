@@ -2,10 +2,7 @@ package games.moegirl.sinocraft.sinocalligraphy.data.lang;
 
 import games.moegirl.sinocraft.sinocalligraphy.block.SCABlocks;
 import games.moegirl.sinocraft.sinocalligraphy.gui.BrushGuiScreen;
-import games.moegirl.sinocraft.sinocalligraphy.item.FanFoldedItem;
-import games.moegirl.sinocraft.sinocalligraphy.item.FanItem;
-import games.moegirl.sinocraft.sinocalligraphy.item.FilledXuanPaper;
-import games.moegirl.sinocraft.sinocalligraphy.item.SCAItems;
+import games.moegirl.sinocraft.sinocalligraphy.item.*;
 import games.moegirl.sinocraft.sinocalligraphy.drawing.DrawHolder;
 import games.moegirl.sinocraft.sinocore.api.data.I18nProviderBase;
 import net.minecraft.data.DataGenerator;
@@ -24,12 +21,13 @@ public class SCALanguageProviderENUS extends I18nProviderBase {
         addItem(SCAItems.WOOD_PULP_BUCKET, "Bucket of wood pulp");
         addItem(SCAItems.FAN, "Unfolded fan");
         addItem(SCAItems.FAN_FOLDED, "Fan");
+        addItem(SCAItems.FIRE_BRUSH, "Historian brush");
 
         addBlock(SCABlocks.PAPER_DRYING_RACK, "Paper drying rack");
 
         add("itemGroup.sino_calligraphy", "SinoCalligraphy");
 
-        add(FilledXuanPaper.HOVER_AUTHOR_PREFIX, "Author: ");
+        add(FilledXuanPaperItem.HOVER_AUTHOR_PREFIX, "Author: ");
 
         add(DrawHolder.KEY_NO_AUTHOR, "Unknown");
 
@@ -40,18 +38,24 @@ public class SCALanguageProviderENUS extends I18nProviderBase {
         add(BrushGuiScreen.KEY_COPY, "Left click to copy, right click to paste");
         add(BrushGuiScreen.KEY_COPIED, "Copied");
         add(BrushGuiScreen.KEY_PASTE_FAILED, "Failed to paste draw %s");
+        add(BrushGuiScreen.KEY_PASTE_SUCCEED, "Paste succeed");
         add(BrushGuiScreen.KEY_OUTPUT, "Output to file");
         add(BrushGuiScreen.KEY_OUTPUT_SUCCEED, "Output succeed");
         add(BrushGuiScreen.KEY_OUTPUT_FAILED, "Output failed: %s");
         add("sinocalligraphy.gui.button.up", "Previous Color");
         add("sinocalligraphy.gui.button.down", "Next Color");
         add(BrushGuiScreen.KEY_DRAW_EMPTY, "Draw something on the paper");
+        add(BrushGuiScreen.KEY_SAVING, "Saving...");
 
         add(FanFoldedItem.FOLDED_DESCRIPTION_LINE_1, "Legend said, TaoismDeeplake used this fan during his speech.");
         add(FanFoldedItem.FOLDED_DESCRIPTION_LINE_2, "He wandered the world without a sword in his hand.");
 
         add(FanItem.UNFOLDED_DESCRIPTION_LINE_1, "Opening this fan, Rivers and mountains rendered by light ink floats on it.");
         add(FanItem.UNFOLDED_DESCRIPTION_LINE_2, "Carrying this fan, there will be no fear of disappointing life. fears.");
+
+        add(FireBrushItem.FIRE_BRUSH_DESC_KEY_1, "This is a brush that burns with flames! Record the righteous words.");
+        add(FireBrushItem.FIRE_BRUSH_DESC_KEY_2, "In fact, it just dipped in red ink (?)");
+        add(SCAItems.FIRE_BRUSH.get().getDescriptionId() + ".clue", "Time, time will tell us the answer.");
 
         add("sinocalligraphy.advancements.sca", "SinoCalligraphy");
         add("sinocalligraphy.advancements.sca.desc", "The painting that used color to depict all walks of life, while retained black and white to render the beauty of ages. (Use Chinese for better experience.)");

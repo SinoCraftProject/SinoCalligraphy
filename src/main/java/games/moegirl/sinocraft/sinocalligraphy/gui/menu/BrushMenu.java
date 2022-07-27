@@ -7,9 +7,8 @@ import games.moegirl.sinocraft.sinocalligraphy.gui.container.BrushContainer;
 import games.moegirl.sinocraft.sinocalligraphy.gui.slot.BrushInputSlot;
 import games.moegirl.sinocraft.sinocalligraphy.item.SCAItems;
 import games.moegirl.sinocraft.sinocalligraphy.network.packet.SaveFailedS2CPacket;
-import games.moegirl.sinocraft.sinocore.api.utility.texture.ButtonEntry;
+import games.moegirl.sinocraft.sinocalligraphy.utility.XuanPaperType;
 import games.moegirl.sinocraft.sinocore.api.utility.texture.SlotStrategy;
-import games.moegirl.sinocraft.sinocore.api.utility.texture.TextureEntry;
 import games.moegirl.sinocraft.sinocore.api.utility.texture.TextureMap;
 import games.moegirl.sinocraft.sinocore.gui.slot.TakeOnlySlot;
 import net.minecraft.network.FriendlyByteBuf;
@@ -55,7 +54,14 @@ public class BrushMenu extends AbstractContainerMenu {
         brush = brushIn;
 
         TEXTURE.placeSlot(brushContainer, "paper", BrushContainer.XUAN_PAPER_SLOT, this::addSlot,
-                (container, slot, x, y) -> new BrushInputSlot(brushContainer, slot, x, y, SCAItems.EMPTY_XUAN_PAPER, this));
+                (container, slot, x, y) -> new BrushInputSlot(brushContainer, slot, x, y, SCAItemTags.PAPERS, this) {
+                    @Override
+                    public void setChanged() {
+                        super.setChanged();
+
+                        gui.setPaperType(XuanPaperType.of(getItem()));
+                    }
+                });
         TEXTURE.placeSlot(brushContainer, "ink", BrushContainer.INK_SLOT, this::addSlot,
                 (container, slot, x, y) ->  new BrushInputSlot(brushContainer, slot, x, y, SCAItemTags.INKS, this));
         TEXTURE.placeSlot(brushContainer, "result", BrushContainer.FILLED_XUAN_PAPER_SLOT, this::addSlot,
@@ -105,8 +111,8 @@ public class BrushMenu extends AbstractContainerMenu {
 
     @Override
     public boolean stillValid(Player player) {
-        return player.getMainHandItem().is(SCAItems.BRUSH.get())
-                || player.getOffhandItem().is(SCAItems.BRUSH.get());
+        return player.getMainHandItem().is(SCAItemTags.BRUSHES)
+                || player.getOffhandItem().is(SCAItemTags.BRUSHES);
     }
 
     /**
@@ -195,6 +201,9 @@ public class BrushMenu extends AbstractContainerMenu {
         }
 
         public void onTake(Player player, ItemStack stack) {
+        }
+
+        public void setPaperType(XuanPaperType type) {
         }
 
         public boolean isEmpty() {

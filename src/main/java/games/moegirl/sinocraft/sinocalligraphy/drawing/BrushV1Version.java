@@ -4,6 +4,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.mojang.blaze3d.platform.NativeImage;
+import games.moegirl.sinocraft.sinocalligraphy.utility.XuanPaperType;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.FriendlyByteBuf;
@@ -42,7 +43,7 @@ public class BrushV1Version extends DrawVersion {
         try {
             String json = value.substring(SYMBOL.length());
             JsonObject object = JsonParser.parseString(json).getAsJsonObject();
-            byte[] draw = (byte[]) holder.data();
+            byte[] draw = (byte[]) holder.getData();
             if (object.has(TAG_PIXELS)) {
                 JsonArray array = object.getAsJsonArray(TAG_PIXELS);
                 int len = Math.min(draw.length, array.size());
@@ -81,12 +82,12 @@ public class BrushV1Version extends DrawVersion {
         sb.append(SYMBOL);
         JsonObject json = new JsonObject();
         JsonArray pixels = new JsonArray();
-        for (byte b : (byte[]) holder.data()) {
+        for (byte b : (byte[]) holder.getData()) {
             pixels.add(b);
         }
         json.add(TAG_PIXELS, pixels);
         if (holder.hasAuthor()) {
-            json.addProperty(TAG_AUTHOR, holder.authorAsString());
+            json.addProperty(TAG_AUTHOR, holder.getAuthorAsString());
         }
         sb.append(json);
     }
@@ -95,17 +96,17 @@ public class BrushV1Version extends DrawVersion {
     public void write(DrawHolder holder, FriendlyByteBuf buf) {
         buf.writeUtf(SYMBOL);
         buf.writeBoolean(holder.hasAuthor());
-        buf.writeByteArray((byte[]) holder.data());
+        buf.writeByteArray((byte[]) holder.getData());
         if (holder.hasAuthor()) {
-            buf.writeUtf(holder.authorAsString());
+            buf.writeUtf(holder.getAuthorAsString());
         }
     }
 
     @Override
     public void write(DrawHolder holder, CompoundTag tag) {
-        tag.putByteArray(TAG_PIXELS, (byte[]) holder.data());
+        tag.putByteArray(TAG_PIXELS, (byte[]) holder.getData());
         if (holder.hasAuthor()) {
-            tag.putString(TAG_AUTHOR, holder.authorAsString());
+            tag.putString(TAG_AUTHOR, holder.getAuthorAsString());
         }
     }
 
@@ -117,6 +118,11 @@ public class BrushV1Version extends DrawVersion {
     @Override
     public DrawHolder newDraw() {
         return new SmallBlackWhiteBrushHolder(this);
+    }
+
+    @Override
+    public DrawHolder newDraw(XuanPaperType type) {
+        return newDraw();
     }
 
     @Override

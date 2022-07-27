@@ -1,6 +1,7 @@
 package games.moegirl.sinocraft.sinocalligraphy.drawing;
 
 import games.moegirl.sinocraft.sinocalligraphy.SinoCalligraphy;
+import games.moegirl.sinocraft.sinocalligraphy.utility.XuanPaperType;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
@@ -23,6 +24,7 @@ public interface DrawHolder {
      * @return holder
      */
     static Optional<DrawHolder> parse(String value) {
+//        return Optional.of(DrawVersion.from(value));
         return DrawVersion.find(value).map(v -> v.read(value)).map(DrawVersion::update);
     }
 
@@ -32,7 +34,10 @@ public interface DrawHolder {
      * @return holder
      */
     static Optional<DrawHolder> parse(FriendlyByteBuf value) {
-        return DrawVersion.find(value).map(v -> v.read(value)).map(DrawVersion::update);
+//        return Optional.of(DrawVersion.from(value));
+        return DrawVersion.find(new FriendlyByteBuf(value.copy()))
+                .map(v -> v.read(value))
+                .map(DrawVersion::update);
     }
 
     /**
@@ -41,6 +46,7 @@ public interface DrawHolder {
      * @return holder
      */
     static Optional<DrawHolder> parse(@Nullable CompoundTag value) {
+//        return Optional.of(DrawVersion.from(value));x
         return DrawVersion.find(value).map(v -> v.read(value)).map(DrawVersion::update);
     }
 
@@ -51,19 +57,19 @@ public interface DrawHolder {
      * Get the draw in the holder
      * @return draw
      */
-    Object data();
+    byte[] getData();
 
     /**
      * Set a draw to the holder
      * @param data draw data
      */
-    void setDraw(Object data);
+    void setDraw(byte[] data);
 
     /**
      * Get the name of author, or unknown author if not exist author
      * @return author name
      */
-    Component author();
+    Component getAuthor();
 
     /**
      * Set the name of author
@@ -97,21 +103,54 @@ public interface DrawHolder {
      * Get author as string
      * @return author string
      */
-    default String authorAsString() {
-        return Component.Serializer.toJson(author());
+    default String getAuthorAsString() {
+        return Component.Serializer.toJson(getAuthor());
     }
 
     /**
      * Get the version of the holder
      * @return version
      */
-    DrawVersion version();
+    DrawVersion getVersion();
+
+    /**
+     * Set the version of the holder
+     * @param version version of the holder.
+     * @since BrushV3
+     */
+    void setVersion(DrawVersion version);
 
     /**
      * True if the draw is blank (or empty)
      * @return draw is blank
      */
     boolean isEmpty();
+
+    /**
+     * Get type of paper.
+     * @return Paper type.
+     */
+    XuanPaperType getType();
+
+    /**
+     * Set the type of the paper.
+     * @param type Paper type.
+     */
+    void setType(XuanPaperType type);
+
+    /**
+     * To nbt.
+     * @return NBT.
+     * @since BrushV3
+     */
+    CompoundTag serializeNBT();
+
+    /**
+     * From nbt.
+     * @param nbt NBT.
+     * @since BrushV3
+     */
+    void deserializeNBT(CompoundTag nbt);
 
     /**
      * Get an object to draw the draw
@@ -139,9 +178,14 @@ public interface DrawHolder {
      * @param dst destination
      */
     static void copyDirectly(DrawHolder src, DrawHolder dst) {
-        dst.setDraw(src.data());
+        dst.setDraw(src.getData());
         if (src.hasAuthor()) {
-            dst.setAuthor(src.author());
+            dst.setAuthor(src.getAuthor());
         }
+        dst.setType(src.getType());
+    }
+
+    static Optional<DrawHolder> from(String str) {
+        return DrawVersion.from(str).map(v -> v.read(str)).map(DrawVersion::update);
     }
 }

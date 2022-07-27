@@ -5,6 +5,7 @@ import games.moegirl.sinocraft.sinocalligraphy.drawing.DrawHolder;
 import games.moegirl.sinocraft.sinocalligraphy.drawing.DrawVersions;
 import games.moegirl.sinocraft.sinocalligraphy.drawing.SmallBlackWhiteBrushHolder;
 import games.moegirl.sinocraft.sinocalligraphy.gui.BrushGuiScreen;
+import games.moegirl.sinocraft.sinocalligraphy.utility.XuanPaperType;
 import games.moegirl.sinocraft.sinocore.api.utility.GLSwitcher;
 import games.moegirl.sinocraft.sinocore.api.utility.texture.TextureMap;
 import net.minecraft.client.gui.components.AbstractWidget;
@@ -34,14 +35,16 @@ public class Canvas extends AbstractWidget {
     private final AbstractContainerScreen<?> parent;
     private int canvasSize;
 
-    private DrawHolder draw = DrawVersions.LATEST_BRUSH_VERSION.newDraw();
+    private DrawHolder draw = null;
+
     private boolean isEnable = false;
     private boolean isDrag = false;
     private int dragButton = 0;
 
     private boolean altPressed = false;
 
-    public Canvas(AbstractContainerScreen<?> parent, TextureMap atlas, String canvas, String shadow, IntSupplier getColor, IntConsumer setColor) {
+    public Canvas(AbstractContainerScreen<?> parent, TextureMap atlas, String canvas,
+                  String shadow, IntSupplier getColor, IntConsumer setColor, XuanPaperType type) {
         super(0, 0, 0, 0, TextComponent.EMPTY);
         this.atlas = atlas;
         this.parent = parent;
@@ -49,6 +52,8 @@ public class Canvas extends AbstractWidget {
         this.shadow = shadow;
         this.getColor = getColor;
         this.setColor = setColor;
+
+        draw = DrawVersions.LATEST_BRUSH_VERSION.newDraw(type);
     }
 
     @Override
@@ -116,11 +121,11 @@ public class Canvas extends AbstractWidget {
     }
 
     @Override
-    public void render(PoseStack pPoseStack, int pMouseX, int pMouseY, float pPartialTick) {
-        atlas.blitTexture(pPoseStack, canvas, parent);
-        draw.render().draw(pPoseStack, x + 1, y + 1, canvasSize, canvasSize);
+    public void render(PoseStack stack, int pMouseX, int pMouseY, float pPartialTick) {
+        atlas.blitTexture(stack, canvas, parent);
+        draw.render().draw(stack, x + 1, y + 1, canvasSize, canvasSize);
         if (!isEnable()) {
-            atlas.blitTexture(pPoseStack, shadow, parent, GLSwitcher.blend().enable());
+            atlas.blitTexture(stack, shadow, parent, GLSwitcher.blend().enable());
         }
     }
 
@@ -133,19 +138,19 @@ public class Canvas extends AbstractWidget {
 
     private void drawPoint(double pMouseX, double pMouseY) {
         if (isEnable) {
-            ((byte[]) draw.data())[getPointIndex(pMouseX, pMouseY)] = (byte) getColor.getAsInt();
+            ((byte[]) draw.getData())[getPointIndex(pMouseX, pMouseY)] = (byte) getColor.getAsInt();
         }
     }
 
     private void removeColor(double pMouseX, double pMouseY) {
         if (isEnable) {
-            ((byte[]) draw.data())[getPointIndex(pMouseX, pMouseY)] = (byte) 0;
+            ((byte[]) draw.getData())[getPointIndex(pMouseX, pMouseY)] = (byte) 0;
         }
     }
 
     private void takeColor(double mouseX, double mouseY) {
         if (isEnable && altPressed) {
-            setColor.accept(((byte[]) draw.data())[getPointIndex(mouseX, mouseY)]);
+            setColor.accept(((byte[]) draw.getData())[getPointIndex(mouseX, mouseY)]);
             if (parent instanceof BrushGuiScreen gui) {
                 var list = gui.getColorSelection();
                 list.setSelectedItem(list.getEntry(getColor.getAsInt()));
@@ -169,6 +174,7 @@ public class Canvas extends AbstractWidget {
     public boolean setDraw(DrawHolder holder) {
         if (holder instanceof SmallBlackWhiteBrushHolder) {
             DrawHolder.copyDirectly(holder, draw);
+            return true;
         }
         return false;
     }
@@ -182,8 +188,16 @@ public class Canvas extends AbstractWidget {
         return this;
     }
 
+    public void setDrawType(XuanPaperType type) {
+        draw.setType(type);
+    }
+
+    public XuanPaperType getDrawType() {
+        return draw.getType();
+    }
+
     public void clear() {
-        draw = draw.version().newDraw();
+        draw = draw.getVersion().newDraw();
     }
 
     @Override

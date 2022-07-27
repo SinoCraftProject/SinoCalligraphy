@@ -2,6 +2,7 @@ package games.moegirl.sinocraft.sinocalligraphy.gui.slot;
 
 import games.moegirl.sinocraft.sinocalligraphy.gui.container.BrushContainer;
 import games.moegirl.sinocraft.sinocalligraphy.gui.menu.BrushMenu;
+import games.moegirl.sinocraft.sinocalligraphy.item.XuanPaperItem;
 import games.moegirl.sinocraft.sinocore.gui.slot.AcceptSpecialSlot;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;

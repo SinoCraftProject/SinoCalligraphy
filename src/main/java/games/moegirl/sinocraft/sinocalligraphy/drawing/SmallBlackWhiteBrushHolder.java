@@ -1,6 +1,9 @@
 package games.moegirl.sinocraft.sinocalligraphy.drawing;
 
 import com.mojang.blaze3d.platform.NativeImage;
+import games.moegirl.sinocraft.sinocalligraphy.utility.DrawHelper;
+import games.moegirl.sinocraft.sinocalligraphy.utility.XuanPaperType;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.FastColor;
 import net.minecraftforge.api.distmarker.Dist;
@@ -20,27 +23,40 @@ public class SmallBlackWhiteBrushHolder implements DrawHolder {
     private byte[] value;
     @Nullable
     private Component author;
-    private final DrawVersion version;
+    private DrawVersion version;
+
+    private XuanPaperType type = null;
 
     public SmallBlackWhiteBrushHolder(DrawVersion version) {
         this.version = version;
 
         setDraw(new byte[PIXEL_COUNT]);
         setAuthor((Component) null);
+
+        type = XuanPaperType.WHITE;
+    }
+
+    public SmallBlackWhiteBrushHolder(DrawVersion version, XuanPaperType typeIn) {
+        this.version = version;
+
+        setDraw(new byte[PIXEL_COUNT]);
+        setAuthor((Component) null);
+
+        type = typeIn;
     }
 
     @Override
-    public Object data() {
+    public byte[] getData() {
         return value;
     }
 
     @Override
-    public void setDraw(Object data) {
-        this.value = adjustSize((byte[]) data);
+    public void setDraw(byte[] data) {
+        this.value = adjustSize(data);
     }
 
     @Override
-    public Component author() {
+    public Component getAuthor() {
         return author == null ? DEFAULT_AUTHOR : author;
     }
 
@@ -55,8 +71,13 @@ public class SmallBlackWhiteBrushHolder implements DrawHolder {
     }
 
     @Override
-    public DrawVersion version() {
+    public DrawVersion getVersion() {
         return version;
+    }
+
+    @Override
+    public void setVersion(DrawVersion versionIn) {
+        version = versionIn;
     }
 
     @Override
@@ -67,6 +88,56 @@ public class SmallBlackWhiteBrushHolder implements DrawHolder {
             }
         }
         return true;
+    }
+
+    @Override
+    public XuanPaperType getType() {
+        return type;
+    }
+
+    @Override
+    public void setType(XuanPaperType typeIn) {
+        type = typeIn;
+    }
+
+    @Override
+    public CompoundTag serializeNBT() {
+        var tag = new CompoundTag();
+
+        tag.putString(Constants.TAG_VERSION, getVersion().getVersionId());
+        tag.putString(Constants.TAG_AUTHOR, getAuthorAsString());
+        tag.putByteArray(Constants.TAG_PIXELS, getData());
+        tag.putString(Constants.TAG_TYPE, getType().getName());
+
+        return tag;
+    }
+
+    @Override
+    public void deserializeNBT(CompoundTag tag) {
+        setVersion(DrawVersions.LATEST_BRUSH_VERSION);
+        setAuthor(DEFAULT_AUTHOR);
+        setDraw(new byte[0]);
+
+        if (tag.contains(Constants.TAG_VERSION)) {
+            var version = tag.getString(Constants.TAG_VERSION);
+            if (!version.equals(getVersion().getVersionId())) {
+                // Todo: qyl27: update from old versions.
+                return;
+            }
+        }
+
+        if (tag.contains(Constants.TAG_AUTHOR)) {
+            setAuthor(tag.getString(Constants.TAG_AUTHOR));
+        }
+
+        if (tag.contains(Constants.TAG_PIXELS)) {
+            setDraw(tag.getByteArray(Constants.TAG_PIXELS));
+        }
+
+        if (tag.contains(Constants.TAG_TYPE)) {
+            var type = XuanPaperType.of(tag.getString(Constants.TAG_TYPE));
+            setType(type);
+        }
     }
 
     @Override
@@ -94,11 +165,24 @@ public class SmallBlackWhiteBrushHolder implements DrawHolder {
 
     public NativeImage toImage() {
         NativeImage image = new NativeImage(SIZE, SIZE, false);
+        image.fillRect(0, 0, SIZE, SIZE, type.getBackground());
+
         int index = 0;
         for (int w = 0; w < SmallBlackWhiteBrushHolder.SIZE; w++) {
             for (int h = 0; h < SmallBlackWhiteBrushHolder.SIZE; h++) {
-                int color = 16 * (16 - value[index++]) - 1;
-                image.setPixelRGBA(w, h, FastColor.ARGB32.color(255, color, color, color));
+                var alpha = 16 * (16 - value[index++]) - 1;
+
+                if (alpha == 255) {
+                    continue;
+                }
+
+                var foreground = DrawHelper.invert(type.getForeground());
+                var argb = FastColor.ARGB32.color(alpha,
+                        FastColor.ARGB32.red(foreground),
+                        FastColor.ARGB32.green(foreground),
+                        FastColor.ARGB32.blue(foreground));
+
+                image.setPixelRGBA(w, h, argb);
             }
         }
         return image;

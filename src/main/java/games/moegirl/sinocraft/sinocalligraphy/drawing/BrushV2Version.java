@@ -3,6 +3,7 @@ package games.moegirl.sinocraft.sinocalligraphy.drawing;
 import com.google.common.base.Verify;
 import com.mojang.blaze3d.platform.NativeImage;
 import games.moegirl.sinocraft.sinocalligraphy.SinoCalligraphy;
+import games.moegirl.sinocraft.sinocalligraphy.utility.XuanPaperType;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.FriendlyByteBuf;
@@ -46,7 +47,7 @@ public class BrushV2Version extends DrawVersion {
     public DrawHolder read(String value) {
         DrawHolder holder = newDraw();
         value = value.substring(SYMBOL.length());
-        byte[] draw = (byte[]) holder.data();
+        byte[] draw = (byte[]) holder.getData();
         for (int i = 0; i < draw.length; i++) {
             draw[i] = Byte.parseByte(Character.toString(value.charAt(i)), 36);
         }
@@ -78,13 +79,13 @@ public class BrushV2Version extends DrawVersion {
     @Override
     public void write(DrawHolder holder, StringBuffer sb) {
         sb.append(SYMBOL);
-        for (byte b : (byte[]) holder.data()) {
+        for (byte b : (byte[]) holder.getData()) {
             Verify.verify(b >= 0, "Value must not negative");
             Verify.verify(b < 36, "Value must less than 36");
             sb.append(Integer.toString(b, 36));
         }
         if (holder.hasAuthor()) {
-            sb.append(holder.authorAsString());
+            sb.append(holder.getAuthorAsString());
         }
     }
 
@@ -92,9 +93,9 @@ public class BrushV2Version extends DrawVersion {
     public void write(DrawHolder holder, FriendlyByteBuf buf) {
         buf.writeUtf(SYMBOL);
         buf.writeBoolean(holder.hasAuthor());
-        buf.writeByteArray((byte[]) holder.data());
+        buf.writeByteArray((byte[]) holder.getData());
         if (holder.hasAuthor()) {
-            buf.writeUtf(holder.authorAsString());
+            buf.writeUtf(holder.getAuthorAsString());
         }
     }
 
@@ -102,9 +103,9 @@ public class BrushV2Version extends DrawVersion {
     public void write(DrawHolder holder, CompoundTag tag) {
         CompoundTag t = new CompoundTag();
         t.putString(TAG_VERSION, SYMBOL);
-        t.putByteArray(TAG_PIXELS, (byte[]) holder.data());
+        t.putByteArray(TAG_PIXELS, (byte[]) holder.getData());
         if (holder.hasAuthor()) {
-            t.putString(TAG_AUTHOR, holder.authorAsString());
+            t.putString(TAG_AUTHOR, holder.getAuthorAsString());
         }
         tag.put(TAG_HOLDER, t);
     }
@@ -118,5 +119,10 @@ public class BrushV2Version extends DrawVersion {
     @Override
     public DrawHolder newDraw() {
         return new SmallBlackWhiteBrushHolder(this);
+    }
+
+    @Override
+    public DrawHolder newDraw(XuanPaperType type) {
+        return newDraw();
     }
 }
