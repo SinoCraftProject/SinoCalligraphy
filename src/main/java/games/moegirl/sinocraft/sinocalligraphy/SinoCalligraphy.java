@@ -29,8 +29,6 @@ public class SinoCalligraphy {
     public SinoCalligraphy() {
         LOGGER.info("Loading SinoCalligraphy. Ver: " + MOD_VERSION);
 
-        LOGGER.info("The painting that used color to depict all walks of life, while retained black and white to render the beauty of ages.");
-
         IEventBus bus = FMLJavaModLoadingContext.get().getModEventBus();
 
         SCAItems.register(bus);
@@ -41,6 +39,8 @@ public class SinoCalligraphy {
         SCANetworks.setup();
 
         DrawVersions.register();
+
+        LOGGER.info("The painting that used color to depict all walks of life, while retained black and white to render the beauty of ages.");
     }
 
     public static Logger getLogger() {
