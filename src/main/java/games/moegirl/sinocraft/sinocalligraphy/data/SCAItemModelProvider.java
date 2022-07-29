@@ -21,6 +21,8 @@ public class SCAItemModelProvider extends ItemModelProviderBase {
         skipItems.add(SCAItems.BRUSH.get());
         skipItems.add(SCAItems.INK.get());
         skipItems.add(SCAItems.WOOD_PULP_BUCKET.get());
+        skipItems.add(SCAItems.FAN.get());
+        skipItems.add(SCAItems.FAN_FOLDED.get());
 
         skipItems.add(SCABlockItems.PAPER_DRYING_RACK.get());
         namedBlockItem(SCABlockItems.PAPER_DRYING_RACK.get(), "paper_drying_rack_0");
