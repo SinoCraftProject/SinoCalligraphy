@@ -1,5 +1,6 @@
 package games.moegirl.sinocraft.sinocalligraphy.item;
 
+import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.item.ItemStack;
@@ -25,10 +26,10 @@ public class FireBrushItem extends BrushItem {
                                 List<Component> tooltipComponents, TooltipFlag isAdvanced) {
         super.appendHoverText(stack, level, tooltipComponents, isAdvanced);
 
-        tooltipComponents.add(new TranslatableComponent(FIRE_BRUSH_DESC_KEY_1));
+        tooltipComponents.add(new TranslatableComponent(FIRE_BRUSH_DESC_KEY_1).withStyle(ChatFormatting.GRAY));
 
         if (isAdvanced == TooltipFlag.Default.ADVANCED) {
-            tooltipComponents.add(new TranslatableComponent(FIRE_BRUSH_DESC_KEY_2));
+            tooltipComponents.add(new TranslatableComponent(FIRE_BRUSH_DESC_KEY_2).withStyle(ChatFormatting.GRAY));
         }
     }
 }
