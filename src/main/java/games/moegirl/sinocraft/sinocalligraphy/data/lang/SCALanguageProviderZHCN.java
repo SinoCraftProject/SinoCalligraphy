@@ -17,6 +17,8 @@ public class SCALanguageProviderZHCN extends I18nProviderBase {
         addItem(SCAItems.BRUSH, "毛笔");
         addItem(SCAItems.INK, "墨汁");
         addItem(SCAItems.EMPTY_XUAN_PAPER, "宣纸");
+        addItem(SCAItems.EMPTY_XUAN_PAPER_RED, "红色的宣纸");
+        addItem(SCAItems.EMPTY_XUAN_PAPER_BLACK, "黑色的宣纸");
         addItem(SCAItems.FILLED_XUAN_PAPER, "填充过的宣纸");
         addItem(SCAItems.WOOD_PULP_BUCKET, "木浆桶");
         addItem(SCAItems.FAN, "展开的折扇");

@@ -11,7 +11,7 @@ apply plugin: 'architectury-plugin'   // Parchment mappings.
 apply plugin: 'maven-publish'
 apply plugin: 'dev.architectury.loom'
 
-version = '1.18.2-1.1.0'
+version = '1.18.2-1.1.1'
 group = 'games.moegirl.sinocraft.sinocalligraphy' // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = 'sinocalligraphy'
 
@@ -103,7 +103,7 @@ jar {
         attributes([
                 "Specification-Title"     : "sinocalligraphy",
                 "Specification-Vendor"    : "SinoCraft Project Team",
-                "Specification-Version"   : "3", // We are version 1 of ourselves
+                "Specification-Version"   : "4", // We are version 1 of ourselves
                 "Implementation-Title"    : project.name,
                 "Implementation-Version"  : project.jar.archiveVersion,
                 "Implementation-Vendor"   : "MoeGirl Games",

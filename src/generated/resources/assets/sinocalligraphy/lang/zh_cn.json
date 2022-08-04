@@ -2,6 +2,8 @@
   "block.sinocalligraphy.paper_drying_rack": "\u667E\u7EB8\u67B6",
   "item.sinocalligraphy.chinese_brush": "\u6BDB\u7B14",
   "item.sinocalligraphy.empty_xuan_paper": "\u5BA3\u7EB8",
+  "item.sinocalligraphy.empty_xuan_paper_black": "\u9ED1\u8272\u7684\u5BA3\u7EB8",
+  "item.sinocalligraphy.empty_xuan_paper_red": "\u7EA2\u8272\u7684\u5BA3\u7EB8",
   "item.sinocalligraphy.fan": "\u5C55\u5F00\u7684\u6298\u6247",
   "item.sinocalligraphy.fan_folded": "\u6298\u6247",
   "item.sinocalligraphy.fan_folded.clue": "\u53BB\u58A8\u67D3\u7684\u5C71\u6CB3\u4E2D\u5BFB\u627E\u8BF4\u4E66\u4EBA\u5427\u3002",
