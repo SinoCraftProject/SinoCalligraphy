@@ -11,6 +11,7 @@ import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.network.chat.TextComponent;
+import net.minecraft.world.inventory.MenuType;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -22,7 +23,11 @@ import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 public class SCAClientScreens {
     @SubscribeEvent
     public static void onClientSetup(FMLClientSetupEvent event) {
-        event.enqueueWork(() -> MenuScreens.<BrushMenu, BrushGuiScreen>register(SCAMenus.BRUSH.get(), (menu, inv, title) -> new BrushGuiScreen(menu, new InventoryNoTitleWrapper(inv.player), TextComponent.EMPTY)));
+        event.enqueueWork(() -> {
+            MenuType<? extends BrushMenu> type = SCAMenus.BRUSH.get();
+            MenuScreens.ScreenConstructor<BrushMenu, BrushGuiScreen> factory = (menu, inv, title) -> new BrushGuiScreen(menu, new InventoryNoTitleWrapper(inv.player), TextComponent.EMPTY);
+            MenuScreens.register(type, factory);
+        });
 
         ItemBlockRenderTypes.setRenderLayer(SCABlocks.WOOD_PULP_BLOCK.get(), RenderType.translucent());
         ItemBlockRenderTypes.setRenderLayer(SCAFluids.WOOD_PULP.get(), RenderType.translucent());

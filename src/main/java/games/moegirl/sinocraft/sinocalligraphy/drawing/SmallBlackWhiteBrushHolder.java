@@ -5,7 +5,6 @@ import games.moegirl.sinocraft.sinocalligraphy.utility.DrawHelper;
 import games.moegirl.sinocraft.sinocalligraphy.utility.XuanPaperType;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.util.FastColor;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 

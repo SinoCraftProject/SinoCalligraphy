@@ -43,7 +43,7 @@ public class BrushV1Version extends DrawVersion {
         try {
             String json = value.substring(SYMBOL.length());
             JsonObject object = JsonParser.parseString(json).getAsJsonObject();
-            byte[] draw = (byte[]) holder.getData();
+            byte[] draw = holder.getData();
             if (object.has(TAG_PIXELS)) {
                 JsonArray array = object.getAsJsonArray(TAG_PIXELS);
                 int len = Math.min(draw.length, array.size());
@@ -82,7 +82,7 @@ public class BrushV1Version extends DrawVersion {
         sb.append(SYMBOL);
         JsonObject json = new JsonObject();
         JsonArray pixels = new JsonArray();
-        for (byte b : (byte[]) holder.getData()) {
+        for (byte b : holder.getData()) {
             pixels.add(b);
         }
         json.add(TAG_PIXELS, pixels);
@@ -96,7 +96,7 @@ public class BrushV1Version extends DrawVersion {
     public void write(DrawHolder holder, FriendlyByteBuf buf) {
         buf.writeUtf(SYMBOL);
         buf.writeBoolean(holder.hasAuthor());
-        buf.writeByteArray((byte[]) holder.getData());
+        buf.writeByteArray(holder.getData());
         if (holder.hasAuthor()) {
             buf.writeUtf(holder.getAuthorAsString());
         }
@@ -104,7 +104,7 @@ public class BrushV1Version extends DrawVersion {
 
     @Override
     public void write(DrawHolder holder, CompoundTag tag) {
-        tag.putByteArray(TAG_PIXELS, (byte[]) holder.getData());
+        tag.putByteArray(TAG_PIXELS, holder.getData());
         if (holder.hasAuthor()) {
             tag.putString(TAG_AUTHOR, holder.getAuthorAsString());
         }

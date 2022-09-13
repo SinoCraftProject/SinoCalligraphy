@@ -119,21 +119,13 @@ public abstract class SelectionLayout<T> {
     public void rollToX(int x) {
         if (x < -list.width) {
             rollX = list.width;
-        } else if (x > canvasWidth) {
-            rollX = canvasWidth;
-        } else {
-            rollX = x;
-        }
+        } else rollX = Math.min(x, canvasWidth);
     }
 
     public void rollToY(int y) {
         if (y < -list.height) {
             rollY = -list.height;
-        } else if (y > canvasHeight) {
-            rollY = canvasHeight;
-        } else {
-            rollY = y;
-        }
+        } else rollY = Math.min(y, canvasHeight);
     }
 
     public boolean canRollX() {

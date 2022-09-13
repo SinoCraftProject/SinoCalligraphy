@@ -47,7 +47,7 @@ public class BrushV2Version extends DrawVersion {
     public DrawHolder read(String value) {
         DrawHolder holder = newDraw();
         value = value.substring(SYMBOL.length());
-        byte[] draw = (byte[]) holder.getData();
+        byte[] draw = holder.getData();
         for (int i = 0; i < draw.length; i++) {
             draw[i] = Byte.parseByte(Character.toString(value.charAt(i)), 36);
         }
@@ -79,7 +79,7 @@ public class BrushV2Version extends DrawVersion {
     @Override
     public void write(DrawHolder holder, StringBuffer sb) {
         sb.append(SYMBOL);
-        for (byte b : (byte[]) holder.getData()) {
+        for (byte b : holder.getData()) {
             Verify.verify(b >= 0, "Value must not negative");
             Verify.verify(b < 36, "Value must less than 36");
             sb.append(Integer.toString(b, 36));
@@ -93,7 +93,7 @@ public class BrushV2Version extends DrawVersion {
     public void write(DrawHolder holder, FriendlyByteBuf buf) {
         buf.writeUtf(SYMBOL);
         buf.writeBoolean(holder.hasAuthor());
-        buf.writeByteArray((byte[]) holder.getData());
+        buf.writeByteArray(holder.getData());
         if (holder.hasAuthor()) {
             buf.writeUtf(holder.getAuthorAsString());
         }
@@ -103,7 +103,7 @@ public class BrushV2Version extends DrawVersion {
     public void write(DrawHolder holder, CompoundTag tag) {
         CompoundTag t = new CompoundTag();
         t.putString(TAG_VERSION, SYMBOL);
-        t.putByteArray(TAG_PIXELS, (byte[]) holder.getData());
+        t.putByteArray(TAG_PIXELS, holder.getData());
         if (holder.hasAuthor()) {
             t.putString(TAG_AUTHOR, holder.getAuthorAsString());
         }

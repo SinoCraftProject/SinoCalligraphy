@@ -6,7 +6,6 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import games.moegirl.sinocraft.sinocalligraphy.SinoCalligraphy;
 import games.moegirl.sinocraft.sinocalligraphy.drawing.DrawHolder;
-import games.moegirl.sinocraft.sinocalligraphy.drawing.DrawVersion;
 import games.moegirl.sinocraft.sinocalligraphy.gui.components.Canvas;
 import games.moegirl.sinocraft.sinocalligraphy.gui.components.ColorSelectionList;
 import games.moegirl.sinocraft.sinocalligraphy.gui.container.BrushContainer;
@@ -15,8 +14,9 @@ import games.moegirl.sinocraft.sinocalligraphy.network.SCANetworks;
 import games.moegirl.sinocraft.sinocalligraphy.network.packet.DrawSaveC2SPacket;
 import games.moegirl.sinocraft.sinocalligraphy.network.packet.SaveFailedS2CPacket;
 import games.moegirl.sinocraft.sinocalligraphy.utility.XuanPaperType;
-import games.moegirl.sinocraft.sinocore.api.client.component.AnimatedText;
-import games.moegirl.sinocraft.sinocore.api.utility.GLSwitcher;
+import games.moegirl.sinocraft.sinocore.api.client.GLSwitcher;
+import games.moegirl.sinocraft.sinocore.api.client.screen.TextureMapClient;
+import games.moegirl.sinocraft.sinocore.api.client.screen.component.AnimatedText;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
@@ -56,7 +56,9 @@ public class BrushGuiScreen extends AbstractContainerScreen<BrushMenu> {
     public static final String KEY_DRAW_EMPTY = SinoCalligraphy.MODID + ".gui.brush.draw.empty";
     public static final String KEY_SAVING = SinoCalligraphy.MODID + ".gui.brush.save.waiting";
 
-    private final Lazy<Canvas> canvas = Lazy.of(() -> new Canvas(this, TEXTURE, "canvas", "shadow", menu::getColor, menu::setColor, XuanPaperType.WHITE));
+    private static final TextureMapClient CLIENT = new TextureMapClient(TEXTURE);
+
+    private final Lazy<Canvas> canvas = Lazy.of(() -> new Canvas(this, CLIENT, "canvas", "shadow", menu::getColor, menu::setColor, XuanPaperType.WHITE));
     private final Lazy<AnimatedText> text = Lazy.of(() -> new AnimatedText(130, 130));
     private final Lazy<ColorSelectionList> list = Lazy.of(() -> ColorSelectionList.create(this));
     private boolean saving = false;
@@ -79,8 +81,8 @@ public class BrushGuiScreen extends AbstractContainerScreen<BrushMenu> {
         // qyl27: Ensure the text below the canvas.
         addRenderableOnly(text.get().resize(leftPos + 58 + (130 / 2 - 10), topPos + 11 + 132, font));
         addRenderableWidget(list.get().resize(leftPos, topPos));
-        TEXTURE.placeButton("copy", this, this::copyDraw, this::pasteDraw, this::addRenderableWidget);
-        TEXTURE.placeButton("output", this, this::saveToFile, this::addRenderableWidget);
+        CLIENT.placeButton("copy", this, this::copyDraw, this::pasteDraw, this::addRenderableWidget);
+        CLIENT.placeButton("output", this, this::saveToFile, this::addRenderableWidget);
     }
 
     @Override
@@ -93,7 +95,7 @@ public class BrushGuiScreen extends AbstractContainerScreen<BrushMenu> {
     @Override
     protected void renderBg(PoseStack stack, float partialTick, int mouseX, int mouseY) {
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-        TEXTURE.blitTexture(stack, "background", this, GLSwitcher.blend().enable(), GLSwitcher.depth().enable());
+        CLIENT.blitTexture(stack, "background", this, GLSwitcher.blend().enable(), GLSwitcher.depth().enable());
     }
 
     @Override

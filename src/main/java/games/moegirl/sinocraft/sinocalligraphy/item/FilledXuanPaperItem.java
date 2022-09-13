@@ -4,7 +4,6 @@ import games.moegirl.sinocraft.sinocalligraphy.SinoCalligraphy;
 import games.moegirl.sinocraft.sinocalligraphy.client.XuanPaperRenderer;
 import games.moegirl.sinocraft.sinocalligraphy.drawing.Constants;
 import games.moegirl.sinocraft.sinocalligraphy.drawing.DrawHolder;
-import games.moegirl.sinocraft.sinocalligraphy.utility.XuanPaperType;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;

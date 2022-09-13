@@ -5,7 +5,6 @@ import games.moegirl.sinocraft.sinocalligraphy.data.SCAItemTags;
 import games.moegirl.sinocraft.sinocalligraphy.gui.SCAMenus;
 import games.moegirl.sinocraft.sinocalligraphy.gui.container.BrushContainer;
 import games.moegirl.sinocraft.sinocalligraphy.gui.slot.BrushInputSlot;
-import games.moegirl.sinocraft.sinocalligraphy.item.SCAItems;
 import games.moegirl.sinocraft.sinocalligraphy.network.packet.SaveFailedS2CPacket;
 import games.moegirl.sinocraft.sinocalligraphy.utility.XuanPaperType;
 import games.moegirl.sinocraft.sinocore.api.utility.texture.SlotStrategy;
@@ -21,7 +20,6 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 /**
  * Menu(Container) of Chinese brush.
@@ -30,9 +28,7 @@ import org.jetbrains.annotations.Nullable;
  */
 public class BrushMenu extends AbstractContainerMenu {
     public static final ResourceLocation GUI = new ResourceLocation(SinoCalligraphy.MODID, "textures/gui/chinese_brush.png");
-
-    @Nullable
-    public static TextureMap TEXTURE = null;
+    public static TextureMap TEXTURE = TextureMap.of(GUI);
 
     protected BrushContainer brushContainer;
     protected Inventory playerInventory;
@@ -56,20 +52,11 @@ public class BrushMenu extends AbstractContainerMenu {
 
         brush = brushIn;
 
-        if (TEXTURE == null) {
-            if (!playerInv.player.level.isClientSide && playerInv.player.getServer().isDedicatedServer()) {
-                TEXTURE = TextureMap.of(GUI, false);
-            } else {
-                TEXTURE = TextureMap.of(GUI);
-            }
-        }
-
         TEXTURE.placeSlot(brushContainer, "paper", BrushContainer.XUAN_PAPER_SLOT, this::addSlot,
                 (container, slot, x, y) -> new BrushInputSlot(brushContainer, slot, x, y, SCAItemTags.PAPERS, this) {
                     @Override
                     public void setChanged() {
                         super.setChanged();
-
                         gui.setPaperType(XuanPaperType.of(getItem()));
                     }
                 });

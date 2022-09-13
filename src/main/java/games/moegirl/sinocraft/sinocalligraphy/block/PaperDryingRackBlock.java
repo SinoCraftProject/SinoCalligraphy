@@ -63,7 +63,7 @@ public class PaperDryingRackBlock extends HorizontalDirectionalBlock {
 
     @Override
     public void tick(BlockState state, ServerLevel level, BlockPos pos, Random random) {
-        var process = state.getValue(PROCESS);
+        int process = state.getValue(PROCESS);
         if (process > 0 && process < 4) {
             level.setBlock(pos, state.setValue(PROCESS, process + 1), Block.UPDATE_NEIGHBORS);
         }
@@ -82,7 +82,7 @@ public class PaperDryingRackBlock extends HorizontalDirectionalBlock {
     @Override
     public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
         ItemStack handStack = player.getItemInHand(hand);
-        var process = state.getValue(PROCESS);
+        int process = state.getValue(PROCESS);
 
         // Todo: Better crafting.
         if (process == 0 && handStack.getItem() == SCAItems.WOOD_PULP_BUCKET.get()) {

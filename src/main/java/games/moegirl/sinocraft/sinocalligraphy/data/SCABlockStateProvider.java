@@ -3,7 +3,6 @@ package games.moegirl.sinocraft.sinocalligraphy.data;
 import games.moegirl.sinocraft.sinocalligraphy.block.PaperDryingRackBlock;
 import games.moegirl.sinocraft.sinocalligraphy.block.SCABlocks;
 import games.moegirl.sinocraft.sinocore.api.data.BlockStateProviderBase;
-import games.moegirl.sinocraft.sinocore.api.data.base.WarnBlockStateProvider;
 import net.minecraft.core.Direction;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.world.level.block.Block;

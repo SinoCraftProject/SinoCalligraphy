@@ -7,7 +7,8 @@ import games.moegirl.sinocraft.sinocalligraphy.gui.BrushGuiScreen;
 import games.moegirl.sinocraft.sinocalligraphy.gui.components.list.SelectionEntry;
 import games.moegirl.sinocraft.sinocalligraphy.gui.components.list.SelectionList;
 import games.moegirl.sinocraft.sinocalligraphy.gui.components.list.VerticalListLayout;
-import games.moegirl.sinocraft.sinocore.api.utility.GLSwitcher;
+import games.moegirl.sinocraft.sinocore.api.client.GLSwitcher;
+import games.moegirl.sinocraft.sinocore.api.client.screen.TextureMapClient;
 import games.moegirl.sinocraft.sinocore.api.utility.texture.PointEntry;
 import games.moegirl.sinocraft.sinocore.api.utility.texture.TextureEntry;
 import net.minecraftforge.api.distmarker.Dist;
@@ -25,6 +26,8 @@ public class ColorSelectionList extends SelectionList<ColorSelectionList.ColorEn
     public static final TextureEntry COLOR = TEXTURE.textures().ensureGet("color");
     public static final TextureEntry COLOR_SELECTOR = TEXTURE.textures().ensureGet("color_selector");
     public static final PointEntry SELECTED = TEXTURE.points().ensureGet("selected");
+
+    private static final TextureMapClient CLIENT = new TextureMapClient(TEXTURE);
 
     public static ColorSelectionList create(BrushGuiScreen screen) {
         int width = COLOR.w();
@@ -99,7 +102,7 @@ public class ColorSelectionList extends SelectionList<ColorSelectionList.ColorEn
                 layout.rollY((int) (dY * 0.3));
             }
         }
-        TEXTURE.bindTexture();
+        CLIENT.bindTexture();
         for (SelectionEntry<ColorEntry> entry : displayItems) {
             int x = entry.getXInList();
             int y = entry.getYInList() + 3;
@@ -112,7 +115,7 @@ public class ColorSelectionList extends SelectionList<ColorSelectionList.ColorEn
     @Override
     public void render(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
         super.render(poseStack, mouseX, mouseY, partialTick);
-        TEXTURE.blitTexture(poseStack, "color_selector", screen, GLSwitcher.blend().enable());
+        CLIENT.blitTexture(poseStack, "color_selector", screen, GLSwitcher.blend().enable());
     }
 
     @Override

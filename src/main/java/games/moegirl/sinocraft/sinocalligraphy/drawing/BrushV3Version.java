@@ -1,9 +1,6 @@
 package games.moegirl.sinocraft.sinocalligraphy.drawing;
 
-import com.google.gson.Gson;
 import com.mojang.blaze3d.platform.NativeImage;
-import com.mojang.brigadier.StringReader;
-import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import games.moegirl.sinocraft.sinocalligraphy.utility.XuanPaperType;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;

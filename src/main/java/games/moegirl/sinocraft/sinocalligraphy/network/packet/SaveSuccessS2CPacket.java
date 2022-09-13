@@ -1,10 +1,8 @@
 package games.moegirl.sinocraft.sinocalligraphy.network.packet;
 
-import games.moegirl.sinocraft.sinocalligraphy.gui.menu.BrushMenu;
 import games.moegirl.sinocraft.sinocalligraphy.utility.NetworkHelper;
 import games.moegirl.sinocraft.sinocore.network.PacketBase;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraftforge.network.NetworkEvent;
 
 import java.util.function.Supplier;

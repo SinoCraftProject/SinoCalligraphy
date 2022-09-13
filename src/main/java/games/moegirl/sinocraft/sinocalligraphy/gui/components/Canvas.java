@@ -6,8 +6,8 @@ import games.moegirl.sinocraft.sinocalligraphy.drawing.DrawVersions;
 import games.moegirl.sinocraft.sinocalligraphy.drawing.SmallBlackWhiteBrushHolder;
 import games.moegirl.sinocraft.sinocalligraphy.gui.BrushGuiScreen;
 import games.moegirl.sinocraft.sinocalligraphy.utility.XuanPaperType;
-import games.moegirl.sinocraft.sinocore.api.utility.GLSwitcher;
-import games.moegirl.sinocraft.sinocore.api.utility.texture.TextureMap;
+import games.moegirl.sinocraft.sinocore.api.client.GLSwitcher;
+import games.moegirl.sinocraft.sinocore.api.client.screen.TextureMapClient;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.narration.NarratedElementType;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
@@ -28,14 +28,14 @@ import static games.moegirl.sinocraft.sinocalligraphy.drawing.SmallBlackWhiteBru
 @OnlyIn(Dist.CLIENT)
 public class Canvas extends AbstractWidget {
 
-    private final TextureMap atlas;
+    private final TextureMapClient atlas;
     private final String canvas, shadow;
     private final IntSupplier getColor;
     private final IntConsumer setColor;
     private final AbstractContainerScreen<?> parent;
     private int canvasSize;
 
-    private DrawHolder draw = null;
+    private DrawHolder draw;
 
     private boolean isEnable = false;
     private boolean isDrag = false;
@@ -43,7 +43,7 @@ public class Canvas extends AbstractWidget {
 
     private boolean altPressed = false;
 
-    public Canvas(AbstractContainerScreen<?> parent, TextureMap atlas, String canvas,
+    public Canvas(AbstractContainerScreen<?> parent, TextureMapClient atlas, String canvas,
                   String shadow, IntSupplier getColor, IntConsumer setColor, XuanPaperType type) {
         super(0, 0, 0, 0, TextComponent.EMPTY);
         this.atlas = atlas;
@@ -138,13 +138,13 @@ public class Canvas extends AbstractWidget {
 
     private void drawPoint(double pMouseX, double pMouseY) {
         if (isEnable) {
-            ((byte[]) draw.getData())[getPointIndex(pMouseX, pMouseY)] = (byte) getColor.getAsInt();
+            draw.getData()[getPointIndex(pMouseX, pMouseY)] = (byte) getColor.getAsInt();
         }
     }
 
     private void removeColor(double pMouseX, double pMouseY) {
         if (isEnable) {
-            ((byte[]) draw.getData())[getPointIndex(pMouseX, pMouseY)] = (byte) 0;
+            draw.getData()[getPointIndex(pMouseX, pMouseY)] = (byte) 0;
         }
     }
 

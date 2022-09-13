@@ -1,6 +1,5 @@
 package games.moegirl.sinocraft.sinocalligraphy.network.packet;
 
-import games.moegirl.sinocraft.sinocalligraphy.drawing.Constants;
 import games.moegirl.sinocraft.sinocalligraphy.gui.menu.BrushMenu;
 import games.moegirl.sinocraft.sinocalligraphy.item.SCAItems;
 import games.moegirl.sinocraft.sinocalligraphy.item.XuanPaperItem;
