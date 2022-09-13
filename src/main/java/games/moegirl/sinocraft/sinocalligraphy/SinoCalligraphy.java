@@ -2,7 +2,7 @@ package games.moegirl.sinocraft.sinocalligraphy;
 
 import games.moegirl.sinocraft.sinocalligraphy.block.SCABlockItems;
 import games.moegirl.sinocraft.sinocalligraphy.block.SCABlocks;
-import games.moegirl.sinocraft.sinocalligraphy.client.drawing.DrawRenders;
+import games.moegirl.sinocraft.sinocalligraphy.drawing.client.DrawRenders;
 import games.moegirl.sinocraft.sinocalligraphy.drawing.version.DrawVersions;
 import games.moegirl.sinocraft.sinocalligraphy.fluid.SCAFluids;
 import games.moegirl.sinocraft.sinocalligraphy.gui.SCAMenus;

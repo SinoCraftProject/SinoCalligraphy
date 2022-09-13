@@ -1,7 +1,7 @@
 package games.moegirl.sinocraft.sinocalligraphy.gui.components;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import games.moegirl.sinocraft.sinocalligraphy.client.drawing.DrawRenders;
+import games.moegirl.sinocraft.sinocalligraphy.drawing.client.DrawRenders;
 import games.moegirl.sinocraft.sinocalligraphy.drawing.DrawHolder;
 import games.moegirl.sinocraft.sinocalligraphy.drawing.holder.HolderByte32;
 import games.moegirl.sinocraft.sinocalligraphy.drawing.version.DrawVersions;
@@ -51,7 +51,7 @@ public class Canvas extends AbstractWidget {
         this.getColor = getColor;
         this.setColor = setColor;
 
-        draw = DrawVersions.LATEST_BRUSH_VERSION.newDraw(type);
+        draw = DrawVersions.LATEST_BRUSH_VERSION.newDraw();
     }
 
     @Override
@@ -136,13 +136,13 @@ public class Canvas extends AbstractWidget {
 
     private void drawPoint(double pMouseX, double pMouseY) {
         if (isEnable) {
-            draw.getData()[getPointIndex(pMouseX, pMouseY)] = (byte) getColor.getAsInt();
+            ((byte[]) draw.getData())[getPointIndex(pMouseX, pMouseY)] = (byte) getColor.getAsInt();
         }
     }
 
     private void removeColor(double pMouseX, double pMouseY) {
         if (isEnable) {
-            draw.getData()[getPointIndex(pMouseX, pMouseY)] = (byte) 0;
+            ((byte[]) draw.getData())[getPointIndex(pMouseX, pMouseY)] = (byte) 0;
         }
     }
 

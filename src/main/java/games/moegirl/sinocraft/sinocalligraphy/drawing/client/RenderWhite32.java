@@ -1,4 +1,4 @@
-package games.moegirl.sinocraft.sinocalligraphy.client.drawing;
+package games.moegirl.sinocraft.sinocalligraphy.drawing.client;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
@@ -17,6 +17,7 @@ import static games.moegirl.sinocraft.sinocalligraphy.drawing.holder.HolderByte3
 import static games.moegirl.sinocraft.sinocalligraphy.drawing.version.VersionBrush3White.background;
 import static games.moegirl.sinocraft.sinocalligraphy.drawing.version.VersionBrush3White.foreground;
 
+// todo todo todo todo
 public class RenderWhite32 implements DrawRender {
 
     private final HolderByte32 holder;
@@ -50,7 +51,7 @@ public class RenderWhite32 implements DrawRender {
             int unitY = height / SIZE;
             int x1 = x;
             int x2 = x1 + unitX;
-            byte[] draw = holder.getDraw();
+            byte[] draw = (byte[]) holder.getData();
             int index = 0;
             for (int i = 0; i < SIZE; i++) {
                 int y1 = y;
@@ -81,7 +82,7 @@ public class RenderWhite32 implements DrawRender {
         if (holder.isEmpty()) {
             drawSquare(stack, vertex, background, 0, 0, SIZE, light);
         } else {
-            byte[] pixels = holder.getDraw();
+            byte[] pixels = (byte[]) holder.getData();
             for (int x = 0; x < SIZE; x++) {
                 for (int y = 0; y < SIZE; y++) {
                     var alpha = 16 * (16 - pixels[x * SIZE + y]) - 1;
@@ -114,7 +115,7 @@ public class RenderWhite32 implements DrawRender {
             vertex.vertex(pPoseStack.last().pose(), SIZE, SIZE, 0).color(1f, 1f, 1f, 1f).endVertex();
             vertex.vertex(pPoseStack.last().pose(), SIZE, 0, 0).color(1f, 1f, 1f, 1f).endVertex();
         } else {
-            byte[] pixels = holder.getDraw();
+            byte[] pixels = (byte[]) holder.getData();
             for (int x1 = 0; x1 < SIZE; x1++) {
                 float x2 = x1 + 1;
                 for (int y1 = 0; y1 < SIZE; y1++) {

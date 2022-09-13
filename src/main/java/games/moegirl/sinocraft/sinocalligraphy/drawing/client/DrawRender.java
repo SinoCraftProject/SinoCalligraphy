@@ -1,11 +1,10 @@
-package games.moegirl.sinocraft.sinocalligraphy.client.drawing;
+package games.moegirl.sinocraft.sinocalligraphy.drawing.client;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import games.moegirl.sinocraft.sinocalligraphy.drawing.DrawHolder;
 import net.minecraft.client.renderer.MultiBufferSource;
 
 /**
- * A renderer to render a draw
+ * 用于绘制图片
  */
 public interface DrawRender {
 

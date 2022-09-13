@@ -2,77 +2,80 @@ package games.moegirl.sinocraft.sinocalligraphy.drawing.version;
 
 import com.google.gson.Gson;
 import com.mojang.blaze3d.platform.NativeImage;
-import games.moegirl.sinocraft.sinocalligraphy.drawing.Constants;
 import games.moegirl.sinocraft.sinocalligraphy.drawing.DrawHolder;
-import games.moegirl.sinocraft.sinocalligraphy.utility.XuanPaperType;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.TagParser;
 import net.minecraft.network.FriendlyByteBuf;
 
 import javax.annotation.Nullable;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Optional;
 import java.util.function.Supplier;
 
+/**
+ * 图像版本信息，包括
+ * <ul>
+ *     <li>可直接用于判断</li>
+ *     <li>该版本对应的上一个/下一个版本</li>
+ *     <li>从旧版本更新到当前版本</li>
+ *     <li>序列化/反序列化（字符串，NBT数据，Buffer）</li>
+ *     <li>创建用于存放图片的 {@link DrawHolder}</li>
+ * </ul>
+ */
 public abstract class DrawVersion {
     public static final Gson GSON = new Gson();
 
-    private static final List<DrawVersion> VERSIONS = new LinkedList<>();
-
     /**
-     * Register a version, use for finding version from other data
-     * @param version version
+     * 根据字符串查找符合的版本
+     * @param version 当前图片适用场景的最新版本
      */
-    public static void register(DrawVersion version) {
-        VERSIONS.add(version);
-    }
-
-    /**
-     * Find version from string
-     * @param versionId string from {@link #write(DrawHolder, StringBuffer)}
-     * @return version if exist
-     */
-    public static Optional<DrawVersion> find(String versionId) {
-        for (int i = VERSIONS.size() - 1; i >= 0; i--) {
-            DrawVersion holder = VERSIONS.get(i);
-            if (holder.match(versionId)) {
-                return Optional.of(holder);
+    public static Optional<DrawVersion> find(String draw, DrawVersion version) {
+        while (version != null) {
+            if (version.match(draw)) {
+                return Optional.of(version);
+            } else {
+                version = version.prevVersion;
             }
         }
-
         return Optional.empty();
     }
 
     /**
-     * Find version from network
-     * @param buf buffer from {@link #write(DrawHolder, FriendlyByteBuf)}
-     * @return version if exist
+     * 根据 buffer 查找符合的版本
+     * <p>
+     * <b>注意：保证 FriendlyByteBuf 的 position 不变</b>
+     * @param version 当前图片适用场景的最新版本
      */
-    public static Optional<DrawVersion> find(FriendlyByteBuf buf) {
-        var ver = buf.readUtf();
-        return find(ver);
+    public static Optional<DrawVersion> find(FriendlyByteBuf buf, DrawVersion version) {
+        while (version != null) {
+            if (version.match(buf)) {
+                return Optional.of(version);
+            } else {
+                version = version.prevVersion;
+            }
+        }
+        return Optional.empty();
     }
 
     /**
-     * Find version from nbt
-     * @param tag tag from {@link #write(DrawHolder, CompoundTag)}
-     * @return version if exist
+     * 根据 nbt 查找符合的版本
+     * <p>
+     * <b>注意：保证 NBT 不变</b>
+     * @param version 当前图片适用场景的最新版本
      */
-    public static Optional<DrawVersion> find(@Nullable CompoundTag tag) {
-        if (tag == null) {
-            return Optional.empty();
+    public static Optional<DrawVersion> find(CompoundTag tag, DrawVersion version) {
+        while (version != null) {
+            if (version.match(tag)) {
+                return Optional.of(version);
+            } else {
+                version = version.prevVersion;
+            }
         }
-
-        if (!tag.contains(Constants.TAG_VERSION)) {
-            return Optional.empty();
-        }
-
-        var versionId = tag.getString(Constants.TAG_VERSION);
-
-        return find(versionId);
+        return Optional.empty();
     }
 
+    /**
+     * 升级：将给定图片升级到可用的最新存储版本
+     * @param draw 给定图片
+     */
     public static DrawHolder update(DrawHolder draw) {
         DrawHolder holder = draw;
         DrawVersion version = draw.getVersion();
@@ -85,8 +88,12 @@ public abstract class DrawVersion {
 
     @Nullable
     private DrawVersion nextVersion = null;
+    @Nullable
+    private final DrawVersion prevVersion;
 
-    @SuppressWarnings("CopyConstructorMissesField")
+    /**
+     * @param prevVersion 前一个版本。注意版本链应当是单向的。
+     */
     public DrawVersion(@Nullable DrawVersion prevVersion) {
         if (prevVersion != null) {
             if (prevVersion.nextVersion != null) {
@@ -94,119 +101,81 @@ public abstract class DrawVersion {
             }
             prevVersion.nextVersion = this;
         }
+        this.prevVersion = prevVersion;
     }
 
     /**
-     * Check if the value is suitable for this version
-     * @param value string value
-     * @return true if the version is suitable for this version
+     * 检查给定字符串是否由该版本生成
      */
     protected abstract boolean match(String value);
 
     /**
-     * Check if the value is suitable for this version
-     * @param value network buffer
-     * @return true if the version is suitable for this version
+     * 检查给定 buffer 是否由该版本生成
+     * <p>
+     * <b>注意：给定 buffer 的 position 不应发生变化</b>
      */
     protected abstract boolean match(FriendlyByteBuf value);
 
     /**
-     * Check if the value is suitable for this version
-     * @param value nbt tag
-     * @return true if the version is suitable for this version
+     * 检查给定 nbt 是否由该版本生成
+     * <p>
+     * <b>注意：给定 nbt 不应发生变化</b>
      */
     protected abstract boolean match(CompoundTag value);
 
     /**
-     * Read a DrawHolder from the value
-     * @param value string value
-     * @return holder
+     * 从给定字符串反序列化生成图片
+     * <p>
+     * <b>注意：假定字符串是由该版本生成，不再进行检查</b>
      */
     public abstract DrawHolder read(String value);
 
     /**
-     * Read a DrawHolder from the value
-     * @param value network buffer
-     * @return holder
+     * 从给定 buffer 生成图片
+     * <p>
+     * <b>注意：假定 buffer 是由该版本生成，不再进行检查</b>
+     * <b>注意：buffer 的 position 应当指向读完图片之后的位置</b>
      */
     public abstract DrawHolder read(FriendlyByteBuf value);
 
     /**
-     * Read a DrawHolder from the value
-     * @param value nbt tag
-     * @return holder
+     * 从给定 nbt 生成图片
+     * <p>
+     * <b>注意：假定 nbt 是由该版本生成，不再进行检查</b>
      */
     public abstract DrawHolder read(CompoundTag value);
 
     /**
-     * Write draw to a string
-     * @param holder draw holder suitable for the version
-     * @param sb string buffer
+     * 将图片序列化成 String 并存入 StringBuffer 中
      */
     public abstract void write(DrawHolder holder, StringBuffer sb);
 
     /**
-     * Write draw to a network
-     * @param holder draw holder suitable for the version
-     * @param buf network buffer
+     * 将图片存入 buffer 中
      */
     public abstract void write(DrawHolder holder, FriendlyByteBuf buf);
 
     /**
-     * Write draw to nbt
-     * @param holder draw holder suitable for the version
-     * @param tag nbt tag
+     * 将图片存入 nbt 中
      */
     public abstract void write(DrawHolder holder, CompoundTag tag);
 
     /**
-     * Create a BufferedImage from a draw
-     * @param holder holder suitable the version
-     * @return image
+     * 将图片生成 NativeImage，主要用于导出到文件
      */
     public abstract Supplier<NativeImage> toImage(DrawHolder holder);
 
     /**
-     * Create a new draw holder
-     * @return holder
+     * 创建一个用于保存图片的容器
      */
     public abstract DrawHolder newDraw();
 
     /**
-     * Create a new draw holder with type.
-     * Ignore type by default for BrushV1 and BrushV2.
-     *
-     * @param type Type of paper.
-     * @return holder
-     * @since BrushV3
-     */
-    public abstract DrawHolder newDraw(XuanPaperType type);
-
-    /**
-     * Create a holder from the old version
-     * @param oldHolder old version holder
-     * @return new version holder
+     * 从该版本上一个版本的图片版本升级到当前版本，默认实现是直接把旧数据传递到新容器
      */
     protected DrawHolder updateFrom(DrawHolder oldHolder) {
         DrawHolder holder = newDraw();
         holder.apply(oldHolder);
         return holder;
-    }
-
-    public static Optional<DrawVersion> from(String str) {
-        CompoundTag nbt = null;
-
-        try {
-            GSON.fromJson(str, Object.class);
-            nbt = TagParser.parseTag(str);
-        } catch (Exception ignored) {
-
-        }
-
-        if (nbt != null) {
-            return find(nbt);
-        } else {
-            return find(str);
-        }
     }
 }

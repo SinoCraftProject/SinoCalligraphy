@@ -6,6 +6,7 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import games.moegirl.sinocraft.sinocalligraphy.SinoCalligraphy;
 import games.moegirl.sinocraft.sinocalligraphy.drawing.DrawHolder;
+import games.moegirl.sinocraft.sinocalligraphy.drawing.version.DrawVersions;
 import games.moegirl.sinocraft.sinocalligraphy.gui.components.Canvas;
 import games.moegirl.sinocraft.sinocalligraphy.gui.components.ColorSelectionList;
 import games.moegirl.sinocraft.sinocalligraphy.gui.container.BrushContainer;
@@ -163,7 +164,7 @@ public class BrushGuiScreen extends AbstractContainerScreen<BrushMenu> {
 
     private void pasteDraw(Button button) {
         String data = Minecraft.getInstance().keyboardHandler.getClipboard();
-        DrawHolder.from(data)
+        DrawHolder.parse(data, DrawVersions.LATEST_BRUSH_VERSION)
                 .filter(h -> canvas.get().setDraw(h))
                 .ifPresentOrElse(c -> {},
                         () -> text.get().begin(Duration.ofSeconds(1), 0, 255, 0, 0, new TranslatableComponent(KEY_PASTE_FAILED, data)));

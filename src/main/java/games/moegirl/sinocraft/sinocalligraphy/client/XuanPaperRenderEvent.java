@@ -3,7 +3,7 @@ package games.moegirl.sinocraft.sinocalligraphy.client;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Vector3f;
-import games.moegirl.sinocraft.sinocalligraphy.client.drawing.DrawRenders;
+import games.moegirl.sinocraft.sinocalligraphy.drawing.client.DrawRenders;
 import games.moegirl.sinocraft.sinocalligraphy.data.SCAItemTags;
 import games.moegirl.sinocraft.sinocalligraphy.drawing.Constants;
 import games.moegirl.sinocraft.sinocalligraphy.drawing.DrawHolder;
@@ -99,7 +99,7 @@ public class XuanPaperRenderEvent {
         var light = event.getPackedLight();
 
         if (stack.is(SCAItems.FILLED_XUAN_PAPER.get()) && player != null && !player.isScoping()) {
-            DrawHolder holder = DrawHolder.parse(nbt).orElseGet(DrawVersions.LATEST_BRUSH_VERSION::newDraw);
+            DrawHolder holder = DrawHolder.parse(nbt, DrawVersions.LATEST_BRUSH_VERSION).orElseGet(DrawVersions.LATEST_BRUSH_VERSION::newDraw);
             InteractionHand hand = event.getHand();
             switch (hand) {
                 case MAIN_HAND -> {

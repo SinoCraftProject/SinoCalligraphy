@@ -4,6 +4,7 @@ import games.moegirl.sinocraft.sinocalligraphy.SinoCalligraphy;
 import games.moegirl.sinocraft.sinocalligraphy.client.XuanPaperRenderer;
 import games.moegirl.sinocraft.sinocalligraphy.drawing.Constants;
 import games.moegirl.sinocraft.sinocalligraphy.drawing.DrawHolder;
+import games.moegirl.sinocraft.sinocalligraphy.drawing.version.DrawVersions;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
@@ -38,7 +39,7 @@ public class FilledXuanPaperItem extends Item {
 
         var nbt = tag.getCompound(Constants.TAG_HOLDER);
 
-        DrawHolder.parse(nbt)
+        DrawHolder.parse(nbt, DrawVersions.LATEST_BRUSH_VERSION)
                 .map(DrawHolder::getAuthor)
                 .map(c -> new TranslatableComponent(HOVER_AUTHOR_PREFIX).append(c))
                 .ifPresent(pTooltipComponents::add);

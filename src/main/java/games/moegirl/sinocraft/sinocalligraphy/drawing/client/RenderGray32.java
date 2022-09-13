@@ -1,4 +1,4 @@
-package games.moegirl.sinocraft.sinocalligraphy.client.drawing;
+package games.moegirl.sinocraft.sinocalligraphy.drawing.client;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -9,8 +9,8 @@ import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.util.FastColor;
 
-import static games.moegirl.sinocraft.sinocalligraphy.client.drawing.RenderTypes.COLOR_256;
-import static games.moegirl.sinocraft.sinocalligraphy.client.drawing.RenderTypes.COLOR_LIGHT_256;
+import static games.moegirl.sinocraft.sinocalligraphy.drawing.client.RenderTypes.COLOR_256;
+import static games.moegirl.sinocraft.sinocalligraphy.drawing.client.RenderTypes.COLOR_LIGHT_256;
 import static games.moegirl.sinocraft.sinocalligraphy.drawing.holder.HolderByte32.SIZE;
 
 public class RenderGray32 implements DrawRender {
@@ -32,7 +32,7 @@ public class RenderGray32 implements DrawRender {
             int unitY = height / SIZE;
             int x1 = x;
             int x2 = x1 + unitX;
-            byte[] draw = holder.getDraw();
+            byte[] draw = (byte[]) holder.getData();
             int index = 0;
             for (int i = 0; i < SIZE; i++) {
                 int y1 = y;
@@ -61,7 +61,7 @@ public class RenderGray32 implements DrawRender {
             vertex.vertex(stack.last().pose(), SIZE, SIZE, 0).color(1, 1, 1, 1).uv2(light).endVertex();
             vertex.vertex(stack.last().pose(), SIZE, 0, 0).color(1, 1, 1, 1).uv2(light).endVertex();
         } else {
-            byte[] pixels = holder.getDraw();
+            byte[] pixels = (byte[]) holder.getData();
             for (int x1 = 0; x1 < SIZE; x1++) {
                 float x2 = x1 + 1;
                 for (int y1 = 0; y1 < SIZE; y1++) {
@@ -85,7 +85,7 @@ public class RenderGray32 implements DrawRender {
             vertex.vertex(pPoseStack.last().pose(), SIZE, SIZE, 0).color(1, 1, 1, 1).endVertex();
             vertex.vertex(pPoseStack.last().pose(), SIZE, 0, 0).color(1, 1, 1, 1).endVertex();
         } else {
-            byte[] pixels = holder.getDraw();
+            byte[] pixels = (byte[]) holder.getData();
             for (int x1 = 0; x1 < SIZE; x1++) {
                 float x2 = x1 + 1;
                 for (int y1 = 0; y1 < SIZE; y1++) {

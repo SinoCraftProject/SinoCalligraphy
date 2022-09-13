@@ -12,9 +12,9 @@ public class DrawVersions {
      */
     public static final DrawVersion LATEST_BRUSH_VERSION = BRUSH_V3_WHITE;
 
+    /**
+     * 调用保证所有版本初始化
+     */
     public static void register() {
-        DrawVersion.register(BRUSH_V1);
-        DrawVersion.register(BRUSH_V2);
-        DrawVersion.register(BRUSH_V3_WHITE);
     }
 }

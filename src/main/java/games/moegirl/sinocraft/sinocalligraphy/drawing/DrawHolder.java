@@ -12,94 +12,76 @@ import javax.annotation.Nullable;
 import java.util.Optional;
 
 /**
- * 保存了图片的
+ * 保存图片本身数据及其作者信息
  */
 public interface DrawHolder {
 
     /**
-     * Parse string to a holder
-     * @param value string from {@link DrawVersion#write(DrawHolder, StringBuffer)}
-     * @return holder
+     * 从字符串读图片
      */
-    static Optional<DrawHolder> parse(String value) {
-//        return Optional.of(DrawVersion.from(value));
-        return DrawVersion.find(value).map(v -> v.read(value)).map(DrawVersion::update);
+    static Optional<DrawHolder> parse(String value, DrawVersion target) {
+        return DrawVersion.find(value, target).map(v -> v.read(value)).map(DrawVersion::update);
     }
 
     /**
-     * Parse network buffer to a holder
-     * @param value buffer from {@link DrawVersion#write(DrawHolder, FriendlyByteBuf)}
-     * @return holder
+     * 从网络读图片
      */
-    static Optional<DrawHolder> parse(FriendlyByteBuf value) {
-//        return Optional.of(DrawVersion.from(value));
-        return DrawVersion.find(new FriendlyByteBuf(value.copy()))
-                .map(v -> v.read(value))
-                .map(DrawVersion::update);
+    static Optional<DrawHolder> parse(FriendlyByteBuf value, DrawVersion target) {
+        return DrawVersion.find(value, target).map(v -> v.read(value)).map(DrawVersion::update);
     }
 
     /**
-     * Parse nbt to a holder
-     * @param value tag from {@link DrawVersion#write(DrawHolder, CompoundTag)}
-     * @return holder
+     * 从 NBT 数据读图片
      */
-    static Optional<DrawHolder> parse(@Nullable CompoundTag value) {
+    static Optional<DrawHolder> parse(CompoundTag value, DrawVersion target) {
 //        return Optional.of(DrawVersion.from(value));x
-        return DrawVersion.find(value).map(v -> v.read(value)).map(DrawVersion::update);
+        return DrawVersion.find(value, target).map(v -> v.read(value)).map(DrawVersion::update);
     }
 
     String KEY_NO_AUTHOR = SinoCalligraphy.MODID + ".hover.author.empty";
     Component DEFAULT_AUTHOR = new TranslatableComponent(KEY_NO_AUTHOR);
 
     /**
-     * Get the draw in the holder
-     * @return draw
+     * 获取图片的原始数据
      */
-    byte[] getData();
+    Object getData();
 
     /**
-     * Set a draw to the holder
-     * @param data draw data
+     * 设置新的图片数据
      */
-    void setDraw(byte[] data);
+    void setDraw(Object data);
 
     /**
-     * Get the name of author, or unknown author if not exist author
-     * @return author name
+     * 获取作者。该方法永远不应该返回 null
      */
     Component getAuthor();
 
     /**
-     * Set the name of author
-     * @param author author name
+     * 设置作者
      */
     void setAuthor(@Nullable Component author);
 
     /**
-     * Set an author name from entity
-     * @param author author
+     * 设置作者（实体）
      */
     default void setAuthor(@Nullable Entity author) {
         setAuthor(author == null ? null : author.getDisplayName());
     }
 
     /**
-     * Set an author name from string
-     * @param author author
+     * 设置作者（名称）
      */
     default void setAuthor(@Nullable String author) {
         setAuthor(author == null ? null : Component.Serializer.fromJson(author));
     }
 
     /**
-     * True if the draw has an author;
-     * @return true if the draw has an author
+     * 是否包含作者信息
      */
     boolean hasAuthor();
 
     /**
-     * Get author as string
-     * @return author string
+     * 以 String 形式获取作者信息
      */
     default String getAuthorAsString() {
         return Component.Serializer.toJson(getAuthor());
@@ -112,15 +94,13 @@ public interface DrawHolder {
     DrawVersion getVersion();
 
     /**
-     * True if the draw is blank (or empty)
-     * @return draw is blank
+     * 当前画作是否是空白的
      */
     boolean isEmpty();
 
     /**
-     * Copy another holder to this
-     * @param another another draw holder
-     * @return true if copy succeed
+     * 将其他画作复制到当前画作中
+     * @return true 可以并已经复制成功
      */
     default boolean apply(DrawHolder another) {
         if (getClass() == another.getClass()) {
@@ -131,18 +111,16 @@ public interface DrawHolder {
     }
 
     /**
-     * Copy data from one holder to another directly
-     * @param src source
-     * @param dst destination
+     * 直接复制图画内容。注意：
+     * <ul>
+     *     <li>浅复制</li>
+     *     <li>不会验证是否匹配</li>
+     * </ul>
      */
     static void copyDirectly(DrawHolder src, DrawHolder dst) {
         dst.setDraw(src.getData());
         if (src.hasAuthor()) {
             dst.setAuthor(src.getAuthor());
         }
-    }
-
-    static Optional<DrawHolder> from(String str) {
-        return DrawVersion.from(str).map(v -> v.read(str)).map(DrawVersion::update);
     }
 }

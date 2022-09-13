@@ -1,4 +1,4 @@
-package games.moegirl.sinocraft.sinocalligraphy.client.drawing;
+package games.moegirl.sinocraft.sinocalligraphy.drawing.client;
 
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.VertexFormat;

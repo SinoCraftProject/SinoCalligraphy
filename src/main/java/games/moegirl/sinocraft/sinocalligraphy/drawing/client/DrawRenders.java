@@ -1,4 +1,4 @@
-package games.moegirl.sinocraft.sinocalligraphy.client.drawing;
+package games.moegirl.sinocraft.sinocalligraphy.drawing.client;
 
 import games.moegirl.sinocraft.sinocalligraphy.drawing.DrawHolder;
 import games.moegirl.sinocraft.sinocalligraphy.drawing.version.DrawVersion;

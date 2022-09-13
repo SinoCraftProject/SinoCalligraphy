@@ -1,6 +1,7 @@
 package games.moegirl.sinocraft.sinocalligraphy.network.packet;
 
 import games.moegirl.sinocraft.sinocalligraphy.drawing.DrawHolder;
+import games.moegirl.sinocraft.sinocalligraphy.drawing.version.DrawVersions;
 import games.moegirl.sinocraft.sinocalligraphy.gui.menu.BrushMenu;
 import games.moegirl.sinocraft.sinocalligraphy.item.SCAItems;
 import games.moegirl.sinocraft.sinocalligraphy.network.SCANetworks;
@@ -25,7 +26,7 @@ public class DrawSaveC2SPacket extends PacketBase {
 
     public DrawSaveC2SPacket(FriendlyByteBuf buf) {
         button = buf.readByte();
-        holder = DrawHolder.parse(buf).orElseThrow();
+        holder = DrawHolder.parse(buf, DrawVersions.LATEST_BRUSH_VERSION).orElseThrow();
     }
 
     @Override

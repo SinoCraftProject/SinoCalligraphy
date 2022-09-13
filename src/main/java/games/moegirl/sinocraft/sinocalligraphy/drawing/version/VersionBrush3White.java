@@ -1,10 +1,10 @@
 package games.moegirl.sinocraft.sinocalligraphy.drawing.version;
 
 import com.mojang.blaze3d.platform.NativeImage;
-import games.moegirl.sinocraft.sinocalligraphy.drawing.*;
+import games.moegirl.sinocraft.sinocalligraphy.drawing.Constants;
+import games.moegirl.sinocraft.sinocalligraphy.drawing.DrawHolder;
 import games.moegirl.sinocraft.sinocalligraphy.drawing.holder.HolderByte32;
 import games.moegirl.sinocraft.sinocalligraphy.utility.DrawHelper;
-import games.moegirl.sinocraft.sinocalligraphy.utility.XuanPaperType;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.FriendlyByteBuf;
@@ -76,10 +76,10 @@ public class VersionBrush3White extends DrawVersion {
                 || !nbt.contains(Constants.TAG_VERSION)
                 || !nbt.getString(Constants.TAG_VERSION).equals(VERSION)) {
             System.out.println("VER3:" + nbt.getString(Constants.TAG_VERSION));
-            return newDraw(XuanPaperType.WHITE);
+            return newDraw();
         }
 
-        var holder = newDraw(XuanPaperType.WHITE);
+        var holder = newDraw();
         // todo holder.deserializeNBT(nbt);
         return holder;
     }
@@ -110,7 +110,7 @@ public class VersionBrush3White extends DrawVersion {
             var bgColor = DrawHelper.toNativeImage(background);
             image.fillRect(0, 0, SIZE, SIZE, bgColor);
             int index = 0;
-            byte[] value = holder.getData();
+            byte[] value = (byte[]) holder.getData();
             for (int w = 0; w < SIZE; w++) {
                 for (int h = 0; h < SIZE; h++) {
                     var alpha = 16 * (16 - value[index++]) - 1;
@@ -130,11 +130,6 @@ public class VersionBrush3White extends DrawVersion {
 
     @Override
     public DrawHolder newDraw() {
-        return new HolderByte32(this);
-    }
-
-    @Override
-    public DrawHolder newDraw(XuanPaperType type) {
         return new HolderByte32(this);
     }
 

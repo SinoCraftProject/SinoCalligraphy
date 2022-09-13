@@ -6,7 +6,6 @@ import com.google.gson.JsonParser;
 import com.mojang.blaze3d.platform.NativeImage;
 import games.moegirl.sinocraft.sinocalligraphy.drawing.DrawHolder;
 import games.moegirl.sinocraft.sinocalligraphy.drawing.holder.HolderByte32;
-import games.moegirl.sinocraft.sinocalligraphy.utility.XuanPaperType;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.FriendlyByteBuf;
@@ -50,7 +49,7 @@ public class VersionBrush1 extends DrawVersion {
         try {
             String json = value.substring(SYMBOL.length());
             JsonObject object = JsonParser.parseString(json).getAsJsonObject();
-            byte[] draw = holder.getData();
+            byte[] draw = (byte[]) holder.getData();
             if (object.has(TAG_PIXELS)) {
                 JsonArray array = object.getAsJsonArray(TAG_PIXELS);
                 int len = Math.min(draw.length, array.size());
@@ -89,7 +88,7 @@ public class VersionBrush1 extends DrawVersion {
         sb.append(SYMBOL);
         JsonObject json = new JsonObject();
         JsonArray pixels = new JsonArray();
-        for (byte b : holder.getData()) {
+        for (byte b : (byte[]) holder.getData()) {
             pixels.add(b);
         }
         json.add(TAG_PIXELS, pixels);
@@ -103,7 +102,7 @@ public class VersionBrush1 extends DrawVersion {
     public void write(DrawHolder holder, FriendlyByteBuf buf) {
         buf.writeUtf(SYMBOL);
         buf.writeBoolean(holder.hasAuthor());
-        buf.writeByteArray(holder.getData());
+        buf.writeByteArray((byte[]) holder.getData());
         if (holder.hasAuthor()) {
             buf.writeUtf(holder.getAuthorAsString());
         }
@@ -111,7 +110,7 @@ public class VersionBrush1 extends DrawVersion {
 
     @Override
     public void write(DrawHolder holder, CompoundTag tag) {
-        tag.putByteArray(TAG_PIXELS, holder.getData());
+        tag.putByteArray(TAG_PIXELS, (byte[]) holder.getData());
         if (holder.hasAuthor()) {
             tag.putString(TAG_AUTHOR, holder.getAuthorAsString());
         }
@@ -125,11 +124,6 @@ public class VersionBrush1 extends DrawVersion {
     @Override
     public DrawHolder newDraw() {
         return new HolderByte32(this);
-    }
-
-    @Override
-    public DrawHolder newDraw(XuanPaperType type) {
-        return newDraw();
     }
 
     @Override
@@ -162,7 +156,7 @@ public class VersionBrush1 extends DrawVersion {
         return () -> {
             NativeImage image = new NativeImage(SIZE, SIZE, false);
             int index = 0;
-            byte[] data = holder.getData();
+            byte[] data = (byte[]) holder.getData();
             for (int w = 0; w < SIZE; w++) {
                 for (int h = 0; h < SIZE; h++) {
                     int color = 16 * (16 - data[index++]) - 1;
