@@ -1,7 +1,9 @@
-package games.moegirl.sinocraft.sinocalligraphy.drawing;
+package games.moegirl.sinocraft.sinocalligraphy.drawing.version;
 
 import com.google.gson.Gson;
 import com.mojang.blaze3d.platform.NativeImage;
+import games.moegirl.sinocraft.sinocalligraphy.drawing.Constants;
+import games.moegirl.sinocraft.sinocalligraphy.drawing.DrawHolder;
 import games.moegirl.sinocraft.sinocalligraphy.utility.XuanPaperType;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.TagParser;
@@ -11,6 +13,7 @@ import javax.annotation.Nullable;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Supplier;
 
 public abstract class DrawVersion {
     public static final Gson GSON = new Gson();
@@ -161,7 +164,7 @@ public abstract class DrawVersion {
      * @param holder holder suitable the version
      * @return image
      */
-    public abstract NativeImage toImage(DrawHolder holder);
+    public abstract Supplier<NativeImage> toImage(DrawHolder holder);
 
     /**
      * Create a new draw holder
@@ -188,10 +191,6 @@ public abstract class DrawVersion {
         DrawHolder holder = newDraw();
         holder.apply(oldHolder);
         return holder;
-    }
-
-    protected String getVersionId() {
-        return "oldVersion";
     }
 
     public static Optional<DrawVersion> from(String str) {

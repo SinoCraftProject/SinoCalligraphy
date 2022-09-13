@@ -1,9 +1,10 @@
 package games.moegirl.sinocraft.sinocalligraphy.gui.components;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import games.moegirl.sinocraft.sinocalligraphy.client.drawing.DrawRenders;
 import games.moegirl.sinocraft.sinocalligraphy.drawing.DrawHolder;
-import games.moegirl.sinocraft.sinocalligraphy.drawing.DrawVersions;
-import games.moegirl.sinocraft.sinocalligraphy.drawing.SmallBlackWhiteBrushHolder;
+import games.moegirl.sinocraft.sinocalligraphy.drawing.holder.HolderByte32;
+import games.moegirl.sinocraft.sinocalligraphy.drawing.version.DrawVersions;
 import games.moegirl.sinocraft.sinocalligraphy.gui.BrushGuiScreen;
 import games.moegirl.sinocraft.sinocalligraphy.utility.XuanPaperType;
 import games.moegirl.sinocraft.sinocore.api.client.GLSwitcher;
@@ -15,17 +16,14 @@ import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Player;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 import org.lwjgl.glfw.GLFW;
 
 import javax.annotation.Nullable;
 import java.util.function.IntConsumer;
 import java.util.function.IntSupplier;
 
-import static games.moegirl.sinocraft.sinocalligraphy.drawing.SmallBlackWhiteBrushHolder.SIZE;
+import static games.moegirl.sinocraft.sinocalligraphy.drawing.holder.HolderByte32.SIZE;
 
-@OnlyIn(Dist.CLIENT)
 public class Canvas extends AbstractWidget {
 
     private final TextureMapClient atlas;
@@ -123,7 +121,7 @@ public class Canvas extends AbstractWidget {
     @Override
     public void render(PoseStack stack, int pMouseX, int pMouseY, float pPartialTick) {
         atlas.blitTexture(stack, canvas, parent);
-        draw.render().draw(stack, x + 1, y + 1, canvasSize, canvasSize);
+        DrawRenders.of(draw).draw(stack, x + 1, y + 1, canvasSize, canvasSize);
         if (!isEnable()) {
             atlas.blitTexture(stack, shadow, parent, GLSwitcher.blend().enable());
         }
@@ -176,7 +174,7 @@ public class Canvas extends AbstractWidget {
     }
 
     public boolean setDraw(DrawHolder holder) {
-        if (holder instanceof SmallBlackWhiteBrushHolder) {
+        if (holder instanceof HolderByte32) {
             DrawHolder.copyDirectly(holder, draw);
             return true;
         }
@@ -190,14 +188,6 @@ public class Canvas extends AbstractWidget {
         this.height = size;
         this.canvasSize = size - 2;
         return this;
-    }
-
-    public void setDrawType(XuanPaperType type) {
-        draw.setType(type);
-    }
-
-    public XuanPaperType getDrawType() {
-        return draw.getType();
     }
 
     public void clear() {

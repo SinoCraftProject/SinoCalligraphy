@@ -1,24 +1,25 @@
-package games.moegirl.sinocraft.sinocalligraphy.drawing;
+package games.moegirl.sinocraft.sinocalligraphy.client.drawing;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.blaze3d.vertex.VertexFormat;
+import games.moegirl.sinocraft.sinocalligraphy.drawing.holder.HolderByte32;
+import games.moegirl.sinocraft.sinocalligraphy.utility.DrawHelper;
 import net.minecraft.client.gui.GuiComponent;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderStateShard;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 
-import static games.moegirl.sinocraft.sinocalligraphy.drawing.SmallBlackWhiteBrushHolder.SIZE;
+import static games.moegirl.sinocraft.sinocalligraphy.drawing.holder.HolderByte32.SIZE;
+import static games.moegirl.sinocraft.sinocalligraphy.drawing.version.VersionBrush3White.background;
+import static games.moegirl.sinocraft.sinocalligraphy.drawing.version.VersionBrush3White.foreground;
 
-@OnlyIn(Dist.CLIENT)
-public class SmallBlockWhiteBrushRender implements DrawRender {
+public class RenderWhite32 implements DrawRender {
 
-    private final SmallBlackWhiteBrushHolder holder;
+    private final HolderByte32 holder;
 
     private final static RenderType RENDER = RenderType.create(
             "black_white_draw", DefaultVertexFormat.POSITION_COLOR,
@@ -34,16 +35,12 @@ public class SmallBlockWhiteBrushRender implements DrawRender {
                     .setLightmapState(new RenderStateShard.LightmapStateShard(true))
                     .createCompositeState(false));
 
-    public SmallBlockWhiteBrushRender(SmallBlackWhiteBrushHolder holder) {
+    public RenderWhite32(HolderByte32 holder) {
         this.holder = holder;
     }
 
     @Override
     public void draw(PoseStack pPoseStack, int x, int y, int width, int height) {
-        var type = holder.getType();
-        var background = type.getBackground();
-        var foreground = type.getForeground();
-
         RenderSystem.setShader(GameRenderer::getPositionColorShader);
         RenderSystem.disableTexture();
 
@@ -61,7 +58,7 @@ public class SmallBlockWhiteBrushRender implements DrawRender {
                 for (int j = 0; j < SIZE; j++) {
                     var alpha = 16 * (16 - draw[index++]) - 1;
                     if (alpha != 255) {
-                        var mixed = type.mix(alpha);
+                        var mixed = DrawHelper.mix(foreground, background, alpha);
 
                         RenderSystem.setShaderColor(1, 1, 1, 1);
                         GuiComponent.fill(pPoseStack, x1, y1, x2, y2, mixed);
@@ -78,9 +75,6 @@ public class SmallBlockWhiteBrushRender implements DrawRender {
 
     @Override
     public void draw(PoseStack stack, MultiBufferSource buffer, int light) {
-        var type = holder.getType();
-        var background = type.getBackground();
-
         RenderSystem.setShader(GameRenderer::getPositionColorLightmapShader);
         VertexConsumer vertex = buffer.getBuffer(RENDER_WITH_LIGHT);
 
@@ -95,7 +89,7 @@ public class SmallBlockWhiteBrushRender implements DrawRender {
                     if (alpha == 255) {
                         drawSquare(stack, vertex, background, x, y, 1, light);
                     } else {
-                        var mixed = type.mix(alpha);
+                        var mixed = DrawHelper.mix(foreground, background, alpha);
                         drawSquare(stack, vertex, mixed, x, y, 1, light);
                     }
                 }

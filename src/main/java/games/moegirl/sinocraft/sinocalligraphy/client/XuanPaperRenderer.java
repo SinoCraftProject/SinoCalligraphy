@@ -3,7 +3,11 @@ package games.moegirl.sinocraft.sinocalligraphy.client;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Vector3f;
-import games.moegirl.sinocraft.sinocalligraphy.drawing.*;
+import games.moegirl.sinocraft.sinocalligraphy.client.drawing.DrawRenders;
+import games.moegirl.sinocraft.sinocalligraphy.drawing.Constants;
+import games.moegirl.sinocraft.sinocalligraphy.drawing.DrawHolder;
+import games.moegirl.sinocraft.sinocalligraphy.drawing.holder.HolderByte32;
+import games.moegirl.sinocraft.sinocalligraphy.drawing.version.DrawVersions;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.geom.EntityModelSet;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
@@ -12,8 +16,6 @@ import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 
 import javax.annotation.Nullable;
 
@@ -22,7 +24,6 @@ import javax.annotation.Nullable;
  * A mod should only one BEWLR.
  * @author qyl27
  */
-@OnlyIn(Dist.CLIENT)
 public class XuanPaperRenderer extends BlockEntityWithoutLevelRenderer {
 
     @Nullable
@@ -61,9 +62,9 @@ public class XuanPaperRenderer extends BlockEntityWithoutLevelRenderer {
             poseStack.translate(0.0D, 0.0D, 0.01D);
         } else {
             poseStack.scale(0.03125f, 0.03125f, 1.0f);
-            poseStack.scale(SmallBlackWhiteBrushHolder.SIZE, SmallBlackWhiteBrushHolder.SIZE, SmallBlackWhiteBrushHolder.SIZE);
+            poseStack.scale(HolderByte32.SIZE, HolderByte32.SIZE, HolderByte32.SIZE);
         }
-        holder.render().draw(poseStack, buffer, packedLight);
+        DrawRenders.of(holder).draw(poseStack, buffer, packedLight);
         poseStack.popPose();
     }
 }

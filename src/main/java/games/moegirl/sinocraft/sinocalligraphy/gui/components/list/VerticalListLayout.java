@@ -1,11 +1,7 @@
 package games.moegirl.sinocraft.sinocalligraphy.gui.components.list;
 
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-
 import javax.annotation.Nullable;
 
-@OnlyIn(Dist.CLIENT)
 public class VerticalListLayout<T, LIST extends SelectionList<T>> extends SelectionLayout<T> {
 
     private final int width, height;

@@ -1,14 +1,16 @@
-package games.moegirl.sinocraft.sinocalligraphy.drawing;
+package games.moegirl.sinocraft.sinocalligraphy.drawing.version;
 
 import com.google.common.base.Verify;
 import com.mojang.blaze3d.platform.NativeImage;
 import games.moegirl.sinocraft.sinocalligraphy.SinoCalligraphy;
+import games.moegirl.sinocraft.sinocalligraphy.drawing.DrawHolder;
+import games.moegirl.sinocraft.sinocalligraphy.drawing.holder.HolderByte32;
 import games.moegirl.sinocraft.sinocalligraphy.utility.XuanPaperType;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+
+import java.util.function.Supplier;
 
 /**
  * <ul>
@@ -16,7 +18,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
  *     <li>Use shorter string value instead of json data</li>
  * </ul>
  */
-public class BrushV2Version extends DrawVersion {
+public class VersionBrush2 extends DrawVersion {
 
     public static final String TAG_HOLDER = SinoCalligraphy.MODID + ".brush";
     public static final String TAG_VERSION = "version";
@@ -24,7 +26,7 @@ public class BrushV2Version extends DrawVersion {
     public static final String TAG_AUTHOR = "author";
     public static final String SYMBOL = "DBRUSH2";
 
-    BrushV2Version() {
+    VersionBrush2() {
         super(null);
     }
 
@@ -35,7 +37,7 @@ public class BrushV2Version extends DrawVersion {
 
     @Override
     protected boolean match(FriendlyByteBuf value) {
-        return BrushV1Version.match(value, SYMBOL);
+        return VersionBrush1.match(value, SYMBOL);
     }
 
     @Override
@@ -71,7 +73,7 @@ public class BrushV2Version extends DrawVersion {
     public DrawHolder read(CompoundTag value) {
         DrawHolder holder = newDraw();
         if (value.contains(TAG_HOLDER, Tag.TAG_COMPOUND)) {
-            BrushV1Version.read(value.getCompound(TAG_HOLDER), TAG_PIXELS, TAG_AUTHOR, holder);
+            VersionBrush1.read(value.getCompound(TAG_HOLDER), TAG_PIXELS, TAG_AUTHOR, holder);
         }
         return holder;
     }
@@ -111,14 +113,13 @@ public class BrushV2Version extends DrawVersion {
     }
 
     @Override
-    @OnlyIn(Dist.CLIENT)
-    public NativeImage toImage(DrawHolder holder) {
-        return ((SmallBlackWhiteBrushHolder) holder).toImage();
+    public Supplier<NativeImage> toImage(DrawHolder holder) {
+        return VersionBrush1.toGrayImage(holder);
     }
 
     @Override
     public DrawHolder newDraw() {
-        return new SmallBlackWhiteBrushHolder(this);
+        return new HolderByte32(this);
     }
 
     @Override

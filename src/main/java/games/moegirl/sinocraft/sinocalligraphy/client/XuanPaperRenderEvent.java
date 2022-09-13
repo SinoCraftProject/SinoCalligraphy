@@ -3,12 +3,13 @@ package games.moegirl.sinocraft.sinocalligraphy.client;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Vector3f;
+import games.moegirl.sinocraft.sinocalligraphy.client.drawing.DrawRenders;
 import games.moegirl.sinocraft.sinocalligraphy.data.SCAItemTags;
 import games.moegirl.sinocraft.sinocalligraphy.drawing.Constants;
-import games.moegirl.sinocraft.sinocalligraphy.item.SCAItems;
 import games.moegirl.sinocraft.sinocalligraphy.drawing.DrawHolder;
-import games.moegirl.sinocraft.sinocalligraphy.drawing.DrawVersions;
-import games.moegirl.sinocraft.sinocalligraphy.drawing.SmallBlackWhiteBrushHolder;
+import games.moegirl.sinocraft.sinocalligraphy.drawing.holder.HolderByte32;
+import games.moegirl.sinocraft.sinocalligraphy.drawing.version.DrawVersions;
+import games.moegirl.sinocraft.sinocalligraphy.item.SCAItems;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -25,7 +26,6 @@ import net.minecraft.world.entity.HumanoidArm;
 import net.minecraft.world.entity.decoration.ItemFrame;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.RenderHandEvent;
 import net.minecraftforge.client.event.RenderItemInFrameEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -35,7 +35,6 @@ import net.minecraftforge.fml.common.Mod;
  * Client render event subscriber.
  */
 @Mod.EventBusSubscriber(Dist.CLIENT)
-@OnlyIn(Dist.CLIENT)
 public class XuanPaperRenderEvent {
     @SubscribeEvent
     public static void onRenderInFrame(RenderItemInFrameEvent event) {
@@ -122,9 +121,9 @@ public class XuanPaperRenderEvent {
         stack.scale(0.38F, 0.38F, 0.38F);
         stack.translate(-0.5D, -0.5D, 0.0D);
         stack.scale(0.0078125F, 0.0078125F, 0.0078125F);
-        float step = 128f / SmallBlackWhiteBrushHolder.SIZE;
+        float step = 128f / HolderByte32.SIZE;
         stack.scale(step, step, step);
-        draw.render().draw(stack, buffer, light);
+        DrawRenders.of(draw).draw(stack, buffer, light);
     }
 
     private static void renderOneHandedPaper(LocalPlayer player, RenderHandEvent event, HumanoidArm arm,

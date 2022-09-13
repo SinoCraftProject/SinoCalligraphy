@@ -1,12 +1,8 @@
 package games.moegirl.sinocraft.sinocalligraphy.gui.components.list;
 
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-
 import javax.annotation.Nullable;
 import java.util.List;
 
-@OnlyIn(Dist.CLIENT)
 public abstract class SelectionLayout<T> {
 
     public static <T> SelectionLayout<T> empty(SelectionList<T> list) {

@@ -2,13 +2,17 @@ package games.moegirl.sinocraft.sinocalligraphy;
 
 import games.moegirl.sinocraft.sinocalligraphy.block.SCABlockItems;
 import games.moegirl.sinocraft.sinocalligraphy.block.SCABlocks;
+import games.moegirl.sinocraft.sinocalligraphy.client.drawing.DrawRenders;
+import games.moegirl.sinocraft.sinocalligraphy.drawing.version.DrawVersions;
 import games.moegirl.sinocraft.sinocalligraphy.fluid.SCAFluids;
 import games.moegirl.sinocraft.sinocalligraphy.gui.SCAMenus;
 import games.moegirl.sinocraft.sinocalligraphy.item.SCAItems;
 import games.moegirl.sinocraft.sinocalligraphy.network.SCANetworks;
-import games.moegirl.sinocraft.sinocalligraphy.drawing.DrawVersions;
+import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.eventbus.api.IEventBus;
+import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -39,11 +43,16 @@ public class SinoCalligraphy {
         SCANetworks.setup();
 
         DrawVersions.register();
+        bus.addListener(this::onClient);
 
         LOGGER.info("The painting that used color to depict all walks of life, while retained black and white to render the beauty of ages.");
     }
 
     public static Logger getLogger() {
         return LOGGER;
+    }
+
+    private void onClient(FMLClientSetupEvent event) {
+        DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> DrawRenders::registerAll);
     }
 }

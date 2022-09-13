@@ -11,8 +11,6 @@ import games.moegirl.sinocraft.sinocore.api.client.GLSwitcher;
 import games.moegirl.sinocraft.sinocore.api.client.screen.TextureMapClient;
 import games.moegirl.sinocraft.sinocore.api.utility.texture.PointEntry;
 import games.moegirl.sinocraft.sinocore.api.utility.texture.TextureEntry;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -20,7 +18,6 @@ import java.util.stream.IntStream;
 
 import static games.moegirl.sinocraft.sinocalligraphy.gui.menu.BrushMenu.TEXTURE;
 
-@OnlyIn(Dist.CLIENT)
 public class ColorSelectionList extends SelectionList<ColorSelectionList.ColorEntry> {
 
     public static final TextureEntry COLOR = TEXTURE.textures().ensureGet("color");

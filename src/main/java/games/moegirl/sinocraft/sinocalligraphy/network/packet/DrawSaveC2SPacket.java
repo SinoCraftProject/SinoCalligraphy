@@ -1,10 +1,9 @@
 package games.moegirl.sinocraft.sinocalligraphy.network.packet;
 
+import games.moegirl.sinocraft.sinocalligraphy.drawing.DrawHolder;
 import games.moegirl.sinocraft.sinocalligraphy.gui.menu.BrushMenu;
 import games.moegirl.sinocraft.sinocalligraphy.item.SCAItems;
-import games.moegirl.sinocraft.sinocalligraphy.item.XuanPaperItem;
 import games.moegirl.sinocraft.sinocalligraphy.network.SCANetworks;
-import games.moegirl.sinocraft.sinocalligraphy.drawing.DrawHolder;
 import games.moegirl.sinocraft.sinocore.network.PacketBase;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
@@ -44,10 +43,6 @@ public class DrawSaveC2SPacket extends PacketBase {
                 if (container.getPaper().isEmpty()) {
                     SCANetworks.send(SaveFailedS2CPacket.noPaper(button), sender);
                     return;
-                }
-
-                if (container.getPaper().getItem() instanceof XuanPaperItem paper) {
-                    holder.setType(paper.getType());
                 }
 
                 if (container.getInk().isEmpty()) {

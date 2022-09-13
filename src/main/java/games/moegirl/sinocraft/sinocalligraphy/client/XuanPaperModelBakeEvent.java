@@ -6,7 +6,6 @@ import games.moegirl.sinocraft.sinocore.api.client.ReplacedModel;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.ModelBakeEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -19,7 +18,6 @@ import static net.minecraft.client.renderer.block.model.ItemTransforms.Transform
  * Client render event subscriber.
  */
 @Mod.EventBusSubscriber(modid = SinoCalligraphy.MODID, bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
-@OnlyIn(Dist.CLIENT)
 public class XuanPaperModelBakeEvent {
 
     @SubscribeEvent

@@ -1,24 +1,31 @@
-package games.moegirl.sinocraft.sinocalligraphy.drawing;
+package games.moegirl.sinocraft.sinocalligraphy.drawing.version;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.mojang.blaze3d.platform.NativeImage;
+import games.moegirl.sinocraft.sinocalligraphy.drawing.DrawHolder;
+import games.moegirl.sinocraft.sinocalligraphy.drawing.holder.HolderByte32;
 import games.moegirl.sinocraft.sinocalligraphy.utility.XuanPaperType;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.util.FastColor;
+
+import java.util.function.Supplier;
+
+import static games.moegirl.sinocraft.sinocalligraphy.drawing.holder.HolderByte32.SIZE;
 
 /**
  * Origin draw version for brush
  */
-public class BrushV1Version extends DrawVersion {
+public class VersionBrush1 extends DrawVersion {
 
     public static final String TAG_PIXELS = "pixels";
     public static final String TAG_AUTHOR = "author";
     public static final String SYMBOL = "DBRUSH1";
 
-    BrushV1Version() {
+    VersionBrush1() {
         super(null);
     }
 
@@ -111,13 +118,13 @@ public class BrushV1Version extends DrawVersion {
     }
 
     @Override
-    public NativeImage toImage(DrawHolder holder) {
-        return ((SmallBlackWhiteBrushHolder) holder).toImage();
+    public Supplier<NativeImage> toImage(DrawHolder holder) {
+        return toGrayImage(holder);
     }
 
     @Override
     public DrawHolder newDraw() {
-        return new SmallBlackWhiteBrushHolder(this);
+        return new HolderByte32(this);
     }
 
     @Override
@@ -149,5 +156,20 @@ public class BrushV1Version extends DrawVersion {
         if (tag.contains(author, Tag.TAG_STRING)) {
             holder.setAuthor(tag.getString(author));
         }
+    }
+
+    public static Supplier<NativeImage> toGrayImage(DrawHolder holder) {
+        return () -> {
+            NativeImage image = new NativeImage(SIZE, SIZE, false);
+            int index = 0;
+            byte[] data = holder.getData();
+            for (int w = 0; w < SIZE; w++) {
+                for (int h = 0; h < SIZE; h++) {
+                    int color = 16 * (16 - data[index++]) - 1;
+                    image.setPixelRGBA(w, h, FastColor.ARGB32.color(255, color, color, color));
+                }
+            }
+            return image;
+        };
     }
 }

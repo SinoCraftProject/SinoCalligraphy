@@ -1,14 +1,12 @@
-package games.moegirl.sinocraft.sinocalligraphy.drawing;
+package games.moegirl.sinocraft.sinocalligraphy.client.drawing;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import games.moegirl.sinocraft.sinocalligraphy.drawing.DrawHolder;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 
 /**
  * A renderer to render a draw
  */
-@OnlyIn(Dist.CLIENT)
 public interface DrawRender {
 
     /**
@@ -36,6 +34,5 @@ public interface DrawRender {
      * @param pPoseStack stack
      * @param pBuffer buffer
      */
-    @Deprecated(since = "BrushV3")
     void draw(PoseStack pPoseStack, MultiBufferSource pBuffer);
 }

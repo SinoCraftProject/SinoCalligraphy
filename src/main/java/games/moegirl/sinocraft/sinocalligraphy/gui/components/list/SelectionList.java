@@ -11,13 +11,10 @@ import net.minecraft.client.gui.components.events.AbstractContainerEventHandler;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.narration.NarratableEntry;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 
 import javax.annotation.Nullable;
 import java.util.*;
 
-@OnlyIn(Dist.CLIENT)
 public abstract class SelectionList<T> extends AbstractContainerEventHandler implements Widget, NarratableEntry {
 
     protected List<SelectionEntry<T>> displayItems = ImmutableList.of();

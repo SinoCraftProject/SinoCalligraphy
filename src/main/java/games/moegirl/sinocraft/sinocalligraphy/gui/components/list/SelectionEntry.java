@@ -1,9 +1,5 @@
 package games.moegirl.sinocraft.sinocalligraphy.gui.components.list;
 
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-
-@OnlyIn(Dist.CLIENT)
 public class SelectionEntry<T> {
     // list
     private final SelectionList<T> list;

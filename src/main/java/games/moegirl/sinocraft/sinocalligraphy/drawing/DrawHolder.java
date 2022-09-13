@@ -1,20 +1,18 @@
 package games.moegirl.sinocraft.sinocalligraphy.drawing;
 
 import games.moegirl.sinocraft.sinocalligraphy.SinoCalligraphy;
-import games.moegirl.sinocraft.sinocalligraphy.utility.XuanPaperType;
+import games.moegirl.sinocraft.sinocalligraphy.drawing.version.DrawVersion;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.entity.Entity;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 
 import javax.annotation.Nullable;
 import java.util.Optional;
 
 /**
- * A holder with version and draw data
+ * 保存了图片的
  */
 public interface DrawHolder {
 
@@ -114,50 +112,10 @@ public interface DrawHolder {
     DrawVersion getVersion();
 
     /**
-     * Set the version of the holder
-     * @param version version of the holder.
-     * @since BrushV3
-     */
-    void setVersion(DrawVersion version);
-
-    /**
      * True if the draw is blank (or empty)
      * @return draw is blank
      */
     boolean isEmpty();
-
-    /**
-     * Get type of paper.
-     * @return Paper type.
-     */
-    XuanPaperType getType();
-
-    /**
-     * Set the type of the paper.
-     * @param type Paper type.
-     */
-    void setType(XuanPaperType type);
-
-    /**
-     * To nbt.
-     * @return NBT.
-     * @since BrushV3
-     */
-    CompoundTag serializeNBT();
-
-    /**
-     * From nbt.
-     * @param nbt NBT.
-     * @since BrushV3
-     */
-    void deserializeNBT(CompoundTag nbt);
-
-    /**
-     * Get an object to draw the draw
-     * @return render object
-     */
-    @OnlyIn(Dist.CLIENT)
-    DrawRender render();
 
     /**
      * Copy another holder to this
@@ -182,7 +140,6 @@ public interface DrawHolder {
         if (src.hasAuthor()) {
             dst.setAuthor(src.getAuthor());
         }
-        dst.setType(src.getType());
     }
 
     static Optional<DrawHolder> from(String str) {

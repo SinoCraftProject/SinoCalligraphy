@@ -29,8 +29,6 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.util.Lazy;
 
 import javax.annotation.Nullable;
@@ -40,7 +38,6 @@ import java.time.Duration;
 
 import static games.moegirl.sinocraft.sinocalligraphy.gui.menu.BrushMenu.TEXTURE;
 
-@OnlyIn(Dist.CLIENT)
 public class BrushGuiScreen extends AbstractContainerScreen<BrushMenu> {
     public static final String KEY_SAVE = SinoCalligraphy.MODID + ".gui.brush.save";
     public static final String KEY_SAVE_SUCCEED = SinoCalligraphy.MODID + ".gui.brush.save.succeed";
@@ -176,7 +173,7 @@ public class BrushGuiScreen extends AbstractContainerScreen<BrushMenu> {
     private void saveToFile(Button button) {
         LocalPlayer player = Minecraft.getInstance().player;
         DrawHolder holder = canvas.get().getDraw(player);
-        try (NativeImage image = holder.getVersion().toImage(holder)) {
+        try (NativeImage image = holder.getVersion().toImage(holder).get()) {
             File name = new File(Minecraft.getInstance().gameDirectory,
                     "sinoseries/sinocalligraphy/draws/" + holder.getAuthor().getString() +
                             "/" + System.currentTimeMillis() + ".png");
@@ -267,11 +264,6 @@ public class BrushGuiScreen extends AbstractContainerScreen<BrushMenu> {
             SCANetworks.send(new DrawSaveC2SPacket(canvas.get().getDraw(player), 0));
             clearCanvas();
             super.onTake(player, stack);
-        }
-
-        @Override
-        public void setPaperType(XuanPaperType type) {
-            canvas.get().setDrawType(type);
         }
 
         @Override
