@@ -11,14 +11,29 @@ apply plugin: 'architectury-plugin'   // Parchment mappings.
 apply plugin: 'maven-publish'
 apply plugin: 'dev.architectury.loom'
 
-version = '1.18.2-1.1.1'
 group = 'games.moegirl.sinocraft.sinocalligraphy' // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = 'sinocalligraphy'
+
+version = '1.18.2-2.0.0'
+if (System.getenv("JITPACK") == "true") {
+    version += "-${System.getenv("VERSION")}"
+}
+
+var release = false
+if (release || project.hasProperty("SINOSERIES_RELEASE")) {
+    version += '-release'
+} else {
+    version += '-dev'
+}
 
 // Mojang ships Java 17 to end users in 1.18+, so your mod should target Java 17.
 java.toolchain.languageVersion = JavaLanguageVersion.of(17)
 
-println('Java: ' + System.getProperty('java.version') + ' JVM: ' + System.getProperty('java.vm.version') + '(' + System.getProperty('java.vendor') + ') Arch: ' + System.getProperty('os.arch'))
+println('Java: ' + System.getProperty('java.version') +
+        ' JVM: ' + System.getProperty('java.vm.version') + '(' + System.getProperty('java.vendor') + ')' +
+        ' Arch: ' + System.getProperty('os.arch'))
+
+println("Building SinoCalligraphy. Ver: $version.")
 
 architectury {
     platformSetupLoomIde()
@@ -94,7 +109,16 @@ dependencies {
         parchment("org.parchmentmc.data:parchment-1.18.2:2022.05.22@zip")
     }
 
-    modImplementation 'com.github.SinoCraftProject:SinoCore:main-SNAPSHOT'
+    modCompileOnly('com.github.SinoCraftProject:SinoCore:dev-SNAPSHOT:api') {
+        changing = true
+    }
+    modRuntimeOnly('com.github.SinoCraftProject:SinoCore:dev-SNAPSHOT') {
+        changing = true
+    }
+
+    modImplementation('com.github.SinoCraftProject:SinoFoundation:dev-SNAPSHOT') {
+        changing = true
+    }
 }
 
 // Example for how to get properties into the manifest for reading at runtime.
@@ -124,3 +148,16 @@ publishing {
         }
     }
 }
+
+import org.apache.tools.ant.filters.ReplaceTokens
+
+task injectString(type: Copy) {
+    from ('src/main/java') {
+        include '**/*.java'
+        filter(ReplaceTokens, tokens: [version: project.version])
+    }
+    into "${buildDir}/generated/java"
+}
+
+// qyl27: It only works with main.
+compileJava.source = "${buildDir}/generated/java"
