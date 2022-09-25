@@ -1,11 +1,11 @@
-package games.moegirl.sinocraft.sinocalligraphy.drawing.version;
+package games.moegirl.sinocraft.sinocalligraphy.drawing.legacy.version;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.mojang.blaze3d.platform.NativeImage;
-import games.moegirl.sinocraft.sinocalligraphy.drawing.DrawHolder;
-import games.moegirl.sinocraft.sinocalligraphy.drawing.holder.HolderByte32;
+import games.moegirl.sinocraft.sinocalligraphy.drawing.legacy.DrawHolder;
+import games.moegirl.sinocraft.sinocalligraphy.drawing.legacy.holder.HolderByte32;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.FriendlyByteBuf;
@@ -13,7 +13,7 @@ import net.minecraft.util.FastColor;
 
 import java.util.function.Supplier;
 
-import static games.moegirl.sinocraft.sinocalligraphy.drawing.holder.HolderByte32.SIZE;
+import static games.moegirl.sinocraft.sinocalligraphy.drawing.legacy.holder.HolderByte32.SIZE;
 
 /**
  * Origin draw version for brush

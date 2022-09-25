@@ -1,4 +1,4 @@
-package games.moegirl.sinocraft.sinocalligraphy.drawing;
+package games.moegirl.sinocraft.sinocalligraphy.drawing.legacy;
 
 public class Constants {
     public static final String TAG_HOLDER = "drawing";

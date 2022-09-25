@@ -1,9 +1,9 @@
-package games.moegirl.sinocraft.sinocalligraphy.drawing.client;
+package games.moegirl.sinocraft.sinocalligraphy.drawing.legacy.client;
 
-import games.moegirl.sinocraft.sinocalligraphy.drawing.DrawHolder;
-import games.moegirl.sinocraft.sinocalligraphy.drawing.version.DrawVersion;
-import games.moegirl.sinocraft.sinocalligraphy.drawing.holder.HolderByte32;
-import games.moegirl.sinocraft.sinocalligraphy.drawing.version.DrawVersions;
+import games.moegirl.sinocraft.sinocalligraphy.drawing.legacy.DrawHolder;
+import games.moegirl.sinocraft.sinocalligraphy.drawing.legacy.version.DrawVersion;
+import games.moegirl.sinocraft.sinocalligraphy.drawing.legacy.holder.HolderByte32;
+import games.moegirl.sinocraft.sinocalligraphy.drawing.legacy.version.DrawVersions;
 
 import java.util.HashMap;
 import java.util.Map;

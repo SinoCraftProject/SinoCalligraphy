@@ -1,10 +1,10 @@
 package games.moegirl.sinocraft.sinocalligraphy.gui.components;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import games.moegirl.sinocraft.sinocalligraphy.drawing.client.DrawRenders;
-import games.moegirl.sinocraft.sinocalligraphy.drawing.DrawHolder;
-import games.moegirl.sinocraft.sinocalligraphy.drawing.holder.HolderByte32;
-import games.moegirl.sinocraft.sinocalligraphy.drawing.version.DrawVersions;
+import games.moegirl.sinocraft.sinocalligraphy.drawing.legacy.client.DrawRenders;
+import games.moegirl.sinocraft.sinocalligraphy.drawing.legacy.DrawHolder;
+import games.moegirl.sinocraft.sinocalligraphy.drawing.legacy.holder.HolderByte32;
+import games.moegirl.sinocraft.sinocalligraphy.drawing.legacy.version.DrawVersions;
 import games.moegirl.sinocraft.sinocalligraphy.gui.BrushGuiScreen;
 import games.moegirl.sinocraft.sinocalligraphy.utility.XuanPaperType;
 import games.moegirl.sinocraft.sinocore.api.client.GLSwitcher;
@@ -22,7 +22,7 @@ import javax.annotation.Nullable;
 import java.util.function.IntConsumer;
 import java.util.function.IntSupplier;
 
-import static games.moegirl.sinocraft.sinocalligraphy.drawing.holder.HolderByte32.SIZE;
+import static games.moegirl.sinocraft.sinocalligraphy.drawing.legacy.holder.HolderByte32.SIZE;
 
 public class Canvas extends AbstractWidget {
 

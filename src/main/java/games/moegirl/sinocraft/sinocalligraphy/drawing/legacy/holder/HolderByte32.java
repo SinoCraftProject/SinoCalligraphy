@@ -1,7 +1,7 @@
-package games.moegirl.sinocraft.sinocalligraphy.drawing.holder;
+package games.moegirl.sinocraft.sinocalligraphy.drawing.legacy.holder;
 
-import games.moegirl.sinocraft.sinocalligraphy.drawing.DrawHolder;
-import games.moegirl.sinocraft.sinocalligraphy.drawing.version.DrawVersion;
+import games.moegirl.sinocraft.sinocalligraphy.drawing.legacy.DrawHolder;
+import games.moegirl.sinocraft.sinocalligraphy.drawing.legacy.version.DrawVersion;
 
 /**
  * 以 32x32 个 byte 存储的图片

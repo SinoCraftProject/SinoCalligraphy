@@ -1,11 +1,11 @@
-package games.moegirl.sinocraft.sinocalligraphy.drawing.client;
+package games.moegirl.sinocraft.sinocalligraphy.drawing.legacy.client;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.blaze3d.vertex.VertexFormat;
-import games.moegirl.sinocraft.sinocalligraphy.drawing.holder.HolderByte32;
+import games.moegirl.sinocraft.sinocalligraphy.drawing.legacy.holder.HolderByte32;
 import games.moegirl.sinocraft.sinocalligraphy.utility.DrawHelper;
 import net.minecraft.client.gui.GuiComponent;
 import net.minecraft.client.renderer.GameRenderer;
@@ -13,9 +13,9 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderStateShard;
 import net.minecraft.client.renderer.RenderType;
 
-import static games.moegirl.sinocraft.sinocalligraphy.drawing.holder.HolderByte32.SIZE;
-import static games.moegirl.sinocraft.sinocalligraphy.drawing.version.VersionBrush3White.background;
-import static games.moegirl.sinocraft.sinocalligraphy.drawing.version.VersionBrush3White.foreground;
+import static games.moegirl.sinocraft.sinocalligraphy.drawing.legacy.holder.HolderByte32.SIZE;
+import static games.moegirl.sinocraft.sinocalligraphy.drawing.legacy.version.VersionBrush3White.background;
+import static games.moegirl.sinocraft.sinocalligraphy.drawing.legacy.version.VersionBrush3White.foreground;
 
 // todo todo todo todo
 public class RenderWhite32 implements DrawRender {

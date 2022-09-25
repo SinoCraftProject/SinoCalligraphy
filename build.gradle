@@ -20,7 +20,7 @@ if (System.getenv("JITPACK") == "true") {
 }
 
 var release = false
-if (release || project.hasProperty("SINOSERIES_RELEASE")) {
+if (release || (project.hasProperty("SINOSERIES_RELEASE") && project.property("SINOSERIES_RELEASE") == 'true')) {
     version += '-release'
 } else {
     version += '-dev'
@@ -123,6 +123,8 @@ dependencies {
 
 // Example for how to get properties into the manifest for reading at runtime.
 jar {
+    archiveClassifier.set('')
+
     manifest {
         attributes([
                 "Specification-Title"     : "sinocalligraphy",
@@ -161,3 +163,4 @@ task injectString(type: Copy) {
 
 // qyl27: It only works with main.
 compileJava.source = "${buildDir}/generated/java"
+compileJava.dependsOn injectString

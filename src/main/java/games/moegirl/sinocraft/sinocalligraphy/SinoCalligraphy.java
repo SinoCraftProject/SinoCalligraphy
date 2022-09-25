@@ -2,8 +2,8 @@ package games.moegirl.sinocraft.sinocalligraphy;
 
 import games.moegirl.sinocraft.sinocalligraphy.block.SCABlockItems;
 import games.moegirl.sinocraft.sinocalligraphy.block.SCABlocks;
-import games.moegirl.sinocraft.sinocalligraphy.drawing.client.DrawRenders;
-import games.moegirl.sinocraft.sinocalligraphy.drawing.version.DrawVersions;
+import games.moegirl.sinocraft.sinocalligraphy.drawing.legacy.client.DrawRenders;
+import games.moegirl.sinocraft.sinocalligraphy.drawing.legacy.version.DrawVersions;
 import games.moegirl.sinocraft.sinocalligraphy.fluid.SCAFluids;
 import games.moegirl.sinocraft.sinocalligraphy.gui.SCAMenus;
 import games.moegirl.sinocraft.sinocalligraphy.item.SCAItems;
@@ -25,13 +25,11 @@ public class SinoCalligraphy {
     public static final Map<String, Object> DEBUG = new HashMap<>();
 
     public static final String MODID = "sinocalligraphy";
-    public static final String MC_VERSION = "1.18.2";
-    public static final String MOD_VERSION = "2.0.0-alpha";
-    public static final String VERSION = MC_VERSION + "-" + MOD_VERSION;
+    public static final String VERSION = "@version@";
     private static final Logger LOGGER = LogManager.getLogger();
 
     public SinoCalligraphy() {
-        LOGGER.info("Loading SinoCalligraphy. Ver: " + MOD_VERSION);
+        LOGGER.info("Loading SinoCalligraphy. Ver: " + VERSION);
 
         IEventBus bus = FMLJavaModLoadingContext.get().getModEventBus();
 

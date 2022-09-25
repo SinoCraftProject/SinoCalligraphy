@@ -3,7 +3,7 @@ package games.moegirl.sinocraft.sinocalligraphy.data.lang;
 import games.moegirl.sinocraft.sinocalligraphy.block.SCABlocks;
 import games.moegirl.sinocraft.sinocalligraphy.gui.BrushGuiScreen;
 import games.moegirl.sinocraft.sinocalligraphy.item.*;
-import games.moegirl.sinocraft.sinocalligraphy.drawing.DrawHolder;
+import games.moegirl.sinocraft.sinocalligraphy.drawing.legacy.DrawHolder;
 import games.moegirl.sinocraft.sinocore.api.data.I18nProviderBase;
 import net.minecraft.data.DataGenerator;
 

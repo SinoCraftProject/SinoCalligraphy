@@ -1,17 +1,17 @@
-package games.moegirl.sinocraft.sinocalligraphy.drawing.client;
+package games.moegirl.sinocraft.sinocalligraphy.drawing.legacy.client;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import games.moegirl.sinocraft.sinocalligraphy.drawing.holder.HolderByte32;
+import games.moegirl.sinocraft.sinocalligraphy.drawing.legacy.holder.HolderByte32;
 import net.minecraft.client.gui.GuiComponent;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.util.FastColor;
 
-import static games.moegirl.sinocraft.sinocalligraphy.drawing.client.RenderTypes.COLOR_256;
-import static games.moegirl.sinocraft.sinocalligraphy.drawing.client.RenderTypes.COLOR_LIGHT_256;
-import static games.moegirl.sinocraft.sinocalligraphy.drawing.holder.HolderByte32.SIZE;
+import static games.moegirl.sinocraft.sinocalligraphy.drawing.legacy.client.RenderTypes.COLOR_256;
+import static games.moegirl.sinocraft.sinocalligraphy.drawing.legacy.client.RenderTypes.COLOR_LIGHT_256;
+import static games.moegirl.sinocraft.sinocalligraphy.drawing.legacy.holder.HolderByte32.SIZE;
 
 public class RenderGray32 implements DrawRender {
 

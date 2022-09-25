@@ -1,4 +1,4 @@
-package games.moegirl.sinocraft.sinocalligraphy.drawing.version;
+package games.moegirl.sinocraft.sinocalligraphy.drawing.legacy.version;
 
 public class DrawVersions {
     public static final DrawVersion BRUSH_V1 = new VersionBrush1();

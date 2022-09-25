@@ -1,8 +1,8 @@
-package games.moegirl.sinocraft.sinocalligraphy.drawing.version;
+package games.moegirl.sinocraft.sinocalligraphy.drawing.legacy.version;
 
 import com.google.gson.Gson;
 import com.mojang.blaze3d.platform.NativeImage;
-import games.moegirl.sinocraft.sinocalligraphy.drawing.DrawHolder;
+import games.moegirl.sinocraft.sinocalligraphy.drawing.legacy.DrawHolder;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 
